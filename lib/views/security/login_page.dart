@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/admin_interface.dart';
-import 'package:mca_leads_management_mobile/utils/app_colors.dart';
+import 'package:mca_leads_management_mobile/utils/theme/app_colors.dart';
 import 'package:mca_leads_management_mobile/widgets/common/notifications.dart';
 
 import '../../controllers/login_controller.dart';

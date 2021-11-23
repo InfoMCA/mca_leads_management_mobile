@@ -16,7 +16,7 @@ class LoginController {
           username: email,
         );
         LocalStorage.saveObject(type: ObjectType.driver, object: currentStaff);
-        Modular.to.popAndPushNamed('/home');
+        Modular.to.popAndPushNamed('/home/dashboard');
       } else {
         currentStaff = null;
       }

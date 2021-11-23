@@ -6,7 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
 enum AppReqCmd {
-  login
+  Login
 }
 
 class AppReq {
@@ -53,16 +53,19 @@ class AdminInterface {
 
   Future<AppResp> checkLoginCredentials(
       String username, String password) async {
+    print ("Check Credential");
     try {
       AppReq appReq = AppReq(
-          cmd: AppReqCmd.login,
+          cmd: AppReqCmd.Login,
           username: username,
           password: password);
       Response response = await dio.post(endpoint, data: json.encode(appReq));
+      print (response);
       AppResp authResponse = AppResp.fromJson(response.data);
       authResponse.statusCode = response.statusCode;
       return authResponse;
     } catch (e) {
+      print (e.toString());
       AppResp authResponse = AppResp();
       authResponse.statusCode = HttpStatus.clientClosedRequest;
       return authResponse;
