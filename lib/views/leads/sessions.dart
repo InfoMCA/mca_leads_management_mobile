@@ -1,22 +1,17 @@
-/*
-* File : Selectable List
-* Version : 1.0.0
-* */
-
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 
-class LeadsList extends StatefulWidget {
-  const LeadsList({Key? key, String? leadType}) : super(key: key);
+class Sessions extends StatefulWidget {
+  const Sessions({Key? key}) : super(key: key);
 
   @override
-  _LeadsListState createState() => _LeadsListState();
+  _SessionsState createState() => _SessionsState();
 }
 
-class _LeadsListState extends State<LeadsList> {
+class _SessionsState extends State<Sessions> {
   final List<int> _list = List.generate(20, (i) => i);
 
   late CustomTheme customTheme;

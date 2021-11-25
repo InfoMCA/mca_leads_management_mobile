@@ -27,7 +27,8 @@ Future<void> main() async {
     child: MaterialApp(
       title: 'MCA Management UI',
       theme: AppTheme.theme,
-      initialRoute: currentStaff != null ? "/home" : "/security/login",
+      // initialRoute: currentStaff != null ? "/home" : "/security/login",
+      initialRoute: "/home",
     ).modular(),
     module: AppModule(),
   ));
