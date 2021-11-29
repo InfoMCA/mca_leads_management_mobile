@@ -9,18 +9,17 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/views/leads/leads.dart';
+import 'package:mca_leads_management_mobile/views/leads/sessions.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 
 class DashBoard extends StatefulWidget {
   const DashBoard({Key? key}) : super(key: key);
 
   @override
-  _DashBoardState createState() =>
-      _DashBoardState();
+  _DashBoardState createState() => _DashBoardState();
 }
 
-class _DashBoardState
-    extends State<DashBoard> {
+class _DashBoardState extends State<DashBoard> {
   late CustomTheme customTheme;
   late ThemeData theme;
 
@@ -51,7 +50,9 @@ class _DashBoardState
                 TabBar(
                   isScrollable: true,
                   tabs: [
-                    Tab(child: FxText.sh1("Awaiting Approval", fontWeight: 600)),
+                    Tab(
+                        child:
+                            FxText.sh1("Awaiting Approval", fontWeight: 600)),
                     Tab(child: FxText.sh1("Follow Up", fontWeight: 600)),
                     Tab(child: FxText.sh1("Appraisal", fontWeight: 600)),
                     Tab(child: FxText.sh1("Dispatched", fontWeight: 600)),
@@ -69,7 +70,7 @@ class _DashBoardState
               LeadsList(leadType: 'Awaiting Approval'),
               LeadsList(leadType: 'Follow Up'),
               LeadsList(leadType: 'Appraisal'),
-              LeadsList(leadType: 'Dispatched'),
+              SessionsList(sessionType: 'Dispatched'),
               LeadsList(leadType: 'In Progress'),
               LeadsList(leadType: 'Completed'),
             ],

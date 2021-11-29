@@ -4,14 +4,14 @@ import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 
-class Sessions extends StatefulWidget {
-  const Sessions({Key? key}) : super(key: key);
+class SessionsList extends StatefulWidget {
+  const SessionsList({Key? key, String? sessionType}) : super(key: key);
 
   @override
-  _SessionsState createState() => _SessionsState();
+  _SessionsListState createState() => _SessionsListState();
 }
 
-class _SessionsState extends State<Sessions> {
+class _SessionsListState extends State<SessionsList> {
   final List<int> _list = List.generate(20, (i) => i);
 
   late CustomTheme customTheme;
@@ -37,7 +37,7 @@ class _SessionsState extends State<Sessions> {
                 child: FxText.b1(_list[index].toString(),
                     fontWeight: 600, color: theme.colorScheme.onSecondary),
               ),
-              subtitle: FxText.b2('Sub Item',
+              subtitle: FxText.b2('Session Sub Item',
                   fontWeight: 500, color: theme.colorScheme.onBackground),
               title: FxText.b1('Item - ' + _list[index].toString(),
                   fontWeight: 600, color: theme.colorScheme.onBackground),

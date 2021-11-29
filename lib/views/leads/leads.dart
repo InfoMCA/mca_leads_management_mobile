@@ -46,7 +46,7 @@ class _LeadsListState extends State<LeadsList> {
                   fontWeight: 500, color: theme.colorScheme.onBackground),
               title: FxText.b1('Item - ' + _list[index].toString(),
                   fontWeight: 600, color: theme.colorScheme.onBackground),
-              onTap: () => {Modular.to.pushNamed('/home/session')},
+              onTap: () => {Modular.to.pushNamed('/home/lead')},
             ),
           );
         },

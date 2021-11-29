@@ -8,6 +8,7 @@ import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/views/leads/followup_dialog.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
+import 'package:flutter/cupertino.dart';
 
 class SessionDetails extends StatefulWidget {
   const SessionDetails({Key? key}) : super(key: key);
@@ -17,6 +18,32 @@ class SessionDetails extends StatefulWidget {
 }
 
 class _SessionDetailsState extends State<SessionDetails> {
+  DateTime selectedDate = DateTime.now();
+  String? _selectedTime;
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015),
+        lastDate: DateTime(2050));
+    if (pickedDate != null && pickedDate != selectedDate) {
+      setState(() {
+        selectedDate = pickedDate;
+      });
+    }
+  }
+
+  Future<void> _show() async {
+    final TimeOfDay? result =
+        await showTimePicker(context: context, initialTime: TimeOfDay.now());
+    if (result != null) {
+      setState(() {
+        _selectedTime = result.format(context);
+      });
+    }
+  }
+
   late CustomTheme customTheme;
   late ThemeData theme;
   @override
@@ -357,28 +384,50 @@ class _SessionDetailsState extends State<SessionDetails> {
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 8),
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      labelText: "Schedule Date",
-                      border: theme.inputDecorationTheme.border,
-                      enabledBorder: theme.inputDecorationTheme.border,
-                      focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                      prefixIcon:
-                          const Icon(MdiIcons.gamepadCircleOutline, size: 24),
-                    ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: "${selectedDate.toLocal()}".split(' ')[0],
+                          border: theme.inputDecorationTheme.border,
+                          enabledBorder: theme.inputDecorationTheme.border,
+                          focusedBorder:
+                              theme.inputDecorationTheme.focusedBorder,
+                          prefixIcon: const Icon(MdiIcons.timelineCheckOutline,
+                              size: 24),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => _selectDate(context),
+                        child: const Text('Schedule Date'),
+                      ),
+                    ],
                   ),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 8),
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      labelText: "Schedule Time",
-                      border: theme.inputDecorationTheme.border,
-                      enabledBorder: theme.inputDecorationTheme.border,
-                      focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                      prefixIcon:
-                          const Icon(MdiIcons.gamepadCircleOutline, size: 24),
-                    ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: _selectedTime != null
+                              ? _selectedTime!
+                              : 'Schedule time',
+                          border: theme.inputDecorationTheme.border,
+                          enabledBorder: theme.inputDecorationTheme.border,
+                          focusedBorder:
+                              theme.inputDecorationTheme.focusedBorder,
+                          prefixIcon: const Icon(MdiIcons.gamepadCircleOutline,
+                              size: 24),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: _show,
+                        child: Text('Schedule time'),
+                      ),
+                    ],
                   ),
                 ),
               ],
