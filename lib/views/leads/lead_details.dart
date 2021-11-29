@@ -18,13 +18,10 @@ class LeadDetails extends StatefulWidget {
   const LeadDetails({Key? key}) : super(key: key);
 
   @override
-  _LeadDetailsState createState() =>
-      _LeadDetailsState();
+  _LeadDetailsState createState() => _LeadDetailsState();
 }
 
-class _LeadDetailsState
-    extends State<LeadDetails> {
-
+class _LeadDetailsState extends State<LeadDetails> {
   late CustomTheme customTheme;
   late ThemeData theme;
 
@@ -34,6 +31,7 @@ class _LeadDetailsState
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
   }
+
   bool _switch2 = false;
 
   @override
@@ -43,12 +41,17 @@ class _LeadDetailsState
           elevation: 0,
           leading: InkWell(
             onTap: () => Navigator.of(context).pop(),
-            child: const Icon(FeatherIcons.chevronLeft, size: 20,),
+            child: const Icon(
+              FeatherIcons.chevronLeft,
+              size: 20,
+            ),
           ),
-          actions:  const <Widget>[
+          actions: const <Widget>[
             Padding(
               padding: EdgeInsets.only(right: 16),
-              child: Icon(Icons.phone,),
+              child: Icon(
+                Icons.phone,
+              ),
             ),
           ],
           title: FxText.sh1("2018 TOYOTA RAV4 XLE", fontWeight: 600),
@@ -63,8 +66,7 @@ class _LeadDetailsState
               color: theme.colorScheme.onPrimary,
             ),
             elevation: 2,
-            backgroundColor:
-            theme.floatingActionButtonTheme.backgroundColor),
+            backgroundColor: theme.floatingActionButtonTheme.backgroundColor),
         body: SingleChildScrollView(
           child: Container(
             padding: FxSpacing.nTop(20),
@@ -74,8 +76,7 @@ class _LeadDetailsState
                 Container(
                   padding: const EdgeInsets.only(
                       left: 0, right: 20, top: 0, bottom: 12),
-                  child:
-                  FxText.sh1("Vehicle Information", fontWeight: 600),
+                  child: FxText.sh1("Vehicle Information", fontWeight: 600),
                 ),
                 TextFormField(
                   initialValue: '12345678',
@@ -83,12 +84,10 @@ class _LeadDetailsState
                   decoration: InputDecoration(
                     labelText: "VIN",
                     border: theme.inputDecorationTheme.border,
-                    enabledBorder:
-                    theme.inputDecorationTheme.border,
-                    focusedBorder: theme
-                        .inputDecorationTheme.focusedBorder,
-                    prefixIcon:
-                    const Icon(Icons.confirmation_number_outlined, size: 24),
+                    enabledBorder: theme.inputDecorationTheme.border,
+                    focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                    prefixIcon: const Icon(Icons.confirmation_number_outlined,
+                        size: 24),
                   ),
                 ),
                 Container(
@@ -97,12 +96,10 @@ class _LeadDetailsState
                     decoration: InputDecoration(
                       labelText: "Color",
                       border: theme.inputDecorationTheme.border,
-                      enabledBorder:
-                      theme.inputDecorationTheme.border,
-                      focusedBorder: theme
-                          .inputDecorationTheme.focusedBorder,
-                      prefixIcon: const Icon(Icons.color_lens_outlined,
-                          size: 24),
+                      enabledBorder: theme.inputDecorationTheme.border,
+                      focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                      prefixIcon:
+                          const Icon(Icons.color_lens_outlined, size: 24),
                     ),
                   ),
                 ),
@@ -112,10 +109,8 @@ class _LeadDetailsState
                     decoration: InputDecoration(
                       labelText: "Mileage",
                       border: theme.inputDecorationTheme.border,
-                      enabledBorder:
-                      theme.inputDecorationTheme.border,
-                      focusedBorder: theme
-                          .inputDecorationTheme.focusedBorder,
+                      enabledBorder: theme.inputDecorationTheme.border,
+                      focusedBorder: theme.inputDecorationTheme.focusedBorder,
                       prefixIcon: const Icon(
                         Icons.speed,
                         size: 24,
@@ -129,10 +124,8 @@ class _LeadDetailsState
                     decoration: InputDecoration(
                       labelText: "Estimated CR",
                       border: theme.inputDecorationTheme.border,
-                      enabledBorder:
-                      theme.inputDecorationTheme.border,
-                      focusedBorder: theme
-                          .inputDecorationTheme.focusedBorder,
+                      enabledBorder: theme.inputDecorationTheme.border,
+                      focusedBorder: theme.inputDecorationTheme.focusedBorder,
                       prefixIcon: const Icon(
                         Icons.high_quality,
                         size: 24,
@@ -150,10 +143,8 @@ class _LeadDetailsState
                     decoration: InputDecoration(
                       labelText: "Listing Price",
                       border: theme.inputDecorationTheme.border,
-                      enabledBorder:
-                      theme.inputDecorationTheme.border,
-                      focusedBorder: theme
-                          .inputDecorationTheme.focusedBorder,
+                      enabledBorder: theme.inputDecorationTheme.border,
+                      focusedBorder: theme.inputDecorationTheme.focusedBorder,
                       prefixIcon: const Icon(
                         Icons.list,
                         size: 24,
@@ -167,10 +158,8 @@ class _LeadDetailsState
                     decoration: InputDecoration(
                       labelText: "MMR",
                       border: theme.inputDecorationTheme.border,
-                      enabledBorder:
-                      theme.inputDecorationTheme.border,
-                      focusedBorder: theme
-                          .inputDecorationTheme.focusedBorder,
+                      enabledBorder: theme.inputDecorationTheme.border,
+                      focusedBorder: theme.inputDecorationTheme.focusedBorder,
                       prefixIcon: const Icon(
                         Icons.price_change,
                         size: 24,
@@ -184,10 +173,8 @@ class _LeadDetailsState
                     decoration: InputDecoration(
                       labelText: "Offered Price",
                       border: theme.inputDecorationTheme.border,
-                      enabledBorder:
-                      theme.inputDecorationTheme.border,
-                      focusedBorder: theme
-                          .inputDecorationTheme.focusedBorder,
+                      enabledBorder: theme.inputDecorationTheme.border,
+                      focusedBorder: theme.inputDecorationTheme.focusedBorder,
                       prefixIcon: const Icon(
                         Icons.price_change_outlined,
                         size: 24,
@@ -201,10 +188,8 @@ class _LeadDetailsState
                     decoration: InputDecoration(
                       labelText: "Requested Price",
                       border: theme.inputDecorationTheme.border,
-                      enabledBorder:
-                      theme.inputDecorationTheme.border,
-                      focusedBorder: theme
-                          .inputDecorationTheme.focusedBorder,
+                      enabledBorder: theme.inputDecorationTheme.border,
+                      focusedBorder: theme.inputDecorationTheme.focusedBorder,
                       prefixIcon: const Icon(
                         Icons.price_change,
                         size: 24,
@@ -214,8 +199,7 @@ class _LeadDetailsState
                 ),
                 Container(
                   padding: const EdgeInsets.only(top: 20),
-                  child: FxText.sh1("Customer Information",
-                      fontWeight: 600),
+                  child: FxText.sh1("Customer Information", fontWeight: 600),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 8),
@@ -223,13 +207,10 @@ class _LeadDetailsState
                     decoration: InputDecoration(
                       labelText: "Customer Name",
                       border: theme.inputDecorationTheme.border,
-                      enabledBorder:
-                      theme.inputDecorationTheme.border,
-                      focusedBorder: theme
-                          .inputDecorationTheme.focusedBorder,
-                      prefixIcon: const Icon(
-                          MdiIcons.accountChildOutline,
-                          size: 24),
+                      enabledBorder: theme.inputDecorationTheme.border,
+                      focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                      prefixIcon:
+                          const Icon(MdiIcons.accountChildOutline, size: 24),
                     ),
                   ),
                 ),
@@ -239,13 +220,10 @@ class _LeadDetailsState
                     decoration: InputDecoration(
                       labelText: "Payoff Status",
                       border: theme.inputDecorationTheme.border,
-                      enabledBorder:
-                      theme.inputDecorationTheme.border,
-                      focusedBorder: theme
-                          .inputDecorationTheme.focusedBorder,
-                      prefixIcon: const Icon(
-                          MdiIcons.gamepadCircleOutline,
-                          size: 24),
+                      enabledBorder: theme.inputDecorationTheme.border,
+                      focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                      prefixIcon:
+                          const Icon(MdiIcons.gamepadCircleOutline, size: 24),
                     ),
                   ),
                 ),
@@ -299,15 +277,18 @@ class _LeadDetailsState
                           fontWeight: 500),
                     ),
                     InkWell(
-                      onTap: () {showDialog(
-                          context: context,
-                          builder: (context) {
-                            return const UnansweredDialog();
-                          });},
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return const UnansweredDialog();
+                            });
+                      },
                       child: ListTile(
                         dense: true,
                         leading: Icon(MdiIcons.phoneMissed,
-                            color: theme.colorScheme.onBackground.withAlpha(220)),
+                            color:
+                                theme.colorScheme.onBackground.withAlpha(220)),
                         title: FxText.b1("Unanswered",
                             color: theme.colorScheme.onBackground,
                             letterSpacing: 0.3,
@@ -336,11 +317,15 @@ class _LeadDetailsState
                           fontWeight: 500),
                     ),
                     InkWell(
-                      onTap: () {Navigator.popUntil(context, ModalRoute.withName('/home'));},
+                      onTap: () {
+                        Navigator.popUntil(
+                            context, ModalRoute.withName('/home'));
+                      },
                       child: ListTile(
                         dense: true,
                         leading: Icon(MdiIcons.contentSave,
-                            color: theme.colorScheme.onBackground.withAlpha(220)),
+                            color:
+                                theme.colorScheme.onBackground.withAlpha(220)),
                         title: FxText.b1("Save",
                             color: theme.colorScheme.onBackground,
                             letterSpacing: 0.3,
@@ -355,13 +340,8 @@ class _LeadDetailsState
         });
   }
 
-  void _showUnansweredDialog() {
-
-
-
-  }
+  void _showUnansweredDialog() {}
   _dismissDialog() {
     Navigator.pop(context);
   }
 }
-

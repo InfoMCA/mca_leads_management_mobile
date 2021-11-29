@@ -2,6 +2,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mca_leads_management_mobile/views/leads/DashBoard.dart';
 import 'package:mca_leads_management_mobile/views/leads/lead_details.dart';
 import 'package:mca_leads_management_mobile/views/leads/session_details.dart';
+import 'package:mca_leads_management_mobile/views/leads/session_details_complete.dart';
 import 'package:mca_leads_management_mobile/views/security/login_page.dart';
 
 class AppModule extends Module {
@@ -14,5 +15,7 @@ class AppModule extends Module {
     ChildRoute('/home', child: (_, args) => const DashBoard()),
     ChildRoute('/home/lead', child: (_, args) => LeadDetails()),
     ChildRoute('/home/session', child: (_, args) => SessionDetails()),
+    ChildRoute('/home/sessionComplete',
+        child: (_, args) => SessionDetailsComplete()),
   ];
 }

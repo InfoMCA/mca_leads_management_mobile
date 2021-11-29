@@ -20,6 +20,8 @@ class SessionDetails extends StatefulWidget {
 class _SessionDetailsState extends State<SessionDetails> {
   DateTime selectedDate = DateTime.now();
   String? _selectedTime;
+  late CustomTheme customTheme;
+  late ThemeData theme;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -34,7 +36,7 @@ class _SessionDetailsState extends State<SessionDetails> {
     }
   }
 
-  Future<void> _show() async {
+  Future<void> _selectTime() async {
     final TimeOfDay? result =
         await showTimePicker(context: context, initialTime: TimeOfDay.now());
     if (result != null) {
@@ -44,8 +46,6 @@ class _SessionDetailsState extends State<SessionDetails> {
     }
   }
 
-  late CustomTheme customTheme;
-  late ThemeData theme;
   @override
   void initState() {
     super.initState();
@@ -54,6 +54,7 @@ class _SessionDetailsState extends State<SessionDetails> {
   }
 
   bool _switch2 = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +76,7 @@ class _SessionDetailsState extends State<SessionDetails> {
             ),
           ],
           title:
-              FxText.sh1("2018 TOYOTA RAV4 XLE Hello Session", fontWeight: 600),
+              FxText.sh1("2018 TOYOTA RAV4 XLE Session part", fontWeight: 600),
         ),
         floatingActionButton: FloatingActionButton(
             onPressed: () {
@@ -419,13 +420,13 @@ class _SessionDetailsState extends State<SessionDetails> {
                           enabledBorder: theme.inputDecorationTheme.border,
                           focusedBorder:
                               theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon: const Icon(MdiIcons.gamepadCircleOutline,
+                          prefixIcon: const Icon(MdiIcons.timelineCheckOutline,
                               size: 24),
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: _show,
-                        child: Text('Schedule time'),
+                        onPressed: _selectTime,
+                        child: const Text('Schedule time'),
                       ),
                     ],
                   ),

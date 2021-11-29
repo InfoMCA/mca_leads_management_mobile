@@ -10,6 +10,7 @@ import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/views/leads/leads.dart';
 import 'package:mca_leads_management_mobile/views/leads/sessions.dart';
+import 'package:mca_leads_management_mobile/views/leads/sessions_complete.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 
 class DashBoard extends StatefulWidget {
@@ -71,8 +72,8 @@ class _DashBoardState extends State<DashBoard> {
               LeadsList(leadType: 'Follow Up'),
               LeadsList(leadType: 'Appraisal'),
               SessionsList(sessionType: 'Dispatched'),
-              LeadsList(leadType: 'In Progress'),
-              LeadsList(leadType: 'Completed'),
+              SessionsCompleteList(sessionCompleteType: 'In Progress'),
+              SessionsCompleteList(sessionCompleteType: 'Completed'),
             ],
           ),
         ),
