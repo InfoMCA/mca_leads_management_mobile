@@ -16,6 +16,6 @@ class AppModule extends Module {
     ChildRoute('/home/lead', child: (_, args) => LeadDetails()),
     ChildRoute('/home/session', child: (_, args) => SessionDetails()),
     ChildRoute('/home/sessionComplete',
-        child: (_, args) => SessionDetailsComplete()),
+        child: (_, args) => SessionDetailsComplete(args.data)),
   ];
 }

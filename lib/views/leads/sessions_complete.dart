@@ -5,7 +5,8 @@ import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 
 class SessionsCompleteList extends StatefulWidget {
-  const SessionsCompleteList({Key? key, String? sessionCompleteType})
+  final String sessionCompleteType;
+  const SessionsCompleteList({Key? key, required this.sessionCompleteType})
       : super(key: key);
 
   @override
@@ -42,7 +43,10 @@ class _SessionsCompleteState extends State<SessionsCompleteList> {
                   fontWeight: 500, color: theme.colorScheme.onBackground),
               title: FxText.b1('Item - ' + _list[index].toString(),
                   fontWeight: 600, color: theme.colorScheme.onBackground),
-              onTap: () => {Modular.to.pushNamed('/home/sessionComplete')},
+              onTap: () => {
+                Modular.to.pushNamed('/home/sessionComplete',
+                    arguments: widget.sessionCompleteType)
+              },
             ),
           );
         },

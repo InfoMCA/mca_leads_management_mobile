@@ -15,7 +15,8 @@ import 'package:mca_leads_management_mobile/views/leads/followup_dialog.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 
 class SessionDetailsComplete extends StatefulWidget {
-  const SessionDetailsComplete({Key? key}) : super(key: key);
+  final String title;
+  const SessionDetailsComplete(this.title, {Key? key}) : super(key: key);
 
   @override
   _SessionDetailsCompleteState createState() => _SessionDetailsCompleteState();
@@ -94,6 +95,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
               Container(
                 margin: const EdgeInsets.only(top: 8),
                 child: TextFormField(
+                  readOnly: true,
                   decoration: InputDecoration(
                     labelText: "Mileage",
                     border: theme.inputDecorationTheme.border,
@@ -109,6 +111,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
               Container(
                 margin: const EdgeInsets.only(top: 8),
                 child: TextFormField(
+                  readOnly: true,
                   decoration: InputDecoration(
                     labelText: "Inspector",
                     border: theme.inputDecorationTheme.border,
@@ -121,6 +124,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
               Container(
                 margin: const EdgeInsets.only(top: 8),
                 child: TextFormField(
+                  readOnly: true,
                   decoration: InputDecoration(
                     labelText: "Estimated CR",
                     border: theme.inputDecorationTheme.border,
@@ -155,6 +159,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
               Container(
                 margin: const EdgeInsets.only(top: 8),
                 child: TextFormField(
+                  readOnly: true,
                   decoration: InputDecoration(
                     labelText: "Asking Price",
                     border: theme.inputDecorationTheme.border,
@@ -170,6 +175,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
               Container(
                 margin: const EdgeInsets.only(top: 8),
                 child: TextFormField(
+                  readOnly: true,
                   decoration: InputDecoration(
                     labelText: "MMR",
                     border: theme.inputDecorationTheme.border,
@@ -185,6 +191,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
               Container(
                 margin: const EdgeInsets.only(top: 8),
                 child: TextFormField(
+                  readOnly: true,
                   decoration: InputDecoration(
                     labelText: "Offered Price",
                     border: theme.inputDecorationTheme.border,
@@ -200,6 +207,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
               Container(
                 margin: const EdgeInsets.only(top: 8),
                 child: TextFormField(
+                  readOnly: true,
                   decoration: InputDecoration(
                     labelText: "Requested Price",
                     border: theme.inputDecorationTheme.border,
@@ -303,19 +311,24 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                 ),
               ),
               Container(
-                margin: const EdgeInsets.only(top: 8),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    labelText: "Transfer Price",
-                    border: theme.inputDecorationTheme.border,
-                    enabledBorder: theme.inputDecorationTheme.border,
-                    focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                    prefixIcon: const Icon(
-                      Icons.price_change,
-                      size: 24,
-                    ),
-                  ),
-                ),
+                child: (widget.title == "Completed")
+                    ? Container(
+                        margin: const EdgeInsets.only(top: 8),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            labelText: "Transfer Price",
+                            border: theme.inputDecorationTheme.border,
+                            enabledBorder: theme.inputDecorationTheme.border,
+                            focusedBorder:
+                                theme.inputDecorationTheme.focusedBorder,
+                            prefixIcon: const Icon(
+                              Icons.price_change,
+                              size: 24,
+                            ),
+                          ),
+                        ),
+                      )
+                    : null,
               ),
             ],
           ),
@@ -349,79 +362,53 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                           letterSpacing: 0.3,
                           fontWeight: 700),
                     ),
-                    ListTile(
-                      dense: true,
-                      leading: Icon(MdiIcons.calendar,
-                          color: theme.colorScheme.onBackground.withAlpha(220)),
-                      title: FxText.b1("Schedule",
-                          color: theme.colorScheme.onBackground,
-                          letterSpacing: 0.3,
-                          fontWeight: 500),
+                    Container(
+                      child: (widget.title == "Completed")
+                          ? ListTile(
+                              dense: true,
+                              leading: Icon(MdiIcons.calendar,
+                                  color: theme.colorScheme.onBackground
+                                      .withAlpha(220)),
+                              title: FxText.b1("Save and Update",
+                                  color: theme.colorScheme.onBackground,
+                                  letterSpacing: 0.3,
+                                  fontWeight: 500),
+                            )
+                          : null,
                     ),
-                    ListTile(
-                      dense: true,
-                      leading: Icon(MdiIcons.phone,
-                          color: theme.colorScheme.onBackground.withAlpha(220)),
-                      title: FxText.b1("FollowUp",
-                          color: theme.colorScheme.onBackground,
-                          letterSpacing: 0.3,
-                          fontWeight: 500),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return const UnansweredDialog();
-                            });
-                      },
-                      child: ListTile(
-                        dense: true,
-                        leading: Icon(MdiIcons.phoneMissed,
-                            color:
-                                theme.colorScheme.onBackground.withAlpha(220)),
-                        title: FxText.b1("Unanswered",
-                            color: theme.colorScheme.onBackground,
-                            letterSpacing: 0.3,
-                            fontWeight: 500),
-                      ),
-                    ),
-                    ListTile(
-                      dense: true,
-                      leading: Icon(MdiIcons.delete,
-                          color: theme.colorScheme.onBackground.withAlpha(220)),
-                      title: FxText.b1("Lost",
-                          color: theme.colorScheme.onBackground,
-                          letterSpacing: 0.3,
-                          fontWeight: 500),
-                    ),
-                    Divider(
-                      color: theme.dividerColor,
-                    ),
-                    ListTile(
-                      dense: true,
-                      leading: Icon(MdiIcons.accountQuestion,
-                          color: theme.colorScheme.onBackground.withAlpha(220)),
-                      title: FxText.b1("Questions",
-                          color: theme.colorScheme.onBackground,
-                          letterSpacing: 0.3,
-                          fontWeight: 500),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.popUntil(
-                            context, ModalRoute.withName('/home'));
-                      },
-                      child: ListTile(
-                        dense: true,
-                        leading: Icon(MdiIcons.contentSave,
-                            color:
-                                theme.colorScheme.onBackground.withAlpha(220)),
-                        title: FxText.b1("Save",
-                            color: theme.colorScheme.onBackground,
-                            letterSpacing: 0.3,
-                            fontWeight: 500),
-                      ),
+                    Container(
+                      child: (widget.title == "In Progress")
+                          ? Column(
+                              children: [
+                                ListTile(
+                                  dense: true,
+                                  leading: Icon(MdiIcons.delete,
+                                      color: theme.colorScheme.onBackground
+                                          .withAlpha(220)),
+                                  title: FxText.b1("Lost",
+                                      color: theme.colorScheme.onBackground,
+                                      letterSpacing: 0.3,
+                                      fontWeight: 500),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.popUntil(
+                                        context, ModalRoute.withName('/home'));
+                                  },
+                                  child: ListTile(
+                                    dense: true,
+                                    leading: Icon(MdiIcons.contentSave,
+                                        color: theme.colorScheme.onBackground
+                                            .withAlpha(220)),
+                                    title: FxText.b1("Save",
+                                        color: theme.colorScheme.onBackground,
+                                        letterSpacing: 0.3,
+                                        fontWeight: 500),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : null,
                     ),
                   ],
                 ),

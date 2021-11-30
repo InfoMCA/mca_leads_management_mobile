@@ -115,6 +115,7 @@ class _SessionDetailsState extends State<SessionDetails> {
                 Container(
                   margin: const EdgeInsets.only(top: 8),
                   child: TextFormField(
+                    readOnly: true,
                     decoration: InputDecoration(
                       labelText: "Year/Make/Model",
                       border: theme.inputDecorationTheme.border,
@@ -128,6 +129,7 @@ class _SessionDetailsState extends State<SessionDetails> {
                 Container(
                   margin: const EdgeInsets.only(top: 8),
                   child: TextFormField(
+                    readOnly: true,
                     decoration: InputDecoration(
                       labelText: "Color",
                       border: theme.inputDecorationTheme.border,
@@ -141,6 +143,7 @@ class _SessionDetailsState extends State<SessionDetails> {
                 Container(
                   margin: const EdgeInsets.only(top: 8),
                   child: TextFormField(
+                    readOnly: true,
                     decoration: InputDecoration(
                       labelText: "Mileage",
                       border: theme.inputDecorationTheme.border,
@@ -156,6 +159,7 @@ class _SessionDetailsState extends State<SessionDetails> {
                 Container(
                   margin: const EdgeInsets.only(top: 8),
                   child: TextFormField(
+                    readOnly: true,
                     decoration: InputDecoration(
                       labelText: "Estimated CR",
                       border: theme.inputDecorationTheme.border,
@@ -175,6 +179,7 @@ class _SessionDetailsState extends State<SessionDetails> {
                 Container(
                   margin: const EdgeInsets.only(top: 8),
                   child: TextFormField(
+                    readOnly: true,
                     decoration: InputDecoration(
                       labelText: "Listing Price",
                       border: theme.inputDecorationTheme.border,
@@ -190,6 +195,7 @@ class _SessionDetailsState extends State<SessionDetails> {
                 Container(
                   margin: const EdgeInsets.only(top: 8),
                   child: TextFormField(
+                    readOnly: true,
                     decoration: InputDecoration(
                       labelText: "MMR",
                       border: theme.inputDecorationTheme.border,
@@ -330,6 +336,7 @@ class _SessionDetailsState extends State<SessionDetails> {
                 Container(
                   margin: const EdgeInsets.only(top: 8),
                   child: TextFormField(
+                    readOnly: true,
                     decoration: InputDecoration(
                       labelText: "Region",
                       border: theme.inputDecorationTheme.border,
@@ -473,49 +480,9 @@ class _SessionDetailsState extends State<SessionDetails> {
                     ),
                     ListTile(
                       dense: true,
-                      leading: Icon(MdiIcons.phone,
-                          color: theme.colorScheme.onBackground.withAlpha(220)),
-                      title: FxText.b1("FollowUp",
-                          color: theme.colorScheme.onBackground,
-                          letterSpacing: 0.3,
-                          fontWeight: 500),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return const UnansweredDialog();
-                            });
-                      },
-                      child: ListTile(
-                        dense: true,
-                        leading: Icon(MdiIcons.phoneMissed,
-                            color:
-                                theme.colorScheme.onBackground.withAlpha(220)),
-                        title: FxText.b1("Unanswered",
-                            color: theme.colorScheme.onBackground,
-                            letterSpacing: 0.3,
-                            fontWeight: 500),
-                      ),
-                    ),
-                    ListTile(
-                      dense: true,
                       leading: Icon(MdiIcons.delete,
                           color: theme.colorScheme.onBackground.withAlpha(220)),
                       title: FxText.b1("Lost",
-                          color: theme.colorScheme.onBackground,
-                          letterSpacing: 0.3,
-                          fontWeight: 500),
-                    ),
-                    Divider(
-                      color: theme.dividerColor,
-                    ),
-                    ListTile(
-                      dense: true,
-                      leading: Icon(MdiIcons.accountQuestion,
-                          color: theme.colorScheme.onBackground.withAlpha(220)),
-                      title: FxText.b1("Questions",
                           color: theme.colorScheme.onBackground,
                           letterSpacing: 0.3,
                           fontWeight: 500),

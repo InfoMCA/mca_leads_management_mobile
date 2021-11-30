@@ -93,6 +93,7 @@ class _LeadDetailsState extends State<LeadDetails> {
                 Container(
                   margin: const EdgeInsets.only(top: 8),
                   child: TextFormField(
+                    readOnly: true,
                     decoration: InputDecoration(
                       labelText: "Color",
                       border: theme.inputDecorationTheme.border,
@@ -106,6 +107,7 @@ class _LeadDetailsState extends State<LeadDetails> {
                 Container(
                   margin: const EdgeInsets.only(top: 8),
                   child: TextFormField(
+                    readOnly: true,
                     decoration: InputDecoration(
                       labelText: "Mileage",
                       border: theme.inputDecorationTheme.border,
@@ -121,6 +123,7 @@ class _LeadDetailsState extends State<LeadDetails> {
                 Container(
                   margin: const EdgeInsets.only(top: 8),
                   child: TextFormField(
+                    readOnly: true,
                     decoration: InputDecoration(
                       labelText: "Estimated CR",
                       border: theme.inputDecorationTheme.border,
@@ -140,6 +143,7 @@ class _LeadDetailsState extends State<LeadDetails> {
                 Container(
                   margin: const EdgeInsets.only(top: 8),
                   child: TextFormField(
+                    readOnly: true,
                     decoration: InputDecoration(
                       labelText: "Listing Price",
                       border: theme.inputDecorationTheme.border,
@@ -155,6 +159,7 @@ class _LeadDetailsState extends State<LeadDetails> {
                 Container(
                   margin: const EdgeInsets.only(top: 8),
                   child: TextFormField(
+                    readOnly: true,
                     decoration: InputDecoration(
                       labelText: "MMR",
                       border: theme.inputDecorationTheme.border,
@@ -206,6 +211,20 @@ class _LeadDetailsState extends State<LeadDetails> {
                   child: TextFormField(
                     decoration: InputDecoration(
                       labelText: "Customer Name",
+                      border: theme.inputDecorationTheme.border,
+                      enabledBorder: theme.inputDecorationTheme.border,
+                      focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                      prefixIcon:
+                          const Icon(MdiIcons.accountChildOutline, size: 24),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 8),
+                  child: TextFormField(
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      labelText: "Customer Phone",
                       border: theme.inputDecorationTheme.border,
                       enabledBorder: theme.inputDecorationTheme.border,
                       focusedBorder: theme.inputDecorationTheme.focusedBorder,
