@@ -246,6 +246,19 @@ class _LeadDetailsState extends State<LeadDetails> {
                     ),
                   ),
                 ),
+                Container(
+                  margin: const EdgeInsets.only(top: 8),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      labelText: "Comment",
+                      border: theme.inputDecorationTheme.border,
+                      enabledBorder: theme.inputDecorationTheme.border,
+                      focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                      prefixIcon:
+                          const Icon(MdiIcons.gamepadCircleOutline, size: 24),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -288,34 +301,6 @@ class _LeadDetailsState extends State<LeadDetails> {
                     ),
                     ListTile(
                       dense: true,
-                      leading: Icon(MdiIcons.phone,
-                          color: theme.colorScheme.onBackground.withAlpha(220)),
-                      title: FxText.b1("FollowUp",
-                          color: theme.colorScheme.onBackground,
-                          letterSpacing: 0.3,
-                          fontWeight: 500),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return const UnansweredDialog();
-                            });
-                      },
-                      child: ListTile(
-                        dense: true,
-                        leading: Icon(MdiIcons.phoneMissed,
-                            color:
-                                theme.colorScheme.onBackground.withAlpha(220)),
-                        title: FxText.b1("Unanswered",
-                            color: theme.colorScheme.onBackground,
-                            letterSpacing: 0.3,
-                            fontWeight: 500),
-                      ),
-                    ),
-                    ListTile(
-                      dense: true,
                       leading: Icon(MdiIcons.delete,
                           color: theme.colorScheme.onBackground.withAlpha(220)),
                       title: FxText.b1("Lost",
@@ -323,14 +308,29 @@ class _LeadDetailsState extends State<LeadDetails> {
                           letterSpacing: 0.3,
                           fontWeight: 500),
                     ),
-                    Divider(
-                      color: theme.dividerColor,
+                    ListTile(
+                      dense: true,
+                      leading: Icon(MdiIcons.update,
+                          color: theme.colorScheme.onBackground.withAlpha(220)),
+                      title: FxText.b1("Save and Update",
+                          color: theme.colorScheme.onBackground,
+                          letterSpacing: 0.3,
+                          fontWeight: 500),
                     ),
                     ListTile(
                       dense: true,
                       leading: Icon(MdiIcons.accountQuestion,
                           color: theme.colorScheme.onBackground.withAlpha(220)),
                       title: FxText.b1("Questions",
+                          color: theme.colorScheme.onBackground,
+                          letterSpacing: 0.3,
+                          fontWeight: 500),
+                    ),
+                    ListTile(
+                      dense: true,
+                      leading: Icon(MdiIcons.multiplication,
+                          color: theme.colorScheme.onBackground.withAlpha(220)),
+                      title: FxText.b1("Options",
                           color: theme.colorScheme.onBackground,
                           letterSpacing: 0.3,
                           fontWeight: 500),
