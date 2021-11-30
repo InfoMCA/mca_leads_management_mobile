@@ -326,15 +326,6 @@ class _LeadDetailsState extends State<LeadDetails> {
                           letterSpacing: 0.3,
                           fontWeight: 500),
                     ),
-                    ListTile(
-                      dense: true,
-                      leading: Icon(MdiIcons.multiplication,
-                          color: theme.colorScheme.onBackground.withAlpha(220)),
-                      title: FxText.b1("Options",
-                          color: theme.colorScheme.onBackground,
-                          letterSpacing: 0.3,
-                          fontWeight: 500),
-                    ),
                     InkWell(
                       onTap: () {
                         Navigator.popUntil(
