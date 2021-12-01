@@ -47,17 +47,10 @@ class _DashBoardState extends State<DashBoard> {
               children: [
                 /*-------------- Build Tabs here ------------------*/
                 TabBar(
-                  isScrollable: true,
-                  tabs: [
-                    Tab(
-                        child:
-                            FxText.sh1("Awaiting Approval", fontSize: 16, fontWeight: 700)),
-                    Tab(child: FxText.sh1("Follow Up", fontSize: 16, fontWeight: 700)),
-                    Tab(child: FxText.sh1("Appraisal", fontSize: 16, fontWeight: 700)),
-                    Tab(child: FxText.sh1("Dispatched", fontSize: 16, fontWeight: 700)),
-                    Tab(child: FxText.sh1("In Progress", fontSize: 16, fontWeight: 700)),
-                    Tab(child: FxText.sh1("Completed", fontSize: 16, fontWeight: 700)),
-                  ],
+                    isScrollable: true,
+                    tabs: LeadView.values.map((e) => Tab(child: FxText.sh1(
+                      e.getName(), fontSize: 16, fontWeight: 700,)))
+                        .toList()
                 )
               ],
             ),
@@ -65,14 +58,8 @@ class _DashBoardState extends State<DashBoard> {
 
           /*--------------- Build Tab body here -------------------*/
           body: TabBarView(
-            children: <Widget>[
-              LeadsList(leadView: LeadView.approval),
-              LeadsList(leadView: LeadView.followUp),
-              LeadsList(leadView: LeadView.appraisal),
-              LeadsList(leadView: LeadView.dispatched),
-              LeadsList(leadView: LeadView.active),
-              LeadsList(leadView: LeadView.completed),
-            ],
+              children: LeadView.values.map((e) => LeadsList(leadView: e))
+                  .toList()
           ),
         ),
       ),

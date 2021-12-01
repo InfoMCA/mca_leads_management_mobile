@@ -10,6 +10,8 @@ import 'package:mca_leads_management_mobile/models/entities/lead.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead_summary.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
+import 'package:mca_leads_management_mobile/views/leads/lead_details_view.dart';
+import 'package:mca_leads_management_mobile/views/leads/lead_view_arg.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 
 class LeadsList extends StatefulWidget {
@@ -54,13 +56,23 @@ class _LeadsListState extends State<LeadsList> {
               leading: CircleAvatar(
                 backgroundColor: _leadList[index].viewTag.getBackgroundColor(),
                 child: FxText.b1(_leadList[index].viewTag.getAbbrv(),
-                    fontWeight: 600, color: _leadList[index].viewTag.getForegroundColor()),
+                    fontWeight: 600,
+                    color: _leadList[index].viewTag.getForegroundColor()),
               ),
               subtitle: FxText.b2(_leadList[index].vin,
                   fontWeight: 500, color: theme.colorScheme.onBackground),
               title: FxText.b1(_leadList[index].title,
                   fontWeight: 700, color: theme.colorScheme.onBackground),
-              onTap: () => {Modular.to.pushNamed('/home/lead')},
+              onTap: () => {
+                Navigator.pushNamed(
+                  context,
+                  LeadDetails.routeName,
+                  arguments: LeadViewArguments(
+                      _leadList[index].id,
+                      widget.leadView
+                  ),
+                )
+              },
             ),
           );
         },

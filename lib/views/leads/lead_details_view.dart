@@ -3,19 +3,21 @@
 * Version : 1.0.0
 * */
 
+import 'dart:developer' as dev;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mca_leads_management_mobile/utils/spacing.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
-import 'package:mca_leads_management_mobile/views/leads/followup_dialog.dart';
+import 'package:mca_leads_management_mobile/views/leads/lead_view_arg.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 
 class LeadDetails extends StatefulWidget {
   const LeadDetails({Key? key}) : super(key: key);
+
+  static const routeName = '/home/lead';
 
   @override
   _LeadDetailsState createState() => _LeadDetailsState();
@@ -36,6 +38,9 @@ class _LeadDetailsState extends State<LeadDetails> {
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as LeadViewArguments;
+    dev.log(args.id);
+
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
