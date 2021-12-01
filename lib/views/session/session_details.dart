@@ -8,6 +8,7 @@ import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 
 class SessionDetails extends StatefulWidget {
+  static String routeName = '/home/session';
   const SessionDetails({Key? key}) : super(key: key);
 
   @override

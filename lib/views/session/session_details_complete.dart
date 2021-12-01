@@ -7,14 +7,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:mca_leads_management_mobile/models/entities/lead.dart';
 import 'package:mca_leads_management_mobile/utils/spacing.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
+import 'package:mca_leads_management_mobile/views/leads/lead_view_arg.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 
 class SessionDetailsComplete extends StatefulWidget {
-  final String title;
-  const SessionDetailsComplete(this.title, {Key? key}) : super(key: key);
+  static String routeName = '/home/sessionComplete';
+  const SessionDetailsComplete({Key? key}) : super(key: key);
 
   @override
   _SessionDetailsCompleteState createState() => _SessionDetailsCompleteState();
@@ -35,6 +37,8 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as LeadViewArguments;
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -58,7 +62,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
-            _showBottomSheet(context);
+            _showBottomSheet(context, args.leadView);
           },
           child: Icon(
             MdiIcons.flashOutline,
@@ -309,7 +313,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                 ),
               ),
               Container(
-                child: (widget.title == "Completed")
+                child: (args.leadView == LeadView.completed)
                     ? Container(
                         margin: const EdgeInsets.only(top: 8),
                         child: TextFormField(
@@ -335,7 +339,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
     );
   }
 
-  void _showBottomSheet(context) {
+  void _showBottomSheet(context, leadView) {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext buildContext) {
@@ -361,7 +365,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                           fontWeight: 700),
                     ),
                     Container(
-                      child: (widget.title == "Completed")
+                      child: (leadView == LeadView.completed)
                           ? ListTile(
                               dense: true,
                               leading: Icon(MdiIcons.calendar,
@@ -375,7 +379,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                           : null,
                     ),
                     Container(
-                      child: (widget.title == "In Progress")
+                      child: (leadView == LeadView.active)
                           ? Column(
                               children: [
                                 ListTile(

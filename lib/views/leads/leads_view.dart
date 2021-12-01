@@ -12,6 +12,8 @@ import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/views/leads/lead_details_view.dart';
 import 'package:mca_leads_management_mobile/views/leads/lead_view_arg.dart';
+import 'package:mca_leads_management_mobile/views/session/session_details.dart';
+import 'package:mca_leads_management_mobile/views/session/session_details_complete.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 
 class LeadsList extends StatefulWidget {
@@ -27,6 +29,7 @@ class _LeadsListState extends State<LeadsList> {
 
   late CustomTheme customTheme;
   late ThemeData theme;
+  late String routeName;
 
   void _getLeads() async {
     _leadList.clear();
@@ -37,11 +40,33 @@ class _LeadsListState extends State<LeadsList> {
     });
   }
 
+  void _getRouteName() {
+    switch (widget.leadView) {
+
+      case LeadView.approval:
+      case LeadView.followUp:
+      case LeadView.appraisal:
+        routeName = LeadDetails.routeName;
+        break;
+      case LeadView.dispatched:
+        routeName = SessionDetails.routeName;
+        break;
+      case LeadView.active:
+        routeName = SessionDetailsComplete.routeName;
+        break;
+      case LeadView.completed:
+        routeName = SessionDetailsComplete.routeName;
+        break;
+    }
+
+  }
+
   @override
   void initState() {
     super.initState();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
+    _getRouteName();
     _getLeads();
   }
 
@@ -63,15 +88,15 @@ class _LeadsListState extends State<LeadsList> {
                   fontWeight: 500, color: theme.colorScheme.onBackground),
               title: FxText.b1(_leadList[index].title,
                   fontWeight: 700, color: theme.colorScheme.onBackground),
-              onTap: () => {
+              onTap: () {
                 Navigator.pushNamed(
                   context,
-                  LeadDetails.routeName,
+                  routeName,
                   arguments: LeadViewArguments(
                       _leadList[index].id,
                       widget.leadView
                   ),
-                )
+                );
               },
             ),
           );
