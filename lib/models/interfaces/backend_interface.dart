@@ -14,8 +14,7 @@ class AdminInterface {
   final String endpoint = dotenv.env['API_ADMIN_APP_REQUEST'] ?? "";
   var dio = Dio();
 
-  Future<String> checkLoginCredentials(
-      String username, String password) async {
+  Future<String> checkLoginCredentials(String username, String password) async {
     try {
       BackendReq appReq = BackendReq(
           cmd: AppReqCmd.login,
@@ -37,7 +36,9 @@ class AdminInterface {
   Future<List<LeadSummary>?> getLeads(LeadView leadView) async {
     try {
       BackendReq appReq = BackendReq(
-          cmd: AppReqCmd.getLeads, username: currentUser!.username, leadView: leadView);
+          cmd: AppReqCmd.getLeads,
+          username: currentUser!.username,
+          leadView: leadView);
       Response response = await dio.post(endpoint, data: json.encode(appReq));
       BackendResp appResp = BackendResp.fromJson(response.data);
       dev.log(appResp.message.toString());
@@ -47,6 +48,27 @@ class AdminInterface {
       } else {
         dev.log(appResp.statusCode.toString());
         return [];
+      }
+    } catch (e, s) {
+      dev.log('Get Leads Error:' + e.toString());
+      dev.log(s.toString());
+      throw ('Error getting sessions');
+    }
+  }
+
+  Future<Lead?> getLead(String leadId) async {
+    try {
+      BackendReq appReq = BackendReq(
+          cmd: AppReqCmd.getLead, username: currentUser!.username, leadId: leadId);
+      Response response = await dio.post(endpoint, data: json.encode(appReq));
+      BackendResp appResp = BackendResp.fromJson(response.data);
+      dev.log(appResp.message.toString());
+
+      if (appResp.statusCode == HttpStatus.ok) {
+        return appResp.lead;
+      } else {
+        dev.log(appResp.statusCode.toString());
+        return null;
       }
     } catch (e, s) {
       dev.log('Get Leads Error:' + e.toString());

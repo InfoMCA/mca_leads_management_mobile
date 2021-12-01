@@ -1,3 +1,4 @@
+import 'lead.dart';
 import 'lead_summary.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -9,11 +10,13 @@ class BackendResp {
   String? message;
   String? status;
   List<LeadSummary>? leadSummaries;
+  Lead? lead;
 
   BackendResp({this.message,
     this.status,
     this.statusCode,
-    this.leadSummaries});
+    this.leadSummaries,
+    this.lead});
 
   factory BackendResp.fromJson(Map<String, dynamic> json) =>
       _$BackendRespFromJson(json);

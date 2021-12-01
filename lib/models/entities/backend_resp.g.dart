@@ -13,6 +13,9 @@ BackendResp _$BackendRespFromJson(Map<String, dynamic> json) => BackendResp(
       leadSummaries: (json['leadSummaries'] as List<dynamic>?)
           ?.map((e) => LeadSummary.fromJson(e as Map<String, dynamic>))
           .toList(),
+      lead: json['lead'] == null
+          ? null
+          : Lead.fromJson(json['lead'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$BackendRespToJson(BackendResp instance) =>
@@ -21,4 +24,5 @@ Map<String, dynamic> _$BackendRespToJson(BackendResp instance) =>
       'message': instance.message,
       'status': instance.status,
       'leadSummaries': instance.leadSummaries,
+      'lead': instance.lead,
     };
