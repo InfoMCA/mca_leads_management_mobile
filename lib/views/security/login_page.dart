@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mca_leads_management_mobile/models/interfaces/admin_interface.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_colors.dart';
 import 'package:mca_leads_management_mobile/widgets/common/notifications.dart';
 
@@ -157,37 +156,6 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(
               height: 20.0,
             ),
-            Row(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isKeepMeLogIn = !isKeepMeLogIn;
-                    });
-                  },
-                  child: _customCheckBox(),
-                ),
-                const SizedBox(
-                  width: 4.0,
-                ),
-                const Text(
-                  "Keep me logged in",
-                  style: TextStyle(
-                      color: AppColors.silverChalice,
-                      fontWeight: FontWeight.bold),
-                ),
-                const Spacer(),
-                const Text(
-                  "Forgot password ?",
-                  style: TextStyle(
-                      color: AppColors.silverChalice,
-                      fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 20.0,
-            ),
             _button(
                 text: "LOGIN",
                 backgroundColor: AppColors.alizarinCrimson,
@@ -278,12 +246,12 @@ class _LoginPageState extends State<LoginPage> {
       showSnackBar(text: "password can not be empty", context: context);
       return;
     }
-    AppResp response = await LoginController()
+    String response = await LoginController()
         .loginWithUsernameAndPassword(username, password);
-    if (response.statusCode != HttpStatus.ok) {
-      SnackBar snackBar = SnackBar(
+    if (response.isNotEmpty) {
+      SnackBar snackBar = const SnackBar(
           backgroundColor: Colors.red,
-          content: Text(response.message ?? "Username or Password incorrect"));
+          content: Text("Username or Password incorrect"));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }

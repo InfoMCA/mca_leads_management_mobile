@@ -18,7 +18,7 @@ Future<void> main() async {
     if (object.isEmpty) {
       log("No user found, proceeding to login page");
     } else {
-      currentStaff = AuthUserModel.fromJson(json.decode(object));
+      currentUser = AuthUserModel.fromJson(json.decode(object));
     }
   } catch (e) {
     log(e.toString());
@@ -27,8 +27,7 @@ Future<void> main() async {
     child: MaterialApp(
       title: 'MCA Management UI',
       theme: AppTheme.theme,
-      // initialRoute: currentStaff != null ? "/home" : "/security/login",
-      initialRoute: "/home",
+      initialRoute: currentUser != null ? "/home" : "/security/login",
     ).modular(),
     module: AppModule(),
   ));

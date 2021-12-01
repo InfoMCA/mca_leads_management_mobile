@@ -38,7 +38,7 @@ enum FxTextSize {
 class FxTextStyle {
 
 
-  static Function _fontFamily = GoogleFonts.ibmPlexSans;
+  static Function _fontFamily = GoogleFonts.poppins;
 
   static Map<int, FontWeight> _defaultFontWeight = {
     100: FontWeight.w100,

@@ -5,12 +5,10 @@
 * */
 
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:mca_leads_management_mobile/models/entities/lead.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
-import 'package:mca_leads_management_mobile/views/leads/leads.dart';
-import 'package:mca_leads_management_mobile/views/leads/sessions.dart';
-import 'package:mca_leads_management_mobile/views/leads/sessions_complete.dart';
+import 'package:mca_leads_management_mobile/views/leads/leads_view.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 
 class DashBoard extends StatefulWidget {
@@ -53,12 +51,12 @@ class _DashBoardState extends State<DashBoard> {
                   tabs: [
                     Tab(
                         child:
-                            FxText.sh1("Awaiting Approval", fontWeight: 600)),
-                    Tab(child: FxText.sh1("Follow Up", fontWeight: 600)),
-                    Tab(child: FxText.sh1("Appraisal", fontWeight: 600)),
-                    Tab(child: FxText.sh1("Dispatched", fontWeight: 600)),
-                    Tab(child: FxText.sh1("In Progress", fontWeight: 600)),
-                    Tab(child: FxText.sh1("Completed", fontWeight: 600)),
+                            FxText.sh1("Awaiting Approval", fontSize: 16, fontWeight: 700)),
+                    Tab(child: FxText.sh1("Follow Up", fontSize: 16, fontWeight: 700)),
+                    Tab(child: FxText.sh1("Appraisal", fontSize: 16, fontWeight: 700)),
+                    Tab(child: FxText.sh1("Dispatched", fontSize: 16, fontWeight: 700)),
+                    Tab(child: FxText.sh1("In Progress", fontSize: 16, fontWeight: 700)),
+                    Tab(child: FxText.sh1("Completed", fontSize: 16, fontWeight: 700)),
                   ],
                 )
               ],
@@ -66,14 +64,14 @@ class _DashBoardState extends State<DashBoard> {
           ),
 
           /*--------------- Build Tab body here -------------------*/
-          body: const TabBarView(
+          body: TabBarView(
             children: <Widget>[
-              LeadsList(leadType: 'Awaiting Approval'),
-              LeadsList(leadType: 'Follow Up'),
-              LeadsList(leadType: 'Appraisal'),
-              SessionsList(sessionType: 'Dispatched'),
-              SessionsCompleteList(sessionCompleteType: 'In Progress'),
-              SessionsCompleteList(sessionCompleteType: 'Completed'),
+              LeadsList(leadView: LeadView.approval),
+              LeadsList(leadView: LeadView.followUp),
+              LeadsList(leadView: LeadView.appraisal),
+              LeadsList(leadView: LeadView.dispatched),
+              LeadsList(leadView: LeadView.active),
+              LeadsList(leadView: LeadView.completed),
             ],
           ),
         ),
