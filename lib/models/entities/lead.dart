@@ -4,7 +4,7 @@ part 'lead.g.dart';
 
 enum LeadView {
   approval,
-  followUp,
+  followUpManager,
   appraisal,
   dispatched,
   active,
@@ -16,7 +16,7 @@ extension LeadViewExt on LeadView {
     switch (this) {
       case LeadView.approval:
         return 'Awaiting Approval';
-      case LeadView.followUp:
+      case LeadView.followUpManager:
         return 'Follow Up';
       case LeadView.appraisal:
         return 'Appraisal';
@@ -47,6 +47,17 @@ class Lead {
   String? customerName;
   String? payoffStatus;
 
+  String? comments;
+  String? conditionQuestions;
+
+  // For Scheduling
+  String? address1;
+  String? address2;
+  String? city;
+  String? state;
+  String? zipCode;
+  String? region;
+
 
   Lead({
     required this.id,
@@ -60,7 +71,15 @@ class Lead {
     required this.requestedPrice,
     required this.mmr,
     required this.mobileNumber,
-    required this.customerName
+    required this.customerName,
+    required this.comments,
+    required this.conditionQuestions,
+    required this.address1,
+    required this.address2,
+    required this.city,
+    required this.state,
+    required this.zipCode,
+    required this.region
   });
 
 

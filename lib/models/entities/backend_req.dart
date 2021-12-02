@@ -3,11 +3,13 @@ import 'package:mca_leads_management_mobile/models/entities/lead.dart';
 
 part 'backend_req.g.dart';
 
-enum AppReqCmd {
+enum LeadMgmCmd {
   login,
   getLeads,
   getLead,
-  leadAction
+  searchLead,
+  actionLead,
+  getInspectors
 }
 
 enum LeadAction {
@@ -19,12 +21,14 @@ enum LeadAction {
 
 @JsonSerializable()
 class BackendReq {
-  final AppReqCmd cmd;
+  final LeadMgmCmd cmd;
   String? username;
   String? password;
+  String? keyword;
+  String? zipcode;
   LeadView? leadView;
   String? leadId;
-  LeadAction? action;
+  LeadAction? leadAction;
   bool? sendSms;
   bool? leftMessage;
   DateTime? followUpDate;
@@ -34,8 +38,16 @@ class BackendReq {
   BackendReq({required this.cmd,
     this.username,
     this.password,
+    this.keyword,
+    this.zipcode,
     this.leadView,
-    this.leadId});
+    this.leadId,
+    this.leadAction,
+    this.sendSms,
+    this.leftMessage,
+    this.followUpComment,
+    this.followUpDate,
+    this.lostReason});
 
   factory BackendReq.fromJson(Map<String, dynamic> json) =>
       _$BackendReqFromJson(json);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'lead_summary.g.dart';
@@ -96,16 +97,32 @@ extension LeadViewTagExt on LeadViewTag {
 
 @JsonSerializable()
 class LeadSummary {
-  LeadSummary(this.id, this.title, this.vin, this.viewTag);
+  LeadSummary(this.id, this.title, this.vin, this.viewTag, this.updateDate);
 
   String id;
   String title;
   String vin;
   LeadViewTag viewTag;
+  DateTime updateDate;
 
   factory LeadSummary.fromJson(Map<String, dynamic> json) =>
       _$LeadSummaryFromJson(json);
 
   Map<String, dynamic> toJson() => _$LeadSummaryToJson(this);
+
+  String getPrettyTime() {
+    if (updateDate == null) {
+      return "";
+    }
+    return updateDate.day.toString() + " " +
+        DateFormat('MMM').format(DateTime(0, updateDate.month));
+  }
+
+  String getCompactTitle() {
+    if (title.length < 30) {
+      return title;
+    }
+    return title.substring(0, 27) + "...";
+  }
 }
 

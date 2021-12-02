@@ -11,6 +11,7 @@ LeadSummary _$LeadSummaryFromJson(Map<String, dynamic> json) => LeadSummary(
       json['title'] as String,
       json['vin'] as String,
       $enumDecode(_$LeadViewTagEnumMap, json['viewTag']),
+      DateTime.parse(json['updateDate'] as String),
     );
 
 Map<String, dynamic> _$LeadSummaryToJson(LeadSummary instance) =>
@@ -19,21 +20,22 @@ Map<String, dynamic> _$LeadSummaryToJson(LeadSummary instance) =>
       'title': instance.title,
       'vin': instance.vin,
       'viewTag': _$LeadViewTagEnumMap[instance.viewTag],
+      'updateDate': instance.updateDate.toIso8601String(),
     };
 
 const _$LeadViewTagEnumMap = {
-  LeadViewTag.approvalBuyNow: 'APPROVAL_BUY_NOW',
-  LeadViewTag.approvalAuction: 'APPROVAL_AUCTION',
-  LeadViewTag.approvalDealMade: 'APPROVAL_DEAL_MADE',
-  LeadViewTag.approvalPotentialDeal: 'APPROVAL_POTENTIAL_DEAL',
-  LeadViewTag.followUpBuyNow: 'FOLLOW_UP_BUY_NOW',
-  LeadViewTag.followUpAuction: 'FOLLOW_UP_AUCTION',
-  LeadViewTag.followUpAppraisal: 'FOLLOW_UP_APPRAISAL',
-  LeadViewTag.appraisal: 'APPRAISAL',
-  LeadViewTag.ready: 'READY',
-  LeadViewTag.activeProgress: 'ACTIVE_IN_PROGRESS',
-  LeadViewTag.activePendingApproval: 'ACTIVE_PENDING_APPROVAL',
-  LeadViewTag.approved: 'APPROVED',
-  LeadViewTag.complete: 'COMPLETE',
-  LeadViewTag.rejected: 'REJECTED',
+  LeadViewTag.approvalBuyNow: 'approvalBuyNow',
+  LeadViewTag.approvalAuction: 'approvalAuction',
+  LeadViewTag.approvalDealMade: 'approvalDealMade',
+  LeadViewTag.approvalPotentialDeal: 'approvalPotentialDeal',
+  LeadViewTag.followUpBuyNow: 'followUpBuyNow',
+  LeadViewTag.followUpAuction: 'followUpAuction',
+  LeadViewTag.followUpAppraisal: 'followUpAppraisal',
+  LeadViewTag.appraisal: 'appraisal',
+  LeadViewTag.ready: 'ready',
+  LeadViewTag.activeProgress: 'activeProgress',
+  LeadViewTag.activePendingApproval: 'activePendingApproval',
+  LeadViewTag.approved: 'approved',
+  LeadViewTag.rejected: 'rejected',
+  LeadViewTag.complete: 'complete',
 };

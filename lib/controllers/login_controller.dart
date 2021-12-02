@@ -9,7 +9,7 @@ class LoginController {
   Future<String> loginWithUsernameAndPassword(String email, String password) async {
     String response ;
     try {
-      response = await AdminInterface().checkLoginCredentials(email, password);
+      response = await BackendInterface().checkLoginCredentials(email, password);
       if (response.isEmpty) {
         currentUser = AuthUserModel(
           username: email,

@@ -7,6 +7,7 @@ import 'dart:developer' as dev;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mca_leads_management_mobile/views/leads/lead_schedule_view.dart';
 import 'package:mca_leads_management_mobile/widgets/button/button.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -18,18 +19,19 @@ import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/views/leads/lead_view_arg.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
+import 'package:collection/collection.dart';
 
-class LeadDetails extends StatefulWidget {
+class LeadDetailsView extends StatefulWidget {
   final LeadViewArguments args;
-  const LeadDetails({Key? key, required this.args}) : super(key: key);
+  const LeadDetailsView({Key? key, required this.args}) : super(key: key);
 
   static const routeName = '/home/lead';
 
   @override
-  _LeadDetailsState createState() => _LeadDetailsState();
+  _LeadDetailsViewState createState() => _LeadDetailsViewState();
 }
 
-class _LeadDetailsState extends State<LeadDetails> {
+class _LeadDetailsViewState extends State<LeadDetailsView> {
   late CustomTheme customTheme;
   late ThemeData theme;
   late Lead? lead;
@@ -48,7 +50,7 @@ class _LeadDetailsState extends State<LeadDetails> {
   }
 
   Future<void> _getLead(String leadId) async {
-    leadFuture = AdminInterface().getLead(leadId);
+    leadFuture = BackendInterface().getLead(leadId);
     leadFuture.whenComplete(() => setState(() {}));
   }
 
@@ -65,251 +67,290 @@ class _LeadDetailsState extends State<LeadDetails> {
     dev.log(widget.args.id);
 
     return FutureBuilder(
-      future: leadFuture,
-      builder: (context, AsyncSnapshot<Lead?> snapshot) {
-        if (!snapshot.hasData) {
-          return Container(
-            color: Colors.white,
-            child: SizedBox(
-              width: double.maxFinite,
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  CircularProgressIndicator(),
-                ],
-              ),
-            ),
-          );
-        }
-        lead = snapshot.data;
-        return Scaffold(
-            resizeToAvoidBottomInset: false,
-            appBar: AppBar(
-              elevation: 0,
-              leading: InkWell(
-                onTap: () => Navigator.of(context).pop(),
-                child: const Icon(
-                  FeatherIcons.chevronLeft,
-                  size: 20,
-                ),
-              ),
-              actions: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 16),
-                  child: InkWell(
-                    onTap: () => _makePhoneCall(lead!.mobileNumber),
-                    child: const Icon(
-                      Icons.phone,
-                    ),
-                  ),
-                ),
-              ],
-              title: FxText.sh1(lead!.name, fontWeight: 600),
-            ),
-            floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  _showBottomSheet(context);
-                },
-                child: Icon(
-                  MdiIcons.flashOutline,
-                  size: 26,
-                  color: theme.colorScheme.onPrimary,
-                ),
-                elevation: 2,
-                backgroundColor: theme.floatingActionButtonTheme.backgroundColor),
-            body: SingleChildScrollView(
-              child: Container(
-                padding: FxSpacing.nTop(20),
+        future: leadFuture,
+        builder: (context, AsyncSnapshot<Lead?> snapshot) {
+          if (!snapshot.hasData) {
+            return Container(
+              color: Colors.white,
+              child: SizedBox(
+                width: double.maxFinite,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      padding: const EdgeInsets.only(
-                          left: 0, right: 20, top: 0, bottom: 12),
-                      child: FxText.sh1("Vehicle Information", fontWeight: 600),
-                    ),
-                    TextFormField(
-                      initialValue: lead!.vin,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        labelText: "VIN",
-                        border: theme.inputDecorationTheme.border,
-                        enabledBorder: theme.inputDecorationTheme.border,
-                        focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                        prefixIcon: const Icon(Icons.confirmation_number_outlined,
-                            size: 24),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        initialValue: lead!.color,
-                        readOnly: true,
-                        decoration: InputDecoration(
-                          labelText: "Color",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon:
-                              const Icon(Icons.color_lens_outlined, size: 24),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        readOnly: true,
-                        initialValue: lead!.mileage.toString(),
-                        decoration: InputDecoration(
-                          labelText: "Mileage",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon: const Icon(
-                            Icons.speed,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        readOnly: true,
-                        initialValue: lead!.estimatedCr.toString(),
-                        decoration: InputDecoration(
-                          labelText: "Estimated CR",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon: const Icon(
-                            Icons.high_quality,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: FxText.sh1("Price Details", fontWeight: 600),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        readOnly: true,
-                        initialValue: lead!.askingPrice.toString(),
-                        decoration: InputDecoration(
-                          labelText: "Listing Price",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon: const Icon(
-                            Icons.list,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        readOnly: true,
-                        initialValue: lead!.mmr.toString(),
-                        decoration: InputDecoration(
-                          labelText: "MMR",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon: const Icon(
-                            Icons.price_change,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        initialValue: (lead!.offeredPrice ?? 0).toString(),
-                        decoration: InputDecoration(
-                          labelText: "Offered Price",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon: const Icon(
-                            Icons.price_change_outlined,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        initialValue: (lead!.requestedPrice ?? 0).toString(),
-                        decoration: InputDecoration(
-                          labelText: "Requested Price",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon: const Icon(
-                            Icons.price_change,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: FxText.sh1("Customer Information", fontWeight: 600),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        initialValue: lead!.customerName ?? "",
-                        decoration: InputDecoration(
-                          labelText: "Customer Name",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon:
-                              const Icon(MdiIcons.accountChildOutline, size: 24),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        initialValue: lead!.payoffStatus?? "",
-                        decoration: InputDecoration(
-                          labelText: "Payoff Status",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon:
-                              const Icon(MdiIcons.gamepadCircleOutline, size: 24),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          labelText: "Comment",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon:
-                              const Icon(MdiIcons.gamepadCircleOutline, size: 24),
-                        ),
-                      ),
-                    ),
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    CircularProgressIndicator(),
                   ],
                 ),
               ),
-            ));
-      }
+            );
+          }
+          lead = snapshot.data;
+          return Scaffold(
+              resizeToAvoidBottomInset: false,
+              appBar: AppBar(
+                elevation: 0,
+                leading: InkWell(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: Icon(
+                    FeatherIcons.chevronLeft,
+                    size: 20,
+                    color: theme.backgroundColor,
+                  ),
+                ),
+                actions: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: InkWell(
+                      onTap: () => _makePhoneCall(lead!.mobileNumber),
+                      child:  Icon(
+                        Icons.phone,
+                        color: theme.backgroundColor,
+                      ),
+                    ),
+                  ),
+                ],
+                title: FxText.sh1(lead!.name, fontWeight: 600, color: theme.backgroundColor,),
+              ),
+              floatingActionButton: FloatingActionButton(
+                  onPressed: () {
+                    _showBottomSheet(context);
+                  },
+                  child: Icon(
+                    MdiIcons.flashOutline,
+                    size: 26,
+                    color: theme.colorScheme.onPrimary,
+                  ),
+                  elevation: 2,
+                  backgroundColor: theme.floatingActionButtonTheme
+                      .backgroundColor),
+              body: GestureDetector(
+                  onTap: () {
+                    FocusScopeNode currentFocus = FocusScope.of(context);
+                    if (!currentFocus.hasPrimaryFocus) {
+                      currentFocus.unfocus();
+                    }
+                  }, child: SingleChildScrollView(
+                child: Container(
+                  padding: FxSpacing.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        padding: const EdgeInsets.only(
+                            left: 0, right: 20, top: 0, bottom: 12),
+                        child: FxText.sh1(
+                            "Vehicle Information", fontWeight: 600),
+                      ),
+                      TextFormField(
+                        initialValue: lead!.name,
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          labelText: "Title",
+                          border: theme.inputDecorationTheme.border,
+                          enabledBorder: theme.inputDecorationTheme.border,
+                          focusedBorder: theme.inputDecorationTheme
+                              .focusedBorder,
+                          prefixIcon: const Icon(Icons
+                              .perm_identity,
+                              size: 24),
+                        ),
+                      ),
+                      TextFormField(
+                        initialValue: lead!.vin,
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          labelText: "VIN",
+                          border: theme.inputDecorationTheme.border,
+                          enabledBorder: theme.inputDecorationTheme.border,
+                          focusedBorder: theme.inputDecorationTheme
+                              .focusedBorder,
+                          prefixIcon: const Icon(Icons
+                              .confirmation_number_outlined,
+                              size: 24),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 8),
+                        child: TextFormField(
+                          initialValue: lead!.color,
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            labelText: "Color",
+                            border: theme.inputDecorationTheme.border,
+                            enabledBorder: theme.inputDecorationTheme.border,
+                            focusedBorder: theme.inputDecorationTheme
+                                .focusedBorder,
+                            prefixIcon:
+                            const Icon(Icons.color_lens_outlined, size: 24),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 8),
+                        child: TextFormField(
+                          readOnly: true,
+                          initialValue: lead!.mileage.toString(),
+                          decoration: InputDecoration(
+                            labelText: "Mileage",
+                            border: theme.inputDecorationTheme.border,
+                            enabledBorder: theme.inputDecorationTheme.border,
+                            focusedBorder: theme.inputDecorationTheme
+                                .focusedBorder,
+                            prefixIcon: const Icon(
+                              Icons.speed,
+                              size: 24,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 8),
+                        child: TextFormField(
+                          readOnly: true,
+                          initialValue: lead!.estimatedCr.toString(),
+                          decoration: InputDecoration(
+                            labelText: "Estimated CR",
+                            border: theme.inputDecorationTheme.border,
+                            enabledBorder: theme.inputDecorationTheme.border,
+                            focusedBorder: theme.inputDecorationTheme
+                                .focusedBorder,
+                            prefixIcon: const Icon(
+                              Icons.high_quality,
+                              size: 24,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: FxText.sh1("Price Details", fontWeight: 600),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 8),
+                        child: TextFormField(
+                          readOnly: true,
+                          initialValue: lead!.askingPrice.toString(),
+                          decoration: InputDecoration(
+                            labelText: "Listing Price",
+                            border: theme.inputDecorationTheme.border,
+                            enabledBorder: theme.inputDecorationTheme.border,
+                            focusedBorder: theme.inputDecorationTheme
+                                .focusedBorder,
+                            prefixIcon: const Icon(
+                              Icons.list,
+                              size: 24,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 8),
+                        child: TextFormField(
+                          readOnly: true,
+                          initialValue: lead!.mmr.toString(),
+                          decoration: InputDecoration(
+                            labelText: "MMR",
+                            border: theme.inputDecorationTheme.border,
+                            enabledBorder: theme.inputDecorationTheme.border,
+                            focusedBorder: theme.inputDecorationTheme
+                                .focusedBorder,
+                            prefixIcon: const Icon(
+                              Icons.price_change,
+                              size: 24,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 8),
+                        child: TextFormField(
+                          initialValue: (lead!.offeredPrice ?? 0).toString(),
+                          decoration: InputDecoration(
+                            labelText: "Offered Price",
+                            border: theme.inputDecorationTheme.border,
+                            enabledBorder: theme.inputDecorationTheme.border,
+                            focusedBorder: theme.inputDecorationTheme
+                                .focusedBorder,
+                            prefixIcon: const Icon(
+                              Icons.price_change_outlined,
+                              size: 24,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 8),
+                        child: TextFormField(
+                          initialValue: (lead!.requestedPrice ?? 0).toString(),
+                          decoration: InputDecoration(
+                            labelText: "Requested Price",
+                            border: theme.inputDecorationTheme.border,
+                            enabledBorder: theme.inputDecorationTheme.border,
+                            focusedBorder: theme.inputDecorationTheme
+                                .focusedBorder,
+                            prefixIcon: const Icon(
+                              Icons.price_change,
+                              size: 24,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: FxText.sh1(
+                            "Customer Information", fontWeight: 600),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 8),
+                        child: TextFormField(
+                          initialValue: lead!.customerName ?? "",
+                          decoration: InputDecoration(
+                            labelText: "Customer Name",
+                            border: theme.inputDecorationTheme.border,
+                            enabledBorder: theme.inputDecorationTheme.border,
+                            focusedBorder: theme.inputDecorationTheme
+                                .focusedBorder,
+                            prefixIcon:
+                            const Icon(MdiIcons.accountChildOutline, size: 24),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 8),
+                        child: TextFormField(
+                          initialValue: lead!.payoffStatus ?? "",
+                          decoration: InputDecoration(
+                            labelText: "Payoff Status",
+                            border: theme.inputDecorationTheme.border,
+                            enabledBorder: theme.inputDecorationTheme.border,
+                            focusedBorder: theme.inputDecorationTheme
+                                .focusedBorder,
+                            prefixIcon:
+                            const Icon(MdiIcons.gamepadCircleOutline, size: 24),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 8),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            labelText: "Comment",
+                            border: theme.inputDecorationTheme.border,
+                            enabledBorder: theme.inputDecorationTheme.border,
+                            focusedBorder: theme.inputDecorationTheme
+                                .focusedBorder,
+                            prefixIcon:
+                            const Icon(MdiIcons.gamepadCircleOutline, size: 24),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+              )
+          );
+        }
     );
   }
 
@@ -336,7 +377,10 @@ class _LeadDetailsState extends State<LeadDetails> {
                       leading: Icon(MdiIcons.calendar,
                           color: theme.colorScheme.onBackground.withAlpha(220)),
                       title: InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.pushNamed(context, LeadScheduleView.routeName, arguments: lead);
+                        },
                         child: FxText.b1("Schedule",
                             color: theme.colorScheme.onBackground,
                             letterSpacing: 0.3,
@@ -438,6 +482,7 @@ class _LeadDetailsState extends State<LeadDetails> {
   }
 
   void _showFollowUpDialog(context) {
+    String comment = '';
     showModalBottomSheet(
         context: context,
         builder: (BuildContext buildContext) {
@@ -456,6 +501,7 @@ class _LeadDetailsState extends State<LeadDetails> {
                     Container(
                       margin: const EdgeInsets.only(top: 8),
                       child: TextFormField(
+                        onChanged: (text) => comment = text,
                         decoration: InputDecoration(
                           labelText: "Comment",
                           border: theme.inputDecorationTheme.border,
@@ -495,13 +541,15 @@ class _LeadDetailsState extends State<LeadDetails> {
                               onPressed: () {
                                 Navigator.pop(context);
                                 Navigator.pop(context);
-                                },
+                                BackendInterface().putLeadFollowUp(
+                                    lead!.id, selectedDate!, comment);
+                              },
                               child: FxText.button("Confirm",
-                            color: theme.colorScheme.onPrimary,)),
+                                color: theme.colorScheme.onPrimary,)),
                           FxButton.rounded(
-                            onPressed: () => Navigator.pop(context),
-                            child: FxText.button("Cancel"),
-                            backgroundColor: theme.colorScheme.onSecondary),
+                              onPressed: () => Navigator.pop(context),
+                              child: FxText.button("Cancel"),
+                              backgroundColor: theme.colorScheme.onSecondary),
                         ],
                       ),
                     )
@@ -571,6 +619,7 @@ class _LeadDetailsState extends State<LeadDetails> {
                                   onPressed: () {
                                     Navigator.pop(context);
                                     Navigator.pop(context);
+                                    BackendInterface().putLeadUnAnswered(lead!.id, _sms!, _voice!);
                                   },
                                   child: FxText.button("Confirm",
                                     color: theme.colorScheme.onPrimary,)),
@@ -592,7 +641,14 @@ class _LeadDetailsState extends State<LeadDetails> {
   }
 
   void _showLostDialog(context) {
-    int? _radioValue = 1;
+    List<String> lostReasons = [
+      "Asking price too high",
+      "Bad carfax/Title Issue",
+      "Already Sold",
+      "High Mileage",
+      "Others"
+    ];
+    int? _selectedIndex = 0;
     showModalBottomSheet(
         context: context,
         builder: (BuildContext buildContext) {
@@ -611,83 +667,25 @@ class _LeadDetailsState extends State<LeadDetails> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        ListTile(
-                          title: FxText.sh2("Asking price too high", fontWeight: 600),
-                          contentPadding: const EdgeInsets.all(0),
-                          dense: true,
-                          leading: Radio(
-                            value: 1,
-                            activeColor: theme.colorScheme.primary,
-                            groupValue: _radioValue,
-                            onChanged: (int? value) {
-                              setState(() {
-                                _radioValue = value;
-                              });
-                            },
-                          ),
-                        ),
-                        ListTile(
-                          title: FxText.sh2("Bad carfax/Title Issue", fontWeight: 600),
-                          contentPadding: const EdgeInsets.all(0),
-                          dense: true,
-                          leading: Radio(
-                            value: 2,
-                            activeColor: theme.colorScheme.primary,
-                            groupValue: _radioValue,
-                            onChanged: (int? value) {
-                              setState(() {
-                                _radioValue = value;
-                              });
-                            },
-                          ),
-                        ),
-                        ListTile(
-                          title: FxText.sh2("Already Sold", fontWeight: 600),
-                          contentPadding: const EdgeInsets.all(0),
-                          dense: true,
-                          leading: Radio(
-                            value: 3,
-                            activeColor: theme.colorScheme.primary,
-                            groupValue: _radioValue,
-                            onChanged: (int? value) {
-                              setState(() {
-                                _radioValue = value;
-                              });
-                            },
-                          ),
-                        ),
-                        ListTile(
-                          title: FxText.sh2("High Mileage", fontWeight: 600),
-                          contentPadding: const EdgeInsets.all(0),
-                          dense: true,
-                          leading: Radio(
-                            value: 4,
-                            activeColor: theme.colorScheme.primary,
-                            groupValue: _radioValue,
-                            onChanged: (int? value) {
-                              setState(() {
-                                _radioValue = value;
-                              });
-                            },
-                          ),
-                        ),
-                        ListTile(
-                          title: FxText.sh2("Others", fontWeight: 600),
-                          contentPadding: const EdgeInsets.all(0),
-                          dense: true,
-                          leading: Radio(
-                            value: 5,
-                            activeColor: theme.colorScheme.primary,
-                            groupValue: _radioValue,
-                            onChanged: (int? value) {
-                              setState(() {
-                                _radioValue = value;
-                              });
-                            },
-                          ),
-                        ),
+                        Column(
+                            children: lostReasons.mapIndexed((index, element) =>
+                                ListTile(
+                                  title: FxText.sh2(element, fontWeight: 600),
+                                  contentPadding: const EdgeInsets.all(0),
+                                  dense: true,
+                                  leading: Radio(
+                                    value: index,
+                                    activeColor: theme.colorScheme.primary,
+                                    groupValue: _selectedIndex,
+                                    onChanged: (int? value) {
+                                      setState(() {
+                                        _selectedIndex = value;
+                                      });
+                                    },
+                                  ),
+                                )).toList()),
                         Padding(
-                          padding: const EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.all(8.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -695,6 +693,8 @@ class _LeadDetailsState extends State<LeadDetails> {
                                   onPressed: () {
                                     Navigator.pop(context);
                                     Navigator.pop(context);
+                                    BackendInterface().putLeadLost(
+                                        lead!.id, lostReasons[_selectedIndex!]);
                                   },
                                   child: FxText.button("Confirm",
                                     color: theme.colorScheme.onPrimary,)),
@@ -713,9 +713,5 @@ class _LeadDetailsState extends State<LeadDetails> {
               )
           );
         });
-  }
-
-  _dismissDialog() {
-    Navigator.pop(context);
   }
 }

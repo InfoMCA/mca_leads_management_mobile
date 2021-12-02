@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:enum_to_string/enum_to_string.dart';
 
@@ -52,7 +51,7 @@ extension SessionStatusString on SessionStatus {
   }
 }
 
-class SessionObject {
+class Session {
   /// Items pertaining to Session object in the backend
   String id;
   SessionStatus? sessionStatus;
@@ -77,7 +76,7 @@ class SessionObject {
   String phone;
   String customerName;
 
-  SessionObject({
+  Session({
     required this.id,
     required this.sessionStatus,
     required this.title,
@@ -102,8 +101,8 @@ class SessionObject {
     required this.scheduledDateTime
   });
 
-  factory SessionObject.fromJson(dynamic json) {
-    return SessionObject(
+  factory Session.fromJson(dynamic json) {
+    return Session(
       id: json['id'] as String,
       sessionStatus: EnumToString.fromString(
           SessionStatus.values, json['status'] as String),
