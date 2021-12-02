@@ -11,6 +11,7 @@ BackendReq _$BackendReqFromJson(Map<String, dynamic> json) => BackendReq(
       username: json['username'] as String?,
       password: json['password'] as String?,
       leadView: $enumDecodeNullable(_$LeadViewEnumMap, json['leadView']),
+      leadId: json['leadId'] as String?,
     );
 
 Map<String, dynamic> _$BackendReqToJson(BackendReq instance) =>
@@ -19,11 +20,13 @@ Map<String, dynamic> _$BackendReqToJson(BackendReq instance) =>
       'username': instance.username,
       'password': instance.password,
       'leadView': _$LeadViewEnumMap[instance.leadView],
+      'leadId': instance.leadId,
     };
 
 const _$AppReqCmdEnumMap = {
   AppReqCmd.login: 'Login',
   AppReqCmd.getLeads: 'GetLeads',
+  AppReqCmd.getLead: 'GetLead',
 };
 
 const _$LeadViewEnumMap = {

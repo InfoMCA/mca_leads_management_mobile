@@ -14,7 +14,7 @@ class AppModule extends Module {
   final List<ModularRoute> routes = [
     ChildRoute('/security/login', child: (_, args) => const LoginPage()),
     ChildRoute('/home', child: (_, args) => const DashBoard()),
-    ChildRoute('/home/lead', child: (_, args) => const LeadDetails()),
+    ChildRoute('/home/lead', child: (_, args) => LeadDetails(args: args.data)),
     ChildRoute('/home/session', child: (_, args) => const SessionDetails()),
     ChildRoute('/home/sessionComplete',
         child: (_, args) => SessionDetailsComplete()),
