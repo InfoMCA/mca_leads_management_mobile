@@ -16,7 +16,7 @@ class AppModule extends Module {
     ChildRoute('/home', child: (_, args) => const DashBoard()),
     ChildRoute('/home/lead', child: (_, args) => LeadDetailsView(args: args.data)),
     ChildRoute('/home/lead-schedule', child: (_, args) => LeadScheduleView(lead: args.data)),
-    ChildRoute('/home/session', child: (_, args) => const SessionDetails()),
+    ChildRoute('/home/session', child: (_, args) =>  SessionDetails(args: args.data)),
     ChildRoute('/home/sessionComplete',
         child: (_, args) => SessionDetailsComplete()),
   ];

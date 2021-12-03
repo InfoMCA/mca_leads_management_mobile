@@ -5,19 +5,16 @@
 * */
 
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mca_leads_management_mobile/models/entities/backend_resp.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
-import 'package:mca_leads_management_mobile/utils/spacing.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/views/leads/lead_details_view.dart';
 import 'package:mca_leads_management_mobile/views/leads/lead_view_arg.dart';
 import 'package:mca_leads_management_mobile/views/leads/leads_view.dart';
 import 'package:mca_leads_management_mobile/widgets/common/notifications.dart';
-import 'package:mca_leads_management_mobile/widgets/container/container.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 
 class DashBoard extends StatefulWidget {
@@ -46,7 +43,7 @@ class _DashBoardState extends State<DashBoard> {
         title: FxText.sh1("MCA Lead Management", fontWeight: 600, color: theme.backgroundColor,),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _showFollowUpDialog(context),
+        onPressed: () => _showSearchDialog(context),
         child: Icon(Icons.search),
         backgroundColor: theme.colorScheme.primary,
       ),
@@ -63,7 +60,9 @@ class _DashBoardState extends State<DashBoard> {
                     isScrollable: true,
                     tabs: LeadView.values.map((e) =>
                         Tab(child: FxText.sh1(
-                          e.getName(), fontSize: 14, fontWeight: 500, color: theme.backgroundColor,)))
+                          e.getName(), fontSize: 14,
+                          fontWeight: 500,
+                          color: theme.backgroundColor,)))
                         .toList()
                 )
               ],
@@ -98,13 +97,12 @@ class _DashBoardState extends State<DashBoard> {
             LeadView.approval
         ),
       );
-
     } catch (e, s) {
       showSnackBar(context: context, text: 'Lead was not found');
     }
   }
 
-  void _showFollowUpDialog(context) {
+  void _showSearchDialog(context) {
     double height = 100;
     String keyword = "";
     bool isSearching = false;
@@ -112,19 +110,19 @@ class _DashBoardState extends State<DashBoard> {
         context: context,
         builder: (BuildContext buildContext) {
           return Container(
-                color: Colors.transparent,
-                child: Container(
-                  height: height,
-                  decoration: BoxDecoration(
-                      color: theme.backgroundColor,
-                      borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(8),
-                          topRight: Radius.circular(8))),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: ListView(
-                      children: <Widget>[
-                        Container(
+              color: Colors.transparent,
+              child: Container(
+                height: height,
+                decoration: BoxDecoration(
+                    color: theme.backgroundColor,
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(8),
+                        topRight: Radius.circular(8))),
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: ListView(
+                    children: <Widget>[
+                      Container(
                           margin: const EdgeInsets.only(top: 8),
                           child: FocusScope(
                             onFocusChange: (value) {
@@ -137,23 +135,24 @@ class _DashBoardState extends State<DashBoard> {
                                 _searchLead(context, keyword);
                               }
                             },
-                          child: TextFormField(
-                            onChanged: (text) => keyword = text,
-                            decoration: InputDecoration(
-                              labelText: "VIN or Last Six",
-                              border: theme.inputDecorationTheme.border,
-                              enabledBorder: theme.inputDecorationTheme.border,
-                              focusedBorder: theme.inputDecorationTheme
-                                  .focusedBorder,
-                              prefixIcon:
-                              const Icon(MdiIcons.numeric, size: 24),
+                            child: TextFormField(
+                              onChanged: (text) => keyword = text,
+                              decoration: InputDecoration(
+                                labelText: "VIN or Last Six",
+                                border: theme.inputDecorationTheme.border,
+                                enabledBorder: theme.inputDecorationTheme
+                                    .border,
+                                focusedBorder: theme.inputDecorationTheme
+                                    .focusedBorder,
+                                prefixIcon:
+                                const Icon(MdiIcons.numeric, size: 24),
+                              ),
                             ),
-                          ),
-                        )
-                        ),
-                      ],
-                    ),
+                          )
+                      ),
+                    ],
                   ),
+                ),
               )
           );
         });

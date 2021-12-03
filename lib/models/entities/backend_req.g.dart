@@ -14,6 +14,7 @@ BackendReq _$BackendReqFromJson(Map<String, dynamic> json) => BackendReq(
       zipcode: json['zipcode'] as String?,
       leadView: $enumDecodeNullable(_$LeadViewEnumMap, json['leadView']),
       leadId: json['leadId'] as String?,
+      sessionId: json['sessionId'] as String?,
       leadAction: $enumDecodeNullable(_$LeadActionEnumMap, json['leadAction']),
       sendSms: json['sendSms'] as bool?,
       leftMessage: json['leftMessage'] as bool?,
@@ -22,6 +23,14 @@ BackendReq _$BackendReqFromJson(Map<String, dynamic> json) => BackendReq(
           ? null
           : DateTime.parse(json['followUpDate'] as String),
       lostReason: json['lostReason'] as String?,
+      lead: json['lead'] == null
+          ? null
+          : Lead.fromJson(json['lead'] as Map<String, dynamic>),
+      inspector: json['inspector'] as String?,
+      inspectionTime: json['inspectionTime'] as int?,
+      scheduleDate: json['scheduleDate'] == null
+          ? null
+          : DateTime.parse(json['scheduleDate'] as String),
     );
 
 Map<String, dynamic> _$BackendReqToJson(BackendReq instance) =>
@@ -33,12 +42,17 @@ Map<String, dynamic> _$BackendReqToJson(BackendReq instance) =>
       'zipcode': instance.zipcode,
       'leadView': _$LeadViewEnumMap[instance.leadView],
       'leadId': instance.leadId,
+      'sessionId': instance.sessionId,
       'leadAction': _$LeadActionEnumMap[instance.leadAction],
       'sendSms': instance.sendSms,
       'leftMessage': instance.leftMessage,
       'followUpDate': instance.followUpDate?.toIso8601String(),
       'followUpComment': instance.followUpComment,
       'lostReason': instance.lostReason,
+      'lead': instance.lead,
+      'inspector': instance.inspector,
+      'inspectionTime': instance.inspectionTime,
+      'scheduleDate': instance.scheduleDate?.toIso8601String(),
     };
 
 const _$LeadMgmCmdEnumMap = {
@@ -47,6 +61,7 @@ const _$LeadMgmCmdEnumMap = {
   LeadMgmCmd.getLead: 'getLead',
   LeadMgmCmd.searchLead: 'searchLead',
   LeadMgmCmd.actionLead: 'actionLead',
+  LeadMgmCmd.getSession: 'getSession',
   LeadMgmCmd.getInspectors: 'getInspectors',
 };
 
@@ -64,4 +79,5 @@ const _$LeadActionEnumMap = {
   LeadAction.followUp: 'followUp',
   LeadAction.unanswered: 'unanswered',
   LeadAction.lost: 'lost',
+  LeadAction.dispatch: 'dispatch',
 };

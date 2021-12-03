@@ -9,6 +9,7 @@ enum LeadMgmCmd {
   getLead,
   searchLead,
   actionLead,
+  getSession,
   getInspectors
 }
 
@@ -16,7 +17,8 @@ enum LeadAction {
   schedule,
   followUp,
   unanswered,
-  lost
+  lost,
+  dispatch
 }
 
 @JsonSerializable()
@@ -28,12 +30,17 @@ class BackendReq {
   String? zipcode;
   LeadView? leadView;
   String? leadId;
+  String? sessionId;
   LeadAction? leadAction;
   bool? sendSms;
   bool? leftMessage;
   DateTime? followUpDate;
   String? followUpComment;
   String? lostReason;
+  Lead? lead;
+  String? inspector;
+  int? inspectionTime;
+  DateTime? scheduleDate;
 
   BackendReq({required this.cmd,
     this.username,
@@ -42,12 +49,17 @@ class BackendReq {
     this.zipcode,
     this.leadView,
     this.leadId,
+    this.sessionId,
     this.leadAction,
     this.sendSms,
     this.leftMessage,
     this.followUpComment,
     this.followUpDate,
-    this.lostReason});
+    this.lostReason,
+    this.lead,
+    this.inspector,
+    this.inspectionTime,
+    this.scheduleDate});
 
   factory BackendReq.fromJson(Map<String, dynamic> json) =>
       _$BackendReqFromJson(json);

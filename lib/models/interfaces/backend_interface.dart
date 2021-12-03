@@ -8,6 +8,7 @@ import 'package:mca_leads_management_mobile/models/entities/backend_resp.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead_summary.dart';
+import 'package:mca_leads_management_mobile/models/entities/session.dart';
 
 
 class BackendInterface {
@@ -68,10 +69,10 @@ class BackendInterface {
 
       if (appResp.statusCode == HttpStatus.ok) {
         return appResp.lead;
-      } else {
-        dev.log(appResp.statusCode.toString());
-        return null;
       }
+      dev.log(appResp.statusCode.toString());
+      throw ('Internal error');
+
     } catch (e, s) {
       dev.log('Get Leads Error:' + e.toString());
       dev.log(s.toString());
@@ -96,7 +97,7 @@ class BackendInterface {
     }
   }
 
-  Future<BackendResp> putLeadFollowUp(String leadId, DateTime followupDate,
+  Future<BackendResp> putLeadAsFollowUp(String leadId, DateTime followupDate,
       String comment) async {
     return sendPostReq(BackendReq(
         cmd: LeadMgmCmd.actionLead,
@@ -106,7 +107,8 @@ class BackendInterface {
         followUpComment: comment));
   }
 
-  Future<BackendResp> putLeadUnAnswered(String leadId, bool sendSms, bool leftMessage) async {
+  Future<BackendResp> putLeadAsUnAnswered(String leadId, bool sendSms,
+      bool leftMessage) async {
     return sendPostReq(BackendReq(
         cmd: LeadMgmCmd.actionLead,
         leadAction: LeadAction.unanswered,
@@ -115,7 +117,7 @@ class BackendInterface {
         leftMessage: leftMessage));
   }
 
-  Future<BackendResp> putLeadLost(String leadId, String lostReason) async {
+  Future<BackendResp> putLeadAsLost(String leadId, String lostReason) async {
     return sendPostReq(BackendReq(
         cmd: LeadMgmCmd.actionLead,
         leadAction: LeadAction.lost,
@@ -136,6 +138,30 @@ class BackendInterface {
         username: currentUser!.username,
         zipcode: zipCode)
     );
+  }
+
+  Future<BackendResp> dispatchLead(Lead lead, String inspector,
+      int inspectionTime, DateTime scheduleDate) {
+    return sendPostReq(BackendReq(
+        cmd: LeadMgmCmd.actionLead,
+        leadAction: LeadAction.dispatch,
+        username: currentUser!.username,
+        lead: lead,
+        leadId: lead.id,
+        inspector: inspector,
+        inspectionTime: inspectionTime,
+        scheduleDate: scheduleDate)
+    );
+  }
+
+  Future<Session?> getSession(String sessionId) async {
+    try {
+      BackendResp backendResp = await sendPostReq(
+          BackendReq(cmd: LeadMgmCmd.getSession, sessionId: sessionId));
+      return backendResp.session;
+    } catch (e) {
+      return null;
+    }
   }
 
 }

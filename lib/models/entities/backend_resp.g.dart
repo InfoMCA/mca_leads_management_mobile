@@ -16,6 +16,9 @@ BackendResp _$BackendRespFromJson(Map<String, dynamic> json) => BackendResp(
       lead: json['lead'] == null
           ? null
           : Lead.fromJson(json['lead'] as Map<String, dynamic>),
+      session: json['session'] == null
+          ? null
+          : Session.fromJson(json['session'] as Map<String, dynamic>),
       inspectors: (json['inspectors'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -29,6 +32,7 @@ Map<String, dynamic> _$BackendRespToJson(BackendResp instance) =>
       'status': instance.status,
       'leadSummaries': instance.leadSummaries,
       'lead': instance.lead,
+      'session': instance.session,
       'inspectors': instance.inspectors,
       'region': instance.region,
     };

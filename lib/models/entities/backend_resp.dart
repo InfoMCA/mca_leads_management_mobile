@@ -1,3 +1,5 @@
+import 'package:mca_leads_management_mobile/models/entities/session.dart';
+
 import 'lead.dart';
 import 'lead_summary.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -11,6 +13,7 @@ class BackendResp {
   String? status;
   List<LeadSummary>? leadSummaries;
   Lead? lead;
+  Session? session;
   List<String>? inspectors;
   String? region;
 
@@ -19,6 +22,7 @@ class BackendResp {
     this.statusCode,
     this.leadSummaries,
     this.lead,
+    this.session,
     this.inspectors,
     this.region});
 

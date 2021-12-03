@@ -2,18 +2,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_picker/flutter_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mca_leads_management_mobile/models/entities/backend_resp.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead.dart';
-import 'package:mca_leads_management_mobile/models/entities/session.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
 import 'package:mca_leads_management_mobile/utils/spacing.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/widgets/common/notifications.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
+import 'package:mca_leads_management_mobile/widgets/textfield/date_text.dart';
+import 'package:mca_leads_management_mobile/widgets/textfield/select_text.dart';
+import 'package:mca_leads_management_mobile/widgets/textfield/time_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:us_states/us_states.dart';
 
@@ -29,47 +29,23 @@ class LeadScheduleView extends StatefulWidget {
 class _LeadScheduleViewState extends State<LeadScheduleView> {
   late CustomTheme customTheme;
   late ThemeData theme;
-  final scheduleDateController = TextEditingController();
-  final scheduleTimeController = TextEditingController();
-  final stateController = TextEditingController();
-  final inspectorController = TextEditingController();
   final regionController = TextEditingController();
   final FocusNode _focus = FocusNode();
   final _formKey = GlobalKey<FormState>();
 
   late List<String> inspectors = [];
   late String inspector;
+  late int inspectionTime;
+  late DateTime scheduleDate;
+  late TimeOfDay scheduleTime;
+  late String state;
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime.now(),
-        lastDate: DateTime.now().add(const Duration(days: 60)));
-    if (pickedDate != null) {
-      setState(() {
-        scheduleDateController.text =
-            DateFormat('yyyy-MM-dd').format(pickedDate);
-      });
-    }
-  }
-
-  Future<void> _selectTime() async {
-    final TimeOfDay? result =
-    await showTimePicker(context: context, initialTime: TimeOfDay.now());
-    if (result != null) {
-      setState(() {
-        scheduleTimeController.text = result.format(context);
-      });
-    }
-  }
 
   Future<void> _getInspector() async {
     try {
       inspectors.clear();
       regionController.text = '';
-      inspectorController.text = '';
-
+      inspector = '';
       BackendResp backendResp = await BackendInterface().getInspectors(
           widget.lead.zipCode!);
       setState(() {
@@ -83,45 +59,6 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
     }
   }
 
-  Future<void> _selectInspector() async {
-    final result = await Picker(
-      headerDecoration: BoxDecoration(
-          color: theme.backgroundColor,
-          borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16))),
-      adapter: PickerDataAdapter<String>(pickerdata: inspectors),
-      selecteds: [inspectors.indexOf(inspectorController.text)],
-      changeToFirst: true,
-      hideHeader: false,
-    ).showModal(this.context); //_sca
-    if (result != null) {
-      setState(() {
-        inspectorController.text = inspectors[result[0]];
-      });
-    }
-  }
-
-  Future<void> _selectState() async {
-    List<String> states = USStates.getAllAbbreviations();
-    final result = await Picker(
-      headerDecoration: BoxDecoration(
-          color: theme.backgroundColor,
-          borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16))),
-      adapter: PickerDataAdapter<String>(pickerdata: states),
-      selecteds: [states.indexOf(stateController.text)],
-      changeToFirst: true,
-      hideHeader: false,
-    ).showModal(this.context); //_sca
-    if (result != null) {
-      setState(() {
-        stateController.text = states[result[0]];
-      });
-    }
-  }
-
   _validate(value,) {
     if (value == null || value.isEmpty) {
       return 'Please enter valid information';
@@ -129,13 +66,11 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
     return null;
   }
 
-
   Future<void> _makePhoneCall(String phoneNumber) async {
-    final Uri launchUri = Uri(
+    await launch(Uri(
       scheme: 'tel',
       path: phoneNumber,
-    );
-    await launch(launchUri.toString());
+    ).toString());
   }
 
   void _onFocusChange() async {
@@ -150,18 +85,10 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
     _focus.addListener(_onFocusChange);
-
-    scheduleTimeController.text = TimeOfDay
-        .now()
-        .hour
-        .toString() + ":" + TimeOfDay
-        .now()
-        .minute
-        .toString();
-    scheduleDateController.text =
-        DateFormat('yyyy-MM-dd').format(DateTime.now());
+    scheduleTime = TimeOfDay.now();
+    scheduleDate = DateTime.now();
     regionController.text = widget.lead.region!;
-    stateController.text = widget.lead.state!;
+    state = widget.lead.state!;
     _getInspector();
   }
 
@@ -209,8 +136,12 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                   showSnackBar(
                       context: context, text: 'Information is not completed!');
                 } else {
-                  Navigator.popUntil(context, ModalRoute.withName(
-                      '/home'));
+                  scheduleDate = DateTime(
+                      scheduleDate.year, scheduleDate.month, scheduleDate.day,
+                      scheduleTime.hour, scheduleTime.minute);
+                  BackendInterface().dispatchLead(
+                      widget.lead, inspector, inspectionTime, scheduleDate);
+                  Navigator.popUntil(context, ModalRoute.withName('/home'));
                 }
               },
               child: Icon(
@@ -294,22 +225,14 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.only(top: 8),
-                    child: TextFormField(
-                      readOnly: true,
-                      controller: stateController,
-                      onTap: () => _selectState(),
-                      onChanged: (text) => widget.lead.state = text,
-                      validator: (value) => _validate(value),
-                      decoration: InputDecoration(
-                        labelText: "State",
-                        border: theme.inputDecorationTheme.border,
-                        enabledBorder: theme.inputDecorationTheme.border,
-                        focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                        prefixIcon:
-                        const Icon(MdiIcons.signRealEstate, size: 24),
-                      ),
-                    ),
+                      margin: const EdgeInsets.only(top: 8),
+                      child: FxListText(label: 'State',
+                          initialValue: state,
+                          values: USStates.getAllAbbreviations(),
+                          onListChanged: (newState) {
+                            widget.lead.state = newState;
+                          },
+                          validator: (value) => _validate(value))
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 8),
@@ -351,26 +274,20 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 8),
-                    child: TextFormField(
-                      readOnly: true,
-                      onTap: () => _selectInspector(),
-                      controller: inspectorController,
-                      validator: (value) => _validate(value),
-                      decoration: InputDecoration(
-                        labelText: "Inspectors",
-                        border: theme.inputDecorationTheme.border,
-                        enabledBorder: theme.inputDecorationTheme.border,
-                        focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                        prefixIcon:
-                        const Icon(MdiIcons.gamepadCircleOutline, size: 24),
-                      ),
-                    ),
+                    child: FxListText(label: 'Inspector',
+                      initialValue: inspector,
+                      values: inspectors,
+                      onListChanged: (newState) {
+                        inspector = newState;
+                      },
+                      validator: (value) => _validate(value))
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 8),
                     child: TextFormField(
                       keyboardType: TextInputType.number,
                       initialValue: '30',
+                      onChanged: (value) => inspectionTime = int.parse(value),
                       validator: (value) => _validate(value),
                       decoration: InputDecoration(
                         labelText: "Duration (min)",
@@ -383,40 +300,18 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.only(top: 8),
-                    child: TextFormField(
-                      controller: scheduleDateController,
-                      readOnly: true,
-                      onTap: () => _selectDate(context),
-                      validator: (value) => _validate(value),
-                      decoration: InputDecoration(
-                        labelText: 'Schedule Date',
-                        border: theme.inputDecorationTheme.border,
-                        enabledBorder: theme.inputDecorationTheme.border,
-                        focusedBorder:
-                        theme.inputDecorationTheme.focusedBorder,
-                        prefixIcon: const Icon(MdiIcons.calendar,
-                            size: 24),
-                      ),
-                    ),
+                      margin: const EdgeInsets.only(top: 8),
+                      child: FxDateText(label: 'Schedule Date',
+                          initValue: DateTime.now(),
+                          onDateChanged: (newDate) => scheduleDate = newDate,
+                          validator: (value) => _validate(value))
                   ),
                   Container(
-                    margin: const EdgeInsets.only(top: 8),
-                    child: TextFormField(
-                      controller: scheduleTimeController,
-                      readOnly: true,
-                      onTap: _selectTime,
-                      validator: (value) => _validate(value),
-                      decoration: InputDecoration(
-                        labelText: 'Schedule time',
-                        border: theme.inputDecorationTheme.border,
-                        enabledBorder: theme.inputDecorationTheme.border,
-                        focusedBorder:
-                        theme.inputDecorationTheme.focusedBorder,
-                        prefixIcon: const Icon(MdiIcons.timelineCheckOutline,
-                            size: 24),
-                      ),
-                    ),
+                      margin: const EdgeInsets.only(top: 8),
+                      child: FxTimeText(label: 'Schedule Time',
+                          initValue: TimeOfDay.now(),
+                          onTimeChanged: (newTime) => scheduleTime = newTime,
+                          validator: (value) => _validate(value))
                   ),
                 ],
               ),
