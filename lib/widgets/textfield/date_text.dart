@@ -12,61 +12,68 @@ import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/text_style.dart';
 
 class FxDateText extends StatefulWidget {
-    final String label;
-    final DateTime initValue;
-    final ValueChanged<DateTime> onDateChanged;
-    final FormFieldValidator<String>? validator;
-    const FxDateText({Key? key, required this.label, required this.initValue, required this.onDateChanged, this.validator}) : super(key: key);
+  final String label;
+  final DateTime? initValue;
+  final ValueChanged<DateTime> onDateChanged;
+  final FormFieldValidator<String>? validator;
 
-    @override
-    _FxDateTextState createState() => _FxDateTextState();
+  const FxDateText(
+      {Key? key,
+      required this.label,
+      required this.initValue,
+      required this.onDateChanged,
+      this.validator})
+      : super(key: key);
+
+  @override
+  _FxDateTextState createState() => _FxDateTextState();
 }
 
 class _FxDateTextState extends State<FxDateText> {
-    late CustomTheme customTheme;
-    late ThemeData theme;
-    late DateTime dateTime;
-    final _controller = TextEditingController();
+  late CustomTheme customTheme;
+  late ThemeData theme;
+  late DateTime dateTime;
+  final _controller = TextEditingController();
 
-    Future<void> _selectDate(BuildContext context) async {
-        final DateTime? pickedDate = await showDatePicker(
-            context: context,
-            initialDate: widget.initValue,
-            firstDate: DateTime.now(),
-            lastDate: DateTime.now().add(const Duration(days: 60)));
-        if (pickedDate != null) {
-            setState(() {
-                dateTime = pickedDate;
-                _controller.text =
-                    DateFormat('yyyy-MM-dd').format(pickedDate);
-                widget.onDateChanged(dateTime);
-            });
-        }
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime initialDate = widget.initValue ?? DateTime.now();
+    final DateTime? pickedDate = await showDatePicker(
+        context: context,
+        initialDate: initialDate,
+        firstDate: initialDate,
+        lastDate: initialDate.add(const Duration(days: 60)));
+    if (pickedDate != null) {
+      setState(() {
+        dateTime = pickedDate;
+        _controller.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+        widget.onDateChanged(dateTime);
+      });
     }
+  }
 
+  @override
+  void initState() {
+    super.initState();
+    customTheme = AppTheme.customTheme;
+    theme = AppTheme.theme;
+    _controller.text = widget.initValue != null
+        ? DateFormat('yyyy-MM-dd').format(widget.initValue ?? DateTime.now())
+        : "";
+  }
 
-    @override
-    void initState() {
-        super.initState();
-        customTheme = AppTheme.customTheme;
-        theme = AppTheme.theme;
-    }
-
-    @override
-    Widget build(BuildContext context) {
-        return TextFormField(
-            controller: _controller,
-            readOnly: true,
-            onTap: () => _selectDate(context),
-            validator: widget.validator,
-            decoration: InputDecoration(
-                labelText: widget.label,
-                border: theme.inputDecorationTheme.border,
-                enabledBorder: theme.inputDecorationTheme.border,
-                focusedBorder:
-                theme.inputDecorationTheme.focusedBorder,
-                prefixIcon: const Icon(MdiIcons.calendar,
-                    size: 24),
-            ));
-    }
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+        controller: _controller,
+        readOnly: true,
+        onTap: () => _selectDate(context),
+        validator: widget.validator,
+        decoration: InputDecoration(
+          labelText: widget.label,
+          border: theme.inputDecorationTheme.border,
+          enabledBorder: theme.inputDecorationTheme.border,
+          focusedBorder: theme.inputDecorationTheme.focusedBorder,
+          prefixIcon: const Icon(MdiIcons.calendar, size: 24),
+        ));
+  }
 }

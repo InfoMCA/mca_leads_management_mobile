@@ -7,7 +7,7 @@ import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.
 
 String? inspectionConfigStr;
 AuthUserModel? _user;
-Map<LeadView, List<LeadSummary>?> leadSummaries = new HashMap();
+Map<LeadView, List<LeadSummary>?> leadSummaries = HashMap();
 
 AuthUserModel? get currentUser {
   return _user;
@@ -24,4 +24,3 @@ Future<List<LeadSummary>?> getLeads(LeadView leadView) async {
   }
   return leadSummaries[leadView];
 }
-

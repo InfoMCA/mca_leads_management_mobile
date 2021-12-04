@@ -1,7 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:mca_leads_management_mobile/utils/datetime_tools.dart';
 
 part 'session.g.dart';
-
 
 enum SessionStatus {
   None,
@@ -74,33 +75,41 @@ class Session {
   String staff;
   String region;
   String service;
-  String scheduledDateTime; // Same as sessionDateTime but in string format
+  String _scheduledDateTime;
   String phone;
   String customerName;
 
-  Session({
-    required this.id,
-    required this.title,
-    required this.vin,
-    required this.color,
-    required this.mileage,
-    required this.estimatedCr,
-    required this.askingPrice,
-    required this.offeredPrice,
-    required this.requestedPrice,
-    required this.mmr,
-    required this.phone,
-    required this.customerName,
-    required this.address1,
-    required this.address2,
-    required this.city,
-    required this.state,
-    required this.zipCode,
-    required this.region,
-    required this.service,
-    required this.staff,
-    required this.scheduledDateTime
-  });
+  DateTime? get scheduledDateTime => DateTime.tryParse(_scheduledDateTime);
+
+  set scheduledDate(DateTime date) =>
+      (scheduledDateTime ?? DateTime.now()).setDate(date);
+
+  set scheduledTime(TimeOfDay timeOfDay) =>
+      (scheduledDateTime ?? DateTime.now()).setTime(timeOfDay);
+
+  Session(
+      {required this.id,
+      required this.title,
+      required this.vin,
+      required this.color,
+      required this.mileage,
+      required this.estimatedCr,
+      required this.askingPrice,
+      required this.offeredPrice,
+      required this.requestedPrice,
+      required this.mmr,
+      required this.phone,
+      required this.customerName,
+      required this.address1,
+      required this.address2,
+      required this.city,
+      required this.state,
+      required this.zipCode,
+      required this.region,
+      required this.service,
+      required this.staff,
+      required String scheduledDateTime})
+      : _scheduledDateTime = scheduledDateTime;
 
   factory Session.fromJson(Map<String, dynamic> json) =>
       _$SessionFromJson(json);
@@ -114,5 +123,9 @@ class Session {
     }
     address += city + ", " + state + ", " + zipCode;
     return address;
+  }
+
+  DateTime setDateTime(DateTime date, TimeOfDay time) {
+    return DateTime(date.year, date.month, date.day, time.hour, time.minute);
   }
 }

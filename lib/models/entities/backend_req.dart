@@ -1,69 +1,43 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:mca_leads_management_mobile/models/entities/lead.dart';
 
 part 'backend_req.g.dart';
 
-enum LeadMgmCmd {
-  login,
-  getLeads,
-  getLead,
-  searchLead,
-  actionLead,
-  getSession,
-  getInspectors
+enum CommandObject { user, lead, session }
+
+enum CommandIntent {
+  getById,
+  getAll,
+  search,
+  action,
 }
 
-enum LeadAction {
-  schedule,
-  followUp,
-  unanswered,
-  lost,
-  dispatch
-}
+enum LeadAction { schedule, followUp, unanswered, lost, save }
+
+enum SessionAction { dispatch, lost, getInspectors, save }
+
+enum UserAction { login }
 
 @JsonSerializable()
 class BackendReq {
-  final LeadMgmCmd cmd;
-  String? username;
-  String? password;
-  String? keyword;
-  String? zipcode;
-  LeadView? leadView;
-  String? leadId;
-  String? sessionId;
-  LeadAction? leadAction;
-  bool? sendSms;
-  bool? leftMessage;
-  DateTime? followUpDate;
-  String? followUpComment;
-  String? lostReason;
-  Lead? lead;
-  String? inspector;
-  int? inspectionTime;
-  DateTime? scheduleDate;
+  String username;
+  CommandObject commandObject;
+  CommandIntent commandIntent;
+  String? objectId;
 
-  BackendReq({required this.cmd,
-    this.username,
-    this.password,
-    this.keyword,
-    this.zipcode,
-    this.leadView,
-    this.leadId,
-    this.sessionId,
-    this.leadAction,
-    this.sendSms,
-    this.leftMessage,
-    this.followUpComment,
-    this.followUpDate,
-    this.lostReason,
-    this.lead,
-    this.inspector,
-    this.inspectionTime,
-    this.scheduleDate});
+  ///Either LeadAction, SessionAction or UserAction enums
+  dynamic actionType;
+  dynamic value;
+
+  BackendReq(
+      {required this.username,
+      required this.commandObject,
+      required this.commandIntent,
+      this.actionType,
+      this.objectId,
+      this.value});
 
   factory BackendReq.fromJson(Map<String, dynamic> json) =>
       _$BackendReqFromJson(json);
 
   Map<String, dynamic> toJson() => _$BackendReqToJson(this);
-
 }

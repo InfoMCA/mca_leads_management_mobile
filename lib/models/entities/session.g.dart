@@ -49,7 +49,7 @@ Map<String, dynamic> _$SessionToJson(Session instance) => <String, dynamic>{
       'staff': instance.staff,
       'region': instance.region,
       'service': instance.service,
-      'scheduledDateTime': instance.scheduledDateTime,
       'phone': instance.phone,
       'customerName': instance.customerName,
+      'scheduledDateTime': instance.scheduledDateTime?.toIso8601String(),
     };

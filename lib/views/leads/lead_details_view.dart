@@ -7,6 +7,7 @@ import 'dart:developer' as dev;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/views/leads/lead_schedule_view.dart';
 import 'package:mca_leads_management_mobile/widgets/button/button.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -23,6 +24,7 @@ import 'package:collection/collection.dart';
 
 class LeadDetailsView extends StatefulWidget {
   final LeadViewArguments args;
+
   const LeadDetailsView({Key? key, required this.args}) : super(key: key);
 
   static const routeName = '/home/lead';
@@ -112,7 +114,10 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                   ),
                 ],
                 title: FxText.sh1(
-                  lead!.name, fontWeight: 600, color: theme.backgroundColor,),
+                  lead!.name,
+                  fontWeight: 600,
+                  color: theme.backgroundColor,
+                ),
               ),
               floatingActionButton: FloatingActionButton(
                   onPressed: () {
@@ -124,8 +129,8 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                     color: theme.colorScheme.onPrimary,
                   ),
                   elevation: 2,
-                  backgroundColor: theme.floatingActionButtonTheme
-                      .backgroundColor),
+                  backgroundColor:
+                      theme.floatingActionButtonTheme.backgroundColor),
               body: GestureDetector(
                   onTap: () {
                     FocusScopeNode currentFocus = FocusScope.of(context);
@@ -143,8 +148,8 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                           Container(
                             padding: const EdgeInsets.only(
                                 left: 0, right: 20, top: 0, bottom: 12),
-                            child: FxText.sh1(
-                                "Vehicle Information", fontWeight: 600),
+                            child: FxText.sh1("Vehicle Information",
+                                fontWeight: 600),
                           ),
                           TextFormField(
                             initialValue: lead!.name,
@@ -153,11 +158,10 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                               labelText: "Title",
                               border: theme.inputDecorationTheme.border,
                               enabledBorder: theme.inputDecorationTheme.border,
-                              focusedBorder: theme.inputDecorationTheme
-                                  .focusedBorder,
-                              prefixIcon: const Icon(Icons
-                                  .perm_identity,
-                                  size: 24),
+                              focusedBorder:
+                                  theme.inputDecorationTheme.focusedBorder,
+                              prefixIcon:
+                                  const Icon(Icons.perm_identity, size: 24),
                             ),
                           ),
                           TextFormField(
@@ -167,10 +171,10 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                               labelText: "VIN",
                               border: theme.inputDecorationTheme.border,
                               enabledBorder: theme.inputDecorationTheme.border,
-                              focusedBorder: theme.inputDecorationTheme
-                                  .focusedBorder,
-                              prefixIcon: const Icon(Icons
-                                  .confirmation_number_outlined,
+                              focusedBorder:
+                                  theme.inputDecorationTheme.focusedBorder,
+                              prefixIcon: const Icon(
+                                  Icons.confirmation_number_outlined,
                                   size: 24),
                             ),
                           ),
@@ -182,12 +186,13 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                               decoration: InputDecoration(
                                 labelText: "Color",
                                 border: theme.inputDecorationTheme.border,
-                                enabledBorder: theme.inputDecorationTheme
-                                    .border,
-                                focusedBorder: theme.inputDecorationTheme
-                                    .focusedBorder,
-                                prefixIcon:
-                                const Icon(Icons.color_lens_outlined, size: 24),
+                                enabledBorder:
+                                    theme.inputDecorationTheme.border,
+                                focusedBorder:
+                                    theme.inputDecorationTheme.focusedBorder,
+                                prefixIcon: const Icon(
+                                    Icons.color_lens_outlined,
+                                    size: 24),
                               ),
                             ),
                           ),
@@ -199,10 +204,10 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                               decoration: InputDecoration(
                                 labelText: "Mileage",
                                 border: theme.inputDecorationTheme.border,
-                                enabledBorder: theme.inputDecorationTheme
-                                    .border,
-                                focusedBorder: theme.inputDecorationTheme
-                                    .focusedBorder,
+                                enabledBorder:
+                                    theme.inputDecorationTheme.border,
+                                focusedBorder:
+                                    theme.inputDecorationTheme.focusedBorder,
                                 prefixIcon: const Icon(
                                   Icons.speed,
                                   size: 24,
@@ -218,10 +223,10 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                               decoration: InputDecoration(
                                 labelText: "Estimated CR",
                                 border: theme.inputDecorationTheme.border,
-                                enabledBorder: theme.inputDecorationTheme
-                                    .border,
-                                focusedBorder: theme.inputDecorationTheme
-                                    .focusedBorder,
+                                enabledBorder:
+                                    theme.inputDecorationTheme.border,
+                                focusedBorder:
+                                    theme.inputDecorationTheme.focusedBorder,
                                 prefixIcon: const Icon(
                                   Icons.high_quality,
                                   size: 24,
@@ -241,10 +246,10 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                               decoration: InputDecoration(
                                 labelText: "Listing Price",
                                 border: theme.inputDecorationTheme.border,
-                                enabledBorder: theme.inputDecorationTheme
-                                    .border,
-                                focusedBorder: theme.inputDecorationTheme
-                                    .focusedBorder,
+                                enabledBorder:
+                                    theme.inputDecorationTheme.border,
+                                focusedBorder:
+                                    theme.inputDecorationTheme.focusedBorder,
                                 prefixIcon: const Icon(
                                   Icons.list,
                                   size: 24,
@@ -260,10 +265,10 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                               decoration: InputDecoration(
                                 labelText: "MMR",
                                 border: theme.inputDecorationTheme.border,
-                                enabledBorder: theme.inputDecorationTheme
-                                    .border,
-                                focusedBorder: theme.inputDecorationTheme
-                                    .focusedBorder,
+                                enabledBorder:
+                                    theme.inputDecorationTheme.border,
+                                focusedBorder:
+                                    theme.inputDecorationTheme.focusedBorder,
                                 prefixIcon: const Icon(
                                   Icons.price_change,
                                   size: 24,
@@ -274,15 +279,15 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                           Container(
                             margin: const EdgeInsets.only(top: 8),
                             child: TextFormField(
-                              initialValue: (lead!.offeredPrice ?? 0)
-                                  .toString(),
+                              initialValue:
+                                  (lead!.offeredPrice ?? 0).toString(),
                               decoration: InputDecoration(
                                 labelText: "Offered Price",
                                 border: theme.inputDecorationTheme.border,
-                                enabledBorder: theme.inputDecorationTheme
-                                    .border,
-                                focusedBorder: theme.inputDecorationTheme
-                                    .focusedBorder,
+                                enabledBorder:
+                                    theme.inputDecorationTheme.border,
+                                focusedBorder:
+                                    theme.inputDecorationTheme.focusedBorder,
                                 prefixIcon: const Icon(
                                   Icons.price_change_outlined,
                                   size: 24,
@@ -293,15 +298,15 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                           Container(
                             margin: const EdgeInsets.only(top: 8),
                             child: TextFormField(
-                              initialValue: (lead!.requestedPrice ?? 0)
-                                  .toString(),
+                              initialValue:
+                                  (lead!.requestedPrice ?? 0).toString(),
                               decoration: InputDecoration(
                                 labelText: "Requested Price",
                                 border: theme.inputDecorationTheme.border,
-                                enabledBorder: theme.inputDecorationTheme
-                                    .border,
-                                focusedBorder: theme.inputDecorationTheme
-                                    .focusedBorder,
+                                enabledBorder:
+                                    theme.inputDecorationTheme.border,
+                                focusedBorder:
+                                    theme.inputDecorationTheme.focusedBorder,
                                 prefixIcon: const Icon(
                                   Icons.price_change,
                                   size: 24,
@@ -311,8 +316,8 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                           ),
                           Container(
                             padding: const EdgeInsets.only(top: 20),
-                            child: FxText.sh1(
-                                "Customer Information", fontWeight: 600),
+                            child: FxText.sh1("Customer Information",
+                                fontWeight: 600),
                           ),
                           Container(
                             margin: const EdgeInsets.only(top: 8),
@@ -321,13 +326,13 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                               decoration: InputDecoration(
                                 labelText: "Customer Name",
                                 border: theme.inputDecorationTheme.border,
-                                enabledBorder: theme.inputDecorationTheme
-                                    .border,
-                                focusedBorder: theme.inputDecorationTheme
-                                    .focusedBorder,
-                                prefixIcon:
-                                const Icon(
-                                    MdiIcons.accountChildOutline, size: 24),
+                                enabledBorder:
+                                    theme.inputDecorationTheme.border,
+                                focusedBorder:
+                                    theme.inputDecorationTheme.focusedBorder,
+                                prefixIcon: const Icon(
+                                    MdiIcons.accountChildOutline,
+                                    size: 24),
                               ),
                             ),
                           ),
@@ -338,13 +343,13 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                               decoration: InputDecoration(
                                 labelText: "Payoff Status",
                                 border: theme.inputDecorationTheme.border,
-                                enabledBorder: theme.inputDecorationTheme
-                                    .border,
-                                focusedBorder: theme.inputDecorationTheme
-                                    .focusedBorder,
-                                prefixIcon:
-                                const Icon(
-                                    MdiIcons.gamepadCircleOutline, size: 24),
+                                enabledBorder:
+                                    theme.inputDecorationTheme.border,
+                                focusedBorder:
+                                    theme.inputDecorationTheme.focusedBorder,
+                                prefixIcon: const Icon(
+                                    MdiIcons.gamepadCircleOutline,
+                                    size: 24),
                               ),
                             ),
                           ),
@@ -354,24 +359,21 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                               decoration: InputDecoration(
                                 labelText: "Comment",
                                 border: theme.inputDecorationTheme.border,
-                                enabledBorder: theme.inputDecorationTheme
-                                    .border,
-                                focusedBorder: theme.inputDecorationTheme
-                                    .focusedBorder,
-                                prefixIcon:
-                                const Icon(
-                                    MdiIcons.gamepadCircleOutline, size: 24),
+                                enabledBorder:
+                                    theme.inputDecorationTheme.border,
+                                focusedBorder:
+                                    theme.inputDecorationTheme.focusedBorder,
+                                prefixIcon: const Icon(
+                                    MdiIcons.gamepadCircleOutline,
+                                    size: 24),
                               ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                  )
-              )
-          );
-        }
-    );
+                  )));
+        });
   }
 
   void _showBottomSheet(context) {
@@ -403,9 +405,8 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                         },
                         child: Icon(MdiIcons.calendar,
                             size: 32,
-                            color: theme.colorScheme.primaryVariant.withAlpha(
-                                220))
-                    ),
+                            color: theme.colorScheme.primaryVariant
+                                .withAlpha(220))),
                     InkWell(
                         onTap: () {
                           Navigator.pop(context);
@@ -413,9 +414,8 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                         },
                         child: Icon(MdiIcons.phoneCheck,
                             size: 32,
-                            color: theme.colorScheme.primaryVariant.withAlpha(
-                                220))
-                    ),
+                            color: theme.colorScheme.primaryVariant
+                                .withAlpha(220))),
                     InkWell(
                         onTap: () {
                           Navigator.pop(context);
@@ -423,9 +423,8 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                         },
                         child: Icon(MdiIcons.phoneMissed,
                             size: 32,
-                            color: theme.colorScheme.primaryVariant.withAlpha(
-                                220))
-                    ),
+                            color: theme.colorScheme.primaryVariant
+                                .withAlpha(220))),
                     InkWell(
                         onTap: () {
                           Navigator.pop(context);
@@ -433,14 +432,13 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                         },
                         child: Icon(MdiIcons.delete,
                             size: 32,
-                            color: theme.colorScheme.primaryVariant.withAlpha(
-                                220))
-                    ),
+                            color: theme.colorScheme.primaryVariant
+                                .withAlpha(220))),
                     InkWell(
                       child: Icon(MdiIcons.accountQuestion,
                           size: 32,
-                          color: theme.colorScheme.primaryVariant.withAlpha(
-                              220)),
+                          color:
+                              theme.colorScheme.primaryVariant.withAlpha(220)),
                     ),
                     InkWell(
                       onTap: () {
@@ -449,8 +447,8 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                       },
                       child: Icon(MdiIcons.contentSave,
                           size: 32,
-                          color: theme.colorScheme.primaryVariant.withAlpha(
-                              220)),
+                          color:
+                              theme.colorScheme.primaryVariant.withAlpha(220)),
                     ),
                   ],
                 ),
@@ -462,10 +460,10 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
 
   _pickDate(BuildContext context) async {
     showDatePicker(
-        context: context,
-        initialDate: selectedDate!,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101))
+            context: context,
+            initialDate: selectedDate!,
+            firstDate: DateTime(2015, 8),
+            lastDate: DateTime(2101))
         .then((value) {
       if (value != null) {
         setState(() {
@@ -501,10 +499,10 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                           labelText: "Comment",
                           border: theme.inputDecorationTheme.border,
                           enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder: theme.inputDecorationTheme
-                              .focusedBorder,
-                          prefixIcon:
-                          const Icon(MdiIcons.gamepadCircleOutline, size: 24),
+                          focusedBorder:
+                              theme.inputDecorationTheme.focusedBorder,
+                          prefixIcon: const Icon(MdiIcons.gamepadCircleOutline,
+                              size: 24),
                         ),
                       ),
                     ),
@@ -519,10 +517,9 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                             labelText: "FollowUp Date",
                             border: theme.inputDecorationTheme.border,
                             enabledBorder: theme.inputDecorationTheme.border,
-                            focusedBorder: theme.inputDecorationTheme
-                                .focusedBorder,
-                            prefixIcon:
-                            const Icon(MdiIcons.calendar, size: 24),
+                            focusedBorder:
+                                theme.inputDecorationTheme.focusedBorder,
+                            prefixIcon: const Icon(MdiIcons.calendar, size: 24),
                           ),
                         ),
                       ),
@@ -537,10 +534,14 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                                 Navigator.pop(context);
                                 Navigator.pop(context);
                                 BackendInterface().putLeadAsFollowUp(
-                                    lead!.id, selectedDate!, comment);
+                                    lead!.id,
+                                    selectedDate!,
+                                    comment);
                               },
-                              child: FxText.button("Confirm",
-                                color: theme.colorScheme.onPrimary,)),
+                              child: FxText.button(
+                                "Confirm",
+                                color: theme.colorScheme.onPrimary,
+                              )),
                           FxButton.rounded(
                               onPressed: () => Navigator.pop(context),
                               child: FxText.button("Cancel"),
@@ -557,82 +558,84 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
   }
 
   void _showUnansweredDialog(context) {
-    bool? _sms = false,
-        _voice = false;
+    bool? _sms = false, _voice = false;
     showModalBottomSheet(
         context: context,
         builder: (BuildContext buildContext) {
-          return StatefulBuilder(builder: (BuildContext context, setState) =>
-              Container(
-                color: Colors.transparent,
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: theme.backgroundColor,
-                      borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(16),
-                          topRight: Radius.circular(16))),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
+          return StatefulBuilder(
+              builder: (BuildContext context, setState) => Container(
+                    color: Colors.transparent,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: theme.backgroundColor,
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(16),
+                              topRight: Radius.circular(16))),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Checkbox(
-                              activeColor: theme.colorScheme.primary,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  _sms = value;
-                                });
-                              },
-                              value: _sms,
-                            ),
-                            FxText.sh2("Send SMS", fontWeight: 600)
-                          ],
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Checkbox(
-                              value: _voice,
-                              activeColor: theme.colorScheme.primary,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  _voice = value;
-                                });
-                              },
-                            ),
-                            FxText.sh2("Left Voice Message", fontWeight: 600)
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              FxButton.rounded(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
-                                    BackendInterface().putLeadAsUnAnswered(
-                                        lead!.id, _sms!, _voice!);
+                            Row(
+                              children: <Widget>[
+                                Checkbox(
+                                  activeColor: theme.colorScheme.primary,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      _sms = value;
+                                    });
                                   },
-                                  child: FxText.button("Confirm",
-                                    color: theme.colorScheme.onPrimary,)),
-                              FxButton.rounded(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: FxText.button("Cancel"),
-                                  backgroundColor: theme.colorScheme
-                                      .onSecondary),
-                            ],
-                          ),
-                        )
-                      ],
+                                  value: _sms,
+                                ),
+                                FxText.sh2("Send SMS", fontWeight: 600)
+                              ],
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Checkbox(
+                                  value: _voice,
+                                  activeColor: theme.colorScheme.primary,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      _voice = value;
+                                    });
+                                  },
+                                ),
+                                FxText.sh2("Left Voice Message",
+                                    fontWeight: 600)
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  FxButton.rounded(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        BackendInterface().putLeadAsUnAnswered(
+                                            lead!.id, _sms!, _voice!);
+                                      },
+                                      child: FxText.button(
+                                        "Confirm",
+                                        color: theme.colorScheme.onPrimary,
+                                      )),
+                                  FxButton.rounded(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: FxText.button("Cancel"),
+                                      backgroundColor:
+                                          theme.colorScheme.onSecondary),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              )
-          );
+                  ));
         });
   }
 
@@ -648,66 +651,73 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext buildContext) {
-          return StatefulBuilder(builder: (BuildContext context, setState) =>
-              Container(
-                color: Colors.transparent,
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: theme.backgroundColor,
-                      borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(16),
-                          topRight: Radius.circular(16))),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Column(
-                            children: lostReasons.mapIndexed((index, element) =>
-                                ListTile(
-                                  title: FxText.sh2(element, fontWeight: 600),
-                                  contentPadding: const EdgeInsets.all(0),
-                                  dense: true,
-                                  leading: Radio(
-                                    value: index,
-                                    activeColor: theme.colorScheme.primary,
-                                    groupValue: _selectedIndex,
-                                    onChanged: (int? value) {
-                                      setState(() {
-                                        _selectedIndex = value;
-                                      });
-                                    },
-                                  ),
-                                )).toList()),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              FxButton.rounded(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
-                                    BackendInterface().putLeadAsLost(
-                                        lead!.id, lostReasons[_selectedIndex!]);
-                                  },
-                                  child: FxText.button("Confirm",
-                                    color: theme.colorScheme.onPrimary,)),
-                              FxButton.rounded(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: FxText.button("Cancel"),
-                                  backgroundColor: theme.colorScheme
-                                      .onSecondary),
-                            ],
-                          ),
-                        )
-                      ],
+          return StatefulBuilder(
+              builder: (BuildContext context, setState) => Container(
+                    color: Colors.transparent,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: theme.backgroundColor,
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(16),
+                              topRight: Radius.circular(16))),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Column(
+                                children: lostReasons
+                                    .mapIndexed((index, element) => ListTile(
+                                          title: FxText.sh2(element,
+                                              fontWeight: 600),
+                                          contentPadding:
+                                              const EdgeInsets.all(0),
+                                          dense: true,
+                                          leading: Radio(
+                                            value: index,
+                                            activeColor:
+                                                theme.colorScheme.primary,
+                                            groupValue: _selectedIndex,
+                                            onChanged: (int? value) {
+                                              setState(() {
+                                                _selectedIndex = value;
+                                              });
+                                            },
+                                          ),
+                                        ))
+                                    .toList()),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  FxButton.rounded(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        BackendInterface().putLeadAsLost(
+                                            lead!.id,
+                                            lostReasons[_selectedIndex!]);
+                                      },
+                                      child: FxText.button(
+                                        "Confirm",
+                                        color: theme.colorScheme.onPrimary,
+                                      )),
+                                  FxButton.rounded(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: FxText.button("Cancel"),
+                                      backgroundColor:
+                                          theme.colorScheme.onSecondary),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              )
-          );
+                  ));
         });
   }
 }
