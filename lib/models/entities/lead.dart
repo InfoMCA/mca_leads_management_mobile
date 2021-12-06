@@ -1,5 +1,8 @@
 
 import 'package:json_annotation/json_annotation.dart';
+import 'package:mca_leads_management_mobile/views/leads/lead_details_view.dart';
+import 'package:mca_leads_management_mobile/views/session/session_details.dart';
+import 'package:mca_leads_management_mobile/views/session/session_details_complete.dart';
 
 part 'lead.g.dart';
 
@@ -39,8 +42,27 @@ extension LeadViewExt on LogicalView {
     }
   }
 
+  String getRouteName() {
+    switch (this) {
+      case LogicalView.approval:
+      case LogicalView.followUpManager:
+      case LogicalView.appraisal:
+        return LeadDetailsView.routeName;
+      case LogicalView.dispatched:
+        return SessionDetails.routeName;
+      case LogicalView.active:
+        return SessionDetailsComplete.routeName;
+      case  LogicalView.completed:
+        return SessionDetailsComplete.routeName;
+      case LogicalView.inventory:
+      case LogicalView.marketplace:
+      case LogicalView.traded:
+        return "";
+    }
+  }
+
   String getString() {
-    return toString().substring(toString().lastIndexOf('.'));
+    return toString().substring(toString().lastIndexOf('.') + 1);
   }
 
   bool isLeadView() {
