@@ -1,5 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:mca_leads_management_mobile/utils/datetime_tools.dart';
 
-import 'package:enum_to_string/enum_to_string.dart';
+part 'session.g.dart';
 
 enum SessionStatus {
   None,
@@ -51,117 +54,78 @@ extension SessionStatusString on SessionStatus {
   }
 }
 
+@JsonSerializable()
 class Session {
   /// Items pertaining to Session object in the backend
   String id;
-  SessionStatus? sessionStatus;
   String title;
   String vin;
   String color;
   int mileage;
   double estimatedCr;
   int askingPrice;
-  int offeredPrice;
-  int requestedPrice;
+  int? offeredPrice;
+  int? requestedPrice;
   int mmr;
   String address1;
-  String address2;
+  String? address2;
   String city;
   String state;
   String zipCode;
   String staff;
   String region;
   String service;
-  String scheduledDateTime; // Same as sessionDateTime but in string format
+  String _scheduledDateTime;
   String phone;
   String customerName;
 
-  Session({
-    required this.id,
-    required this.sessionStatus,
-    required this.title,
-    required this.vin,
-    required this.color,
-    required this.mileage,
-    required this.estimatedCr,
-    required this.askingPrice,
-    required this.offeredPrice,
-    required this.requestedPrice,
-    required this.mmr,
-    required this.phone,
-    required this.customerName,
-    required this.address1,
-    required this.address2,
-    required this.city,
-    required this.state,
-    required this.zipCode,
-    required this.region,
-    required this.service,
-    required this.staff,
-    required this.scheduledDateTime
-  });
+  DateTime? get scheduledDateTime => DateTime.tryParse(_scheduledDateTime);
 
-  factory Session.fromJson(dynamic json) {
-    return Session(
-      id: json['id'] as String,
-      sessionStatus: EnumToString.fromString(
-          SessionStatus.values, json['status'] as String),
-      title: json['title'] as String,
-      vin: json['vin'] as String,
-      mileage: json['mileage'] as int,
-      color: json['color'] as String,
-      estimatedCr: json['estimatedCr'] as double,
-      askingPrice: json['askingPrice'] as int,
-      mmr: json['mmr'] as int,
-      requestedPrice: json['requestedPrice'] as int,
-      offeredPrice: json['offeredPrice'] as int,
-      address1: json['address1'] as String,
-      address2: json['address2'] as String,
-      city: json['city'] as String,
-      state: json['state'] as String,
-      zipCode: json['zipCode'] as String,
-      staff: json['staff'] as String,
-      region: json['region'] as String,
-      service: json['service'] as String,
-      phone: json['phone'] as String,
-      customerName: json['customerName'] ?? "N/A",
-      scheduledDateTime: json['scheduledDateTime'],
-    );
-  }
+  set scheduledDate(DateTime date) =>
+      (scheduledDateTime ?? DateTime.now()).setDate(date);
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'sessionStatus': EnumToString.convertToString(sessionStatus),
-      'title': title,
-      'vin': vin,
-      'color': color,
-      'mileage': mileage,
-      'estimatedCr': estimatedCr,
-      'askingPrice': askingPrice,
-      'requestedPrice': requestedPrice,
-      'offeredPrice': offeredPrice,
-      'mmr': mmr,
-      'address1': address1,
-      'address2': address2,
-      'city': city,
-      'state': state,
-      'zipCode': zipCode,
-      'staff': staff,
-      'region': region,
-      'service': service,
-      'customerName': customerName,
-      'phone': phone,
-      'scheduledDateTime': scheduledDateTime
-    };
-  }
+  set scheduledTime(TimeOfDay timeOfDay) =>
+      (scheduledDateTime ?? DateTime.now()).setTime(timeOfDay);
+
+  Session(
+      {required this.id,
+      required this.title,
+      required this.vin,
+      required this.color,
+      required this.mileage,
+      required this.estimatedCr,
+      required this.askingPrice,
+      required this.offeredPrice,
+      required this.requestedPrice,
+      required this.mmr,
+      required this.phone,
+      required this.customerName,
+      required this.address1,
+      required this.address2,
+      required this.city,
+      required this.state,
+      required this.zipCode,
+      required this.region,
+      required this.service,
+      required this.staff,
+      required String scheduledDateTime})
+      : _scheduledDateTime = scheduledDateTime;
+
+  factory Session.fromJson(Map<String, dynamic> json) =>
+      _$SessionFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SessionToJson(this);
 
   String getAddress() {
     String address = address1 + ", ";
-    if (address2.isNotEmpty) {
-      address += address2 + ", ";
+    if (address2!.isNotEmpty) {
+      address += address2! + ", ";
     }
     address += city + ", " + state + ", " + zipCode;
     return address;
+  }
+
+  DateTime setDateTime(DateTime date, TimeOfDay time) {
+    return DateTime(date.year, date.month, date.day, time.hour, time.minute);
   }
 }

@@ -1,57 +1,62 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:mca_leads_management_mobile/models/entities/lead.dart';
+import 'package:mca_leads_management_mobile/models/entities/session.dart';
+
+import 'lead.dart';
 
 part 'backend_req.g.dart';
 
-enum LeadMgmCmd {
-  login,
-  getLeads,
-  getLead,
-  searchLead,
-  actionLead,
-  getInspectors
+enum CommandObject { user, region, lead, session }
+
+enum CommandIntent {
+  getById,
+  getAll,
+  search,
+  save,
+  action,
 }
 
-enum LeadAction {
-  schedule,
-  followUp,
-  unanswered,
-  lost
+enum CommandAction {
+  // Lead Actions
+  leadDispatch,
+  leadFollowUp,
+  leadUnanswered,
+  leadApprovedOffer,
+  leadApprovedDeal,
+  leadLost,
+  // Session Actions
+  sessionSchedule,
+  sessionLost,
+  // User Action
+  userLogin,
+  // Region Action
+  regionGetByZipcode,
+  regionGetInspectors
 }
 
 @JsonSerializable()
 class BackendReq {
-  final LeadMgmCmd cmd;
-  String? username;
-  String? password;
-  String? keyword;
-  String? zipcode;
-  LeadView? leadView;
-  String? leadId;
-  LeadAction? leadAction;
-  bool? sendSms;
-  bool? leftMessage;
-  DateTime? followUpDate;
-  String? followUpComment;
-  String? lostReason;
+  String username;
+  CommandObject object;
+  CommandIntent intent;
+  CommandAction? action;
+  String? objectId;
+  Lead? lead;
+  Session? session;
 
-  BackendReq({required this.cmd,
-    this.username,
-    this.password,
-    this.keyword,
-    this.zipcode,
-    this.leadView,
-    this.leadId,
-    this.leadAction,
-    this.sendSms,
-    this.leftMessage,
-    this.followUpComment,
-    this.followUpDate,
-    this.lostReason});
+  ///Either LeadAction, SessionAction or UserAction enums
+  Map<String, String>? params;
+
+  BackendReq({required this.username,
+    required this.object,
+    required this.intent,
+    this.action,
+    this.objectId,
+    this.lead,
+    this.session,
+    this.params});
 
   factory BackendReq.fromJson(Map<String, dynamic> json) =>
       _$BackendReqFromJson(json);
 
   Map<String, dynamic> toJson() => _$BackendReqToJson(this);
-
 }

@@ -7,61 +7,59 @@ part of 'backend_req.dart';
 // **************************************************************************
 
 BackendReq _$BackendReqFromJson(Map<String, dynamic> json) => BackendReq(
-      cmd: $enumDecode(_$LeadMgmCmdEnumMap, json['cmd']),
-      username: json['username'] as String?,
-      password: json['password'] as String?,
-      keyword: json['keyword'] as String?,
-      zipcode: json['zipcode'] as String?,
-      leadView: $enumDecodeNullable(_$LeadViewEnumMap, json['leadView']),
-      leadId: json['leadId'] as String?,
-      leadAction: $enumDecodeNullable(_$LeadActionEnumMap, json['leadAction']),
-      sendSms: json['sendSms'] as bool?,
-      leftMessage: json['leftMessage'] as bool?,
-      followUpComment: json['followUpComment'] as String?,
-      followUpDate: json['followUpDate'] == null
+      username: json['username'] as String,
+      object: $enumDecode(_$CommandObjectEnumMap, json['object']),
+      intent: $enumDecode(_$CommandIntentEnumMap, json['intent']),
+      action: $enumDecodeNullable(_$CommandActionEnumMap, json['action']),
+      objectId: json['objectId'] as String?,
+      lead: json['lead'] == null
           ? null
-          : DateTime.parse(json['followUpDate'] as String),
-      lostReason: json['lostReason'] as String?,
+          : Lead.fromJson(json['lead'] as Map<String, dynamic>),
+      session: json['session'] == null
+          ? null
+          : Session.fromJson(json['session'] as Map<String, dynamic>),
+      params: (json['params'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as String),
+      ),
     );
 
 Map<String, dynamic> _$BackendReqToJson(BackendReq instance) =>
     <String, dynamic>{
-      'cmd': _$LeadMgmCmdEnumMap[instance.cmd],
       'username': instance.username,
-      'password': instance.password,
-      'keyword': instance.keyword,
-      'zipcode': instance.zipcode,
-      'leadView': _$LeadViewEnumMap[instance.leadView],
-      'leadId': instance.leadId,
-      'leadAction': _$LeadActionEnumMap[instance.leadAction],
-      'sendSms': instance.sendSms,
-      'leftMessage': instance.leftMessage,
-      'followUpDate': instance.followUpDate?.toIso8601String(),
-      'followUpComment': instance.followUpComment,
-      'lostReason': instance.lostReason,
+      'object': _$CommandObjectEnumMap[instance.object],
+      'intent': _$CommandIntentEnumMap[instance.intent],
+      'action': _$CommandActionEnumMap[instance.action],
+      'objectId': instance.objectId,
+      'lead': instance.lead,
+      'session': instance.session,
+      'params': instance.params,
     };
 
-const _$LeadMgmCmdEnumMap = {
-  LeadMgmCmd.login: 'login',
-  LeadMgmCmd.getLeads: 'getLeads',
-  LeadMgmCmd.getLead: 'getLead',
-  LeadMgmCmd.searchLead: 'searchLead',
-  LeadMgmCmd.actionLead: 'actionLead',
-  LeadMgmCmd.getInspectors: 'getInspectors',
+const _$CommandObjectEnumMap = {
+  CommandObject.user: 'user',
+  CommandObject.region: 'region',
+  CommandObject.lead: 'lead',
+  CommandObject.session: 'session',
 };
 
-const _$LeadViewEnumMap = {
-  LeadView.approval: 'approval',
-  LeadView.followUpManager: 'followUpManager',
-  LeadView.appraisal: 'appraisal',
-  LeadView.dispatched: 'dispatched',
-  LeadView.active: 'active',
-  LeadView.completed: 'completed',
+const _$CommandIntentEnumMap = {
+  CommandIntent.getById: 'getById',
+  CommandIntent.getAll: 'getAll',
+  CommandIntent.search: 'search',
+  CommandIntent.save: 'save',
+  CommandIntent.action: 'action',
 };
 
-const _$LeadActionEnumMap = {
-  LeadAction.schedule: 'schedule',
-  LeadAction.followUp: 'followUp',
-  LeadAction.unanswered: 'unanswered',
-  LeadAction.lost: 'lost',
+const _$CommandActionEnumMap = {
+  CommandAction.leadDispatch: 'leadDispatch',
+  CommandAction.leadFollowUp: 'leadFollowUp',
+  CommandAction.leadUnanswered: 'leadUnanswered',
+  CommandAction.leadApprovedOffer: 'leadApprovedOffer',
+  CommandAction.leadApprovedDeal: 'leadApprovedDeal',
+  CommandAction.leadLost: 'leadLost',
+  CommandAction.sessionSchedule: 'sessionSchedule',
+  CommandAction.sessionLost: 'sessionLost',
+  CommandAction.userLogin: 'userLogin',
+  CommandAction.regionGetByZipcode: 'regionGetByZipcode',
+  CommandAction.regionGetInspectors: 'regionGetInspectors',
 };

@@ -17,8 +17,8 @@ import 'package:mca_leads_management_mobile/views/session/session_details_comple
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 
 class LeadsView extends StatefulWidget {
-  LeadView leadView;
-  LeadsView({Key? key, required this.leadView}) : super(key: key);
+  LogicalView logicalView;
+  LeadsView({Key? key, required this.logicalView}) : super(key: key);
 
   @override
   _LeadsViewState createState() => _LeadsViewState();
@@ -33,26 +33,26 @@ class _LeadsViewState extends State<LeadsView> {
 
   void _getLeads() async {
     _leadList.clear();
-    List<LeadSummary>? newLeads = await getLeads(widget.leadView);
+    List<LeadSummary>? newLeads = await getLeads(widget.logicalView);
     newLeads?.forEach((lead) => _leadList.add(lead));
-    dev.log("Leads size (${widget.leadView}): ${_leadList.length.toString()}");
+    dev.log("Leads size (${widget.logicalView}): ${_leadList.length.toString()}");
     setState(() {});
   }
 
   void _getRouteName() {
-    switch (widget.leadView) {
-      case LeadView.approval:
-      case LeadView.followUpManager:
-      case LeadView.appraisal:
+    switch (widget.logicalView) {
+      case LogicalView.approval:
+      case LogicalView.followUpManager:
+      case LogicalView.appraisal:
         routeName = LeadDetailsView.routeName;
         break;
-      case LeadView.dispatched:
+      case LogicalView.dispatched:
         routeName = SessionDetails.routeName;
         break;
-      case LeadView.active:
+      case LogicalView.active:
         routeName = SessionDetailsComplete.routeName;
         break;
-      case LeadView.completed:
+      case LogicalView.completed:
         routeName = SessionDetailsComplete.routeName;
         break;
     }
@@ -117,7 +117,7 @@ class _LeadsViewState extends State<LeadsView> {
                           routeName,
                           arguments: LeadViewArguments(
                               _leadList[index].id,
-                              widget.leadView
+                              widget.logicalView
                           ),
                         );
                       },

@@ -1,32 +1,54 @@
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'lead.g.dart';
 
-enum LeadView {
+enum LogicalView {
   approval,
   followUpManager,
   appraisal,
   dispatched,
   active,
-  completed
+  completed,
+  inventory,
+  marketplace,
+  traded
 }
 
-extension LeadViewExt on LeadView {
+extension LeadViewExt on LogicalView {
   String getName() {
     switch (this) {
-      case LeadView.approval:
+      case LogicalView.approval:
         return 'Awaiting Approval';
-      case LeadView.followUpManager:
+      case LogicalView.followUpManager:
         return 'Follow Up';
-      case LeadView.appraisal:
+      case LogicalView.appraisal:
         return 'Appraisal';
-      case LeadView.dispatched:
+      case LogicalView.dispatched:
         return 'Dispatched';
-      case LeadView.active:
+      case LogicalView.active:
         return 'In Progress';
-      case LeadView.completed:
+      case LogicalView.completed:
         return 'Completed';
+      case LogicalView.inventory:
+        return 'Inventory';
+      case LogicalView.marketplace:
+        return 'marketplace';
+      case LogicalView.traded:
+        return 'traded';
     }
+  }
+
+  String getString() {
+    return toString().substring(toString().lastIndexOf('.'));
+  }
+
+  bool isLeadView() {
+    return [LogicalView.approval, LogicalView.followUpManager, LogicalView.appraisal].contains(this);
+  }
+
+  bool isSessionView() {
+    return [LogicalView.dispatched, LogicalView.active, LogicalView.completed].contains(this);
   }
 }
 

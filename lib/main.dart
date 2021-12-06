@@ -8,7 +8,6 @@ import 'package:mca_leads_management_mobile/app/app_module.dart';
 import 'package:mca_leads_management_mobile/models/entities/auth_user.dart';
 import 'package:mca_leads_management_mobile/utils/local_storage.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
-import 'package:mca_leads_management_mobile/utils/theme/theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

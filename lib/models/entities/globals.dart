@@ -7,7 +7,7 @@ import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.
 
 String? inspectionConfigStr;
 AuthUserModel? _user;
-Map<LeadView, List<LeadSummary>?> leadSummaries = new HashMap();
+Map<LogicalView, List<LeadSummary>?> leadSummaries = HashMap();
 
 AuthUserModel? get currentUser {
   return _user;
@@ -17,11 +17,15 @@ set currentUser(AuthUserModel? newUser) {
   _user = newUser;
 }
 
-Future<List<LeadSummary>?> getLeads(LeadView leadView) async {
-  List<LeadSummary>? newLeads = await BackendInterface().getLeads(leadView);
-  if (newLeads!.isNotEmpty) {
-    leadSummaries.putIfAbsent(leadView, () => newLeads);
+Future<List<LeadSummary>?> getLeads(LogicalView logicalView) async {
+  List<LeadSummary>? newLeads;
+  if (logicalView.isLeadView()) {
+    newLeads = await BackendInterface().getLeads(logicalView);
+  } else {
+    newLeads = await BackendInterface().getSessions(logicalView);
   }
-  return leadSummaries[leadView];
+  if (newLeads!.isNotEmpty) {
+    leadSummaries.putIfAbsent(logicalView, () => newLeads);
+  }
+  return leadSummaries[logicalView];
 }
-

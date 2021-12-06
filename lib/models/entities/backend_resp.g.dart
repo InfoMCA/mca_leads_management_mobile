@@ -9,13 +9,15 @@ part of 'backend_resp.dart';
 BackendResp _$BackendRespFromJson(Map<String, dynamic> json) => BackendResp(
       message: json['message'] as String?,
       status: json['status'] as String?,
-      statusCode: json['statusCode'] as int?,
       leadSummaries: (json['leadSummaries'] as List<dynamic>?)
           ?.map((e) => LeadSummary.fromJson(e as Map<String, dynamic>))
           .toList(),
       lead: json['lead'] == null
           ? null
           : Lead.fromJson(json['lead'] as Map<String, dynamic>),
+      session: json['session'] == null
+          ? null
+          : Session.fromJson(json['session'] as Map<String, dynamic>),
       inspectors: (json['inspectors'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -24,11 +26,11 @@ BackendResp _$BackendRespFromJson(Map<String, dynamic> json) => BackendResp(
 
 Map<String, dynamic> _$BackendRespToJson(BackendResp instance) =>
     <String, dynamic>{
-      'statusCode': instance.statusCode,
       'message': instance.message,
       'status': instance.status,
       'leadSummaries': instance.leadSummaries,
       'lead': instance.lead,
+      'session': instance.session,
       'inspectors': instance.inspectors,
       'region': instance.region,
     };

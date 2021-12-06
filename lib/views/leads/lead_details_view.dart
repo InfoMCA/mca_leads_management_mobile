@@ -7,6 +7,7 @@ import 'dart:developer' as dev;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/views/leads/lead_schedule_view.dart';
 import 'package:mca_leads_management_mobile/widgets/button/button.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -20,7 +21,7 @@ import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/views/leads/lead_view_arg.dart';
 import 'package:mca_leads_management_mobile/views/leads/followup_dialog.dart';
 import 'package:mca_leads_management_mobile/views/leads/question_dialog.dart';
-import 'package:mca_leads_management_mobile/views/leads/schedule_view.dart';
+
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 import 'package:collection/collection.dart';
 
@@ -41,10 +42,12 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
   late Future<Lead?> leadFuture;
   late DateTime? selectedDate;
   final followupDateController = TextEditingController();
+  late ScrollController _controller;
 
   @override
   void initState() {
     super.initState();
+    _controller = ScrollController();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
     _getLead(widget.args.id);
@@ -90,7 +93,6 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
           }
           lead = snapshot.data;
           return Scaffold(
-              resizeToAvoidBottomInset: false,
               appBar: AppBar(
                 elevation: 0,
                 leading: InkWell(
@@ -124,7 +126,7 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                     _showBottomSheet(context);
                   },
                   child: Icon(
-                    MdiIcons.flashOutline,
+                    MdiIcons.cloudQuestion,
                     size: 26,
                     color: theme.colorScheme.onPrimary,
                   ),
@@ -139,6 +141,7 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                     }
                   },
                   child: SingleChildScrollView(
+                    controller: _controller,
                     child: Container(
                       padding: FxSpacing.all(20),
                       child: Column(
@@ -380,99 +383,59 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
         context: context,
         builder: (BuildContext buildContext) {
           return Container(
+            height: 80,
             color: Colors.transparent,
             child: Container(
               decoration: BoxDecoration(
-                color: theme.backgroundColor,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
-                ),
-              ),
+                  color: theme.backgroundColor,
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16))),
               child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
+                padding: const EdgeInsets.all(20),
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    ListTile(
-                      dense: true,
-                      leading: Icon(MdiIcons.calendar,
-                          color: theme.colorScheme.onBackground.withAlpha(220)),
-                      title: InkWell(
+                    InkWell(
                         onTap: () {
                           Navigator.pop(context);
                           Navigator.pushNamed(
                               context, LeadScheduleView.routeName,
                               arguments: lead);
                         },
-                        child: FxText.b1("Schedule",
-                            color: theme.colorScheme.onBackground,
-                            letterSpacing: 0.3,
-                            fontWeight: 600),
-                      ),
-                    ),
-                    Container(
-                      child: (widget.args.leadView == LeadView.followUpManager)
-                          ? null
-                          : InkWell(
-                              onTap: () {
-                                Navigator.pop(context);
-                                _showFollowUpDialog(context);
-                              },
-                              child: ListTile(
-                                dense: true,
-                                leading: Icon(MdiIcons.phoneCheck,
-                                    color: theme.colorScheme.onBackground
-                                        .withAlpha(220)),
-                                title: FxText.b1("Follow Up",
-                                    color: theme.colorScheme.onBackground,
-                                    letterSpacing: 0.3,
-                                    fontWeight: 600),
-                              ),
-                            ),
-                    ),
+                        child: Icon(MdiIcons.calendar,
+                            size: 32,
+                            color: theme.colorScheme.primaryVariant
+                                .withAlpha(220))),
                     InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                        _showUnansweredDialog(context);
-                      },
-                      child: ListTile(
-                        dense: true,
-                        leading: Icon(MdiIcons.phoneMissed,
-                            color:
-                                theme.colorScheme.onBackground.withAlpha(220)),
-                        title: FxText.b1("Unanswered",
-                            color: theme.colorScheme.onBackground,
-                            letterSpacing: 0.3,
-                            fontWeight: 600),
-                      ),
-                    ),
+                        onTap: () {
+                          Navigator.pop(context);
+                          _showFollowUpDialog(context);
+                        },
+                        child: Icon(MdiIcons.phoneCheck,
+                            size: 32,
+                            color: theme.colorScheme.primaryVariant
+                                .withAlpha(220))),
                     InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                        _showLostDialog(context);
-                      },
-                      child: ListTile(
-                        dense: true,
-                        leading: Icon(MdiIcons.delete,
-                            color:
-                                theme.colorScheme.onBackground.withAlpha(220)),
-                        title: FxText.b1("Lost",
-                            color: theme.colorScheme.onBackground,
-                            letterSpacing: 0.3,
-                            fontWeight: 600),
-                      ),
-                    ),
-                    ListTile(
-                      dense: true,
-                      leading: Icon(MdiIcons.accountQuestion,
-                          color: theme.colorScheme.onBackground.withAlpha(220)),
-                      title: FxText.b1("Questions",
-                          color: theme.colorScheme.onBackground,
-                          letterSpacing: 0.3,
-                          fontWeight: 500),
-                    ),
+                        onTap: () {
+                          Navigator.pop(context);
+                          _showUnansweredDialog(context);
+                        },
+                        child: Icon(MdiIcons.phoneMissed,
+                            size: 32,
+                            color: theme.colorScheme.primaryVariant
+                                .withAlpha(220))),
+                    InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                          _showLostDialog(context);
+                        },
+                        child: Icon(MdiIcons.delete,
+                            size: 32,
+                            color: theme.colorScheme.primaryVariant
+                                .withAlpha(220))),
                     InkWell(
                       onTap: () {
                         Navigator.push(
@@ -481,32 +444,20 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                               builder: (context) => QuestionListDialog(lead)),
                         );
                       },
-                      child: ListTile(
-                        dense: true,
-                        leading: Icon(MdiIcons.accountQuestion,
-                            color:
-                                theme.colorScheme.onBackground.withAlpha(220)),
-                        title: FxText.b1("Questions",
-                            color: theme.colorScheme.onBackground,
-                            letterSpacing: 0.3,
-                            fontWeight: 500),
-                      ),
+                      child: Icon(MdiIcons.accountQuestion,
+                          size: 32,
+                          color:
+                              theme.colorScheme.primaryVariant.withAlpha(220)),
                     ),
                     InkWell(
                       onTap: () {
                         Navigator.popUntil(
                             context, ModalRoute.withName('/home'));
                       },
-                      child: ListTile(
-                        dense: true,
-                        leading: Icon(MdiIcons.contentSave,
-                            color:
-                                theme.colorScheme.onBackground.withAlpha(220)),
-                        title: FxText.b1("Save",
-                            color: theme.colorScheme.onBackground,
-                            letterSpacing: 0.3,
-                            fontWeight: 500),
-                      ),
+                      child: Icon(MdiIcons.contentSave,
+                          size: 32,
+                          color:
+                              theme.colorScheme.primaryVariant.withAlpha(220)),
                     ),
                   ],
                 ),
@@ -591,7 +542,7 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                               onPressed: () {
                                 Navigator.pop(context);
                                 Navigator.pop(context);
-                                BackendInterface().putLeadFollowUp(
+                                BackendInterface().putLeadAsFollowUp(
                                     lead!.id, selectedDate!, comment);
                               },
                               child: FxText.button(
@@ -672,7 +623,7 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                                       onPressed: () {
                                         Navigator.pop(context);
                                         Navigator.pop(context);
-                                        BackendInterface().putLeadUnAnswered(
+                                        BackendInterface().putLeadAsUnAnswered(
                                             lead!.id, _sms!, _voice!);
                                       },
                                       child: FxText.button(
@@ -753,7 +704,8 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                                       onPressed: () {
                                         Navigator.pop(context);
                                         Navigator.pop(context);
-                                        BackendInterface().putLeadLost(lead!.id,
+                                        BackendInterface().putLeadAsLost(
+                                            lead!.id,
                                             lostReasons[_selectedIndex!]);
                                       },
                                       child: FxText.button(

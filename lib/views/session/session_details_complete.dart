@@ -63,7 +63,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
-            _showBottomSheet(context, args.leadView);
+            _showBottomSheet(context, args.logicalView);
           },
           child: Icon(
             MdiIcons.flashOutline,
@@ -314,7 +314,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                 ),
               ),
               Container(
-                child: (args.leadView == LeadView.completed)
+                child: (args.logicalView == LogicalView.completed)
                     ? Container(
                         margin: const EdgeInsets.only(top: 8),
                         child: TextFormField(
@@ -340,7 +340,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
     );
   }
 
-  void _showBottomSheet(context, leadView) {
+  void _showBottomSheet(context, logicalView) {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext buildContext) {
@@ -366,7 +366,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                           fontWeight: 700),
                     ),
                     Container(
-                      child: (leadView == LeadView.completed)
+                      child: (logicalView == LogicalView.completed)
                           ? ListTile(
                               dense: true,
                               leading: Icon(MdiIcons.calendar,
@@ -380,7 +380,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                           : null,
                     ),
                     Container(
-                      child: (leadView == LeadView.active)
+                      child: (logicalView == LogicalView.active)
                           ? Column(
                               children: [
                                 ListTile(
