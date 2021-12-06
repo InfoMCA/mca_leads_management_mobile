@@ -33,30 +33,12 @@ class _DashBoardState extends State<DashBoard> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late CustomTheme customTheme;
   late ThemeData theme;
+
   int _selectedPage = 0;
   List<bool> _dataExpansionPanel = [false, true, false];
-  late String routeName;
   final List<LeadSummary> _leadList = [];
   late LogicalView logicalView;
 
-  void _getRouteName() {
-    switch (logicalView) {
-      case LogicalView.approval:
-      case LogicalView.followUpManager:
-      case LogicalView.appraisal:
-        routeName = LeadDetailsView.routeName;
-        break;
-      case LogicalView.dispatched:
-        routeName = SessionDetails.routeName;
-        break;
-      case LogicalView.active:
-        routeName = SessionDetailsComplete.routeName;
-        break;
-        case  LogicalView.completed:
-        routeName = SessionDetailsComplete.routeName;
-        break;
-    }
-  }
 
   void _getLeads() async {
     _leadList.clear();
@@ -72,7 +54,6 @@ class _DashBoardState extends State<DashBoard> {
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
     logicalView = LogicalView.approval;
-    _getRouteName();
     _getLeads();
   }
 
@@ -238,6 +219,57 @@ class _DashBoardState extends State<DashBoard> {
         ));
   }
 
+  Widget _buildItemList() {
+    return ListView.separated(
+        itemCount: _leadList.length,
+        itemBuilder: (context, index) {
+          return Ink(
+            color: theme.backgroundColor,
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundColor: _leadList[index].viewTag
+                    .getBackgroundColor(),
+                child: FxText.b1(_leadList[index].viewTag.getAbbrv(),
+                    fontWeight: 600,
+                    color: _leadList[index].viewTag
+                        .getForegroundColor()),
+              ),
+              subtitle: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  FxText.b2(_leadList[index].vin,
+                      fontSize: 13,
+                      fontWeight: 500,
+                      color: theme.colorScheme.onBackground),
+                  FxText.b2(_leadList[index].getPrettyTime(),
+                      fontSize: 13,
+                      fontWeight: 500,
+                      color: theme.colorScheme.onBackground),
+                ],
+              ),
+              title: FxText.b1(_leadList[index].getCompactTitle(),
+                  fontWeight: 700,
+                  color: theme.colorScheme.onBackground),
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  logicalView.getRouteName(),
+                  arguments: LeadViewArguments(
+                      _leadList[index].id,
+                      logicalView
+                  ),
+                );
+              },
+            ),
+          );
+        },
+        separatorBuilder: (_, __) =>
+            Divider(
+              height: 0.5,
+              color: theme.dividerColor,
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -285,54 +317,7 @@ class _DashBoardState extends State<DashBoard> {
                 }
                 return true;
               },
-              child: ListView.separated(
-                  itemCount: _leadList.length,
-                  itemBuilder: (context, index) {
-                    return Ink(
-                      color: theme.backgroundColor,
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: _leadList[index].viewTag
-                              .getBackgroundColor(),
-                          child: FxText.b1(_leadList[index].viewTag.getAbbrv(),
-                              fontWeight: 600,
-                              color: _leadList[index].viewTag
-                                  .getForegroundColor()),
-                        ),
-                        subtitle: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            FxText.b2(_leadList[index].vin,
-                                fontSize: 13,
-                                fontWeight: 500,
-                                color: theme.colorScheme.onBackground),
-                            FxText.b2(_leadList[index].getPrettyTime(),
-                                fontSize: 13,
-                                fontWeight: 500,
-                                color: theme.colorScheme.onBackground),
-                          ],
-                        ),
-                        title: FxText.b1(_leadList[index].getCompactTitle(),
-                            fontWeight: 700,
-                            color: theme.colorScheme.onBackground),
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            routeName,
-                            arguments: LeadViewArguments(
-                                _leadList[index].id,
-                                logicalView
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                  separatorBuilder: (_, __) =>
-                      Divider(
-                        height: 0.5,
-                        color: theme.dividerColor,
-                      )),
+              child: _buildItemList(),
             ),
           ),
         ],
@@ -460,7 +445,6 @@ class _DashBoardState extends State<DashBoard> {
       onTap: () {
         setState(() {
           this.logicalView = logicalView;
-          _getRouteName();
           _getLeads();
           _selectedPage = position;
         });

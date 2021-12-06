@@ -4,9 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead.dart';
+import 'package:mca_leads_management_mobile/utils/spacing.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class QuestionListDialog extends StatefulWidget {
   final Lead? lead;
@@ -19,6 +21,7 @@ class QuestionListDialog extends StatefulWidget {
 class _QuestionListDialogState extends State<QuestionListDialog> {
   late CustomTheme customTheme;
   late ThemeData theme;
+
   Map<String, dynamic>? conditionQuestion;
   List<String>? questionList = [];
   List<String>? answerList = [];
@@ -38,10 +41,16 @@ class _QuestionListDialogState extends State<QuestionListDialog> {
     print(answerList);
   }
 
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    await launch(Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    ).toString());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         elevation: 0,
         leading: InkWell(
@@ -52,6 +61,18 @@ class _QuestionListDialogState extends State<QuestionListDialog> {
             color: theme.backgroundColor,
           ),
         ),
+        actions: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: InkWell(
+              onTap: () => _makePhoneCall(widget.lead!.mobileNumber),
+              child: Icon(
+                Icons.phone,
+                color: theme.backgroundColor,
+              ),
+            ),
+          ),
+        ],
         title: FxText.sh1(
           "Questions",
           fontWeight: 600,
