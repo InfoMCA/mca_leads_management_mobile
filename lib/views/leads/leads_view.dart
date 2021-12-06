@@ -16,15 +16,15 @@ import 'package:mca_leads_management_mobile/views/session/session_details.dart';
 import 'package:mca_leads_management_mobile/views/session/session_details_complete.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 
-class LeadsList extends StatefulWidget {
+class LeadsView extends StatefulWidget {
   LeadView leadView;
-  LeadsList({Key? key, required this.leadView}) : super(key: key);
+  LeadsView({Key? key, required this.leadView}) : super(key: key);
 
   @override
-  _LeadsListState createState() => _LeadsListState();
+  _LeadsViewState createState() => _LeadsViewState();
 }
 
-class _LeadsListState extends State<LeadsList> {
+class _LeadsViewState extends State<LeadsView> {
   final List<LeadSummary> _leadList = [];
 
   late CustomTheme customTheme;
@@ -36,17 +36,15 @@ class _LeadsListState extends State<LeadsList> {
     List<LeadSummary>? newLeads = await getLeads(widget.leadView);
     newLeads?.forEach((lead) => _leadList.add(lead));
     dev.log("Leads size (${widget.leadView}): ${_leadList.length.toString()}");
-    setState(() {
-    });
+    setState(() {});
   }
 
   void _getRouteName() {
     switch (widget.leadView) {
-
       case LeadView.approval:
-      case LeadView.followUp:
+      case LeadView.followUpManager:
       case LeadView.appraisal:
-        routeName = LeadDetails.routeName;
+        routeName = LeadDetailsView.routeName;
         break;
       case LeadView.dispatched:
         routeName = SessionDetails.routeName;
@@ -58,7 +56,6 @@ class _LeadsListState extends State<LeadsList> {
         routeName = SessionDetailsComplete.routeName;
         break;
     }
-
   }
 
   @override
@@ -72,38 +69,69 @@ class _LeadsListState extends State<LeadsList> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-        itemCount: _leadList.length,
-        itemBuilder: (context, index) {
-          return Ink(
-            color: theme.backgroundColor,
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: _leadList[index].viewTag.getBackgroundColor(),
-                child: FxText.b1(_leadList[index].viewTag.getAbbrv(),
-                    fontWeight: 600,
-                    color: _leadList[index].viewTag.getForegroundColor()),
-              ),
-              subtitle: FxText.b2(_leadList[index].vin,
-                  fontWeight: 500, color: theme.colorScheme.onBackground),
-              title: FxText.b1(_leadList[index].title,
-                  fontWeight: 700, color: theme.colorScheme.onBackground),
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  routeName,
-                  arguments: LeadViewArguments(
-                      _leadList[index].id,
-                      widget.leadView
-                  ),
-                );
-              },
-            ),
-          );
-        },
-        separatorBuilder: (_, __) => Divider(
-              height: 0.5,
-              color: theme.dividerColor,
-            ));
+    return Column(
+      children: [
+        Expanded(
+          child:
+          NotificationListener<ScrollNotification>(
+            onNotification: (ScrollNotification scrollInfo) {
+              if (scrollInfo.metrics.pixels ==
+                  scrollInfo.metrics.maxScrollExtent) {
+                setState(() {});
+              }
+              return true;
+            },
+            child: ListView.separated(
+                itemCount: _leadList.length,
+                itemBuilder: (context, index) {
+                  return Ink(
+                    color: theme.backgroundColor,
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: _leadList[index].viewTag
+                            .getBackgroundColor(),
+                        child: FxText.b1(_leadList[index].viewTag.getAbbrv(),
+                            fontWeight: 600,
+                            color: _leadList[index].viewTag
+                                .getForegroundColor()),
+                      ),
+                      subtitle: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          FxText.b2(_leadList[index].vin,
+                              fontSize: 13,
+                              fontWeight: 500,
+                              color: theme.colorScheme.onBackground),
+                          FxText.b2(_leadList[index].getPrettyTime(),
+                              fontSize: 13,
+                              fontWeight: 500,
+                              color: theme.colorScheme.onBackground),
+                        ],
+                      ),
+                      title: FxText.b1(_leadList[index].getCompactTitle(),
+                          fontWeight: 700,
+                          color: theme.colorScheme.onBackground),
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          routeName,
+                          arguments: LeadViewArguments(
+                              _leadList[index].id,
+                              widget.leadView
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+                separatorBuilder: (_, __) =>
+                    Divider(
+                      height: 0.5,
+                      color: theme.dividerColor,
+                    )),
+          ),
+        ),
+      ],
+    );
   }
 }

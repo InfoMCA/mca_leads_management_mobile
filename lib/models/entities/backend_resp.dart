@@ -11,12 +11,16 @@ class BackendResp {
   String? status;
   List<LeadSummary>? leadSummaries;
   Lead? lead;
+  List<String>? inspectors;
+  String? region;
 
   BackendResp({this.message,
     this.status,
     this.statusCode,
     this.leadSummaries,
-    this.lead});
+    this.lead,
+    this.inspectors,
+    this.region});
 
   factory BackendResp.fromJson(Map<String, dynamic> json) =>
       _$BackendRespFromJson(json);

@@ -4,7 +4,7 @@ part 'lead.g.dart';
 
 enum LeadView {
   approval,
-  followUp,
+  followUpManager,
   appraisal,
   dispatched,
   active,
@@ -16,7 +16,7 @@ extension LeadViewExt on LeadView {
     switch (this) {
       case LeadView.approval:
         return 'Awaiting Approval';
-      case LeadView.followUp:
+      case LeadView.followUpManager:
         return 'Follow Up';
       case LeadView.appraisal:
         return 'Appraisal';
@@ -47,26 +47,40 @@ class Lead {
   String? customerName;
   String? payoffStatus;
 
+  String? comments;
+  String? conditionQuestions;
 
-  Lead({
-    required this.id,
-    required this.name,
-    required this.vin,
-    required this.color,
-    required this.mileage,
-    required this.estimatedCr,
-    required this.askingPrice,
-    required this.offeredPrice,
-    required this.requestedPrice,
-    required this.mmr,
-    required this.mobileNumber,
-    required this.customerName
-  });
+  // For Scheduling
+  String? address1;
+  String? address2;
+  String? city;
+  String? state;
+  String? zipCode;
+  String? region;
 
+  Lead(
+      {required this.id,
+      required this.name,
+      required this.vin,
+      required this.color,
+      required this.mileage,
+      required this.estimatedCr,
+      required this.askingPrice,
+      required this.offeredPrice,
+      required this.requestedPrice,
+      required this.mmr,
+      required this.mobileNumber,
+      required this.customerName,
+      required this.comments,
+      required this.conditionQuestions,
+      required this.address1,
+      required this.address2,
+      required this.city,
+      required this.state,
+      required this.zipCode,
+      required this.region});
 
-  factory Lead.fromJson(Map<String, dynamic> json) =>
-      _$LeadFromJson(json);
+  factory Lead.fromJson(Map<String, dynamic> json) => _$LeadFromJson(json);
 
   Map<String, dynamic> toJson() => _$LeadToJson(this);
-
 }

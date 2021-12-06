@@ -18,7 +18,7 @@ set currentUser(AuthUserModel? newUser) {
 }
 
 Future<List<LeadSummary>?> getLeads(LeadView leadView) async {
-  List<LeadSummary>? newLeads = await AdminInterface().getLeads(leadView);
+  List<LeadSummary>? newLeads = await BackendInterface().getLeads(leadView);
   if (newLeads!.isNotEmpty) {
     leadSummaries.putIfAbsent(leadView, () => newLeads);
   }

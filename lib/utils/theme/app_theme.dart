@@ -81,7 +81,7 @@ class AppTheme {
 
     /// AppBar Theme
     appBarTheme: const AppBarTheme(
-        backgroundColor: Color(0xffffffff),
+        backgroundColor: Color(0xff3C4EC5),
         iconTheme: IconThemeData(color: Color(0xff495057)),
         actionsIconTheme: IconThemeData(color: Color(0xff495057))),
 
@@ -119,12 +119,12 @@ class AppTheme {
         const BottomAppBarTheme(color: Color(0xffeeeeee), elevation: 2),
 
     /// Tab bar Theme
-    tabBarTheme: const TabBarTheme(
+    tabBarTheme:  TabBarTheme(
       unselectedLabelColor: Color(0xff495057),
       labelColor: Color(0xff3d63ff),
       indicatorSize: TabBarIndicatorSize.label,
       indicator: UnderlineTabIndicator(
-        borderSide: BorderSide(color: Color(0xff3d63ff), width: 2.0),
+        borderSide: BorderSide(color: Colors.red.shade100, width: 2.0),
       ),
     ),
 

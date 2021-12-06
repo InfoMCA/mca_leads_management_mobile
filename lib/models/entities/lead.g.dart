@@ -19,6 +19,14 @@ Lead _$LeadFromJson(Map<String, dynamic> json) => Lead(
       mmr: json['mmr'] as int,
       mobileNumber: json['mobileNumber'] as String,
       customerName: json['customerName'] as String?,
+      comments: json['comments'] as String?,
+      conditionQuestions: json['conditionQuestions'] as String?,
+      address1: json['address1'] as String?,
+      address2: json['address2'] as String?,
+      city: json['city'] as String?,
+      state: json['state'] as String?,
+      zipCode: json['zipCode'] as String?,
+      region: json['region'] as String?,
     )..payoffStatus = json['payoffStatus'] as String?;
 
 Map<String, dynamic> _$LeadToJson(Lead instance) => <String, dynamic>{
@@ -35,4 +43,12 @@ Map<String, dynamic> _$LeadToJson(Lead instance) => <String, dynamic>{
       'mobileNumber': instance.mobileNumber,
       'customerName': instance.customerName,
       'payoffStatus': instance.payoffStatus,
+      'comments': instance.comments,
+      'conditionQuestions': instance.conditionQuestions,
+      'address1': instance.address1,
+      'address2': instance.address2,
+      'city': instance.city,
+      'state': instance.state,
+      'zipCode': instance.zipCode,
+      'region': instance.region,
     };
