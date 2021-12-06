@@ -5,7 +5,7 @@ import 'package:mca_leads_management_mobile/models/entities/lead.dart';
 
 class LeadViewArguments {
   final String id;
-  final LeadView leadView;
+  final LogicalView logicalView;
 
-  LeadViewArguments(this.id, this.leadView);
+  LeadViewArguments(this.id, this.logicalView);
 }

@@ -66,7 +66,7 @@ class BackendInterface {
     }
   }
 
-  Future<List<LeadSummary>?> getLeads(LeadView leadView) async {
+  Future<List<LeadSummary>?> getLeads(LogicalView logicalView) async {
     try {
       BackendResp appResp = await sendPostReq(
           BackendReq(
@@ -74,7 +74,7 @@ class BackendInterface {
               object: CommandObject.lead,
               intent: CommandIntent.getAll,
               params: {
-                'viewType': leadView.getString()
+                'viewType': logicalView.getString()
               }));
       return appResp.leadSummaries;
     } catch (e) {
@@ -82,7 +82,7 @@ class BackendInterface {
     }
   }
 
-  Future<List<LeadSummary>?> getSessions(LeadView leadView) async {
+  Future<List<LeadSummary>?> getSessions(LogicalView logicalView) async {
     try {
       BackendResp appResp = await sendPostReq(
           BackendReq(
@@ -90,7 +90,7 @@ class BackendInterface {
               object: CommandObject.session,
               intent: CommandIntent.getAll,
               params: {
-                'viewType': leadView.getString()
+                'viewType': logicalView.getString()
               }));
       return appResp.leadSummaries;
     } catch (e) {
