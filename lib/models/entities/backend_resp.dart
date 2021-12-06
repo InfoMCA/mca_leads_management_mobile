@@ -8,7 +8,6 @@ part 'backend_resp.g.dart';
 
 @JsonSerializable()
 class BackendResp {
-  int? statusCode;
   String? message;
   String? status;
   List<LeadSummary>? leadSummaries;
@@ -19,7 +18,6 @@ class BackendResp {
 
   BackendResp({this.message,
     this.status,
-    this.statusCode,
     this.leadSummaries,
     this.lead,
     this.session,

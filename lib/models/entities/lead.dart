@@ -1,3 +1,4 @@
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'lead.g.dart';
@@ -27,6 +28,31 @@ extension LeadViewExt on LeadView {
       case LeadView.completed:
         return 'Completed';
     }
+  }
+
+  String getString() {
+    switch (this) {
+      case LeadView.approval:
+        return 'approval';
+      case LeadView.followUpManager:
+        return 'followUpManager';
+      case LeadView.appraisal:
+        return 'appraisal';
+      case LeadView.dispatched:
+        return 'dispatched';
+      case LeadView.active:
+        return 'active';
+      case LeadView.completed:
+        return 'completed';
+    }
+  }
+
+  bool isLeadView() {
+    return [LeadView.approval, LeadView.followUpManager, LeadView.appraisal].contains(this);
+  }
+
+  bool isSessionView() {
+    return [LeadView.dispatched, LeadView.active, LeadView.completed].contains(this);
   }
 }
 

@@ -1,40 +1,59 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:mca_leads_management_mobile/models/entities/session.dart';
+
+import 'lead.dart';
 
 part 'backend_req.g.dart';
 
-enum CommandObject { user, lead, session }
+enum CommandObject { user, region, lead, session }
 
 enum CommandIntent {
   getById,
   getAll,
   search,
+  save,
   action,
 }
 
-enum LeadAction { schedule, followUp, unanswered, lost, save }
-
-enum SessionAction { dispatch, lost, getInspectors, save }
-
-enum UserAction { login }
+enum CommandAction {
+  // Lead Actions
+  leadDispatch,
+  leadFollowUp,
+  leadUnanswered,
+  leadApprovedOffer,
+  leadApprovedDeal,
+  leadLost,
+  // Session Actions
+  sessionSchedule,
+  sessionLost,
+  // User Action
+  userLogin,
+  // Region Action
+  regionGetByZipcode,
+  regionGetInspectors
+}
 
 @JsonSerializable()
 class BackendReq {
   String username;
-  CommandObject commandObject;
-  CommandIntent commandIntent;
+  CommandObject object;
+  CommandIntent intent;
+  CommandAction? action;
   String? objectId;
+  Lead? lead;
+  Session? session;
 
   ///Either LeadAction, SessionAction or UserAction enums
-  dynamic actionType;
-  dynamic value;
+  Map<String, String>? params;
 
-  BackendReq(
-      {required this.username,
-      required this.commandObject,
-      required this.commandIntent,
-      this.actionType,
-      this.objectId,
-      this.value});
+  BackendReq({required this.username,
+    required this.object,
+    required this.intent,
+    this.action,
+    this.objectId,
+    this.lead,
+    this.session,
+    this.params});
 
   factory BackendReq.fromJson(Map<String, dynamic> json) =>
       _$BackendReqFromJson(json);

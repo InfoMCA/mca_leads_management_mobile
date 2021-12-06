@@ -9,7 +9,6 @@ part of 'backend_resp.dart';
 BackendResp _$BackendRespFromJson(Map<String, dynamic> json) => BackendResp(
       message: json['message'] as String?,
       status: json['status'] as String?,
-      statusCode: json['statusCode'] as int?,
       leadSummaries: (json['leadSummaries'] as List<dynamic>?)
           ?.map((e) => LeadSummary.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -27,7 +26,6 @@ BackendResp _$BackendRespFromJson(Map<String, dynamic> json) => BackendResp(
 
 Map<String, dynamic> _$BackendRespToJson(BackendResp instance) =>
     <String, dynamic>{
-      'statusCode': instance.statusCode,
       'message': instance.message,
       'status': instance.status,
       'leadSummaries': instance.leadSummaries,
