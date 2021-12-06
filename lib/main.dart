@@ -7,7 +7,7 @@ import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/app/app_module.dart';
 import 'package:mca_leads_management_mobile/models/entities/auth_user.dart';
 import 'package:mca_leads_management_mobile/utils/local_storage.dart';
-import 'package:mca_leads_management_mobile/utils/theme.dart';
+import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,7 +17,7 @@ Future<void> main() async {
     if (object.isEmpty) {
       log("No user found, proceeding to login page");
     } else {
-      currentStaff = AuthUserModel.fromJson(json.decode(object));
+      currentUser = AuthUserModel.fromJson(json.decode(object));
     }
   } catch (e) {
     log(e.toString());
@@ -25,8 +25,8 @@ Future<void> main() async {
   runApp(ModularApp(
     child: MaterialApp(
       title: 'MCA Management UI',
-      theme: appTheme,
-      initialRoute: currentStaff != null ? "/home" : "/security/login",
+      theme: AppTheme.theme,
+      initialRoute: currentUser != null ? "/home" : "/security/login",
     ).modular(),
     module: AppModule(),
   ));
