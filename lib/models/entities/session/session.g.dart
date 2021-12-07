@@ -33,7 +33,10 @@ Session _$SessionFromJson(Map<String, dynamic> json) => Session(
       ..deductionsAmount = (json['deductionsAmount'] as num?)?.toDouble()
       ..lenderAmount = (json['lenderAmount'] as num?)?.toDouble()
       ..customerAmount = (json['customerAmount'] as num?)?.toDouble()
-      ..withholdingAmount = (json['withholdingAmount'] as num?)?.toDouble();
+      ..withholdingAmount = (json['withholdingAmount'] as num?)?.toDouble()
+      ..purchasedDate = json['purchasedDate'] == null
+          ? null
+          : DateTime.parse(json['purchasedDate'] as String);
 
 Map<String, dynamic> _$SessionToJson(Session instance) => <String, dynamic>{
       'id': instance.id,
@@ -51,6 +54,7 @@ Map<String, dynamic> _$SessionToJson(Session instance) => <String, dynamic>{
       'lenderAmount': instance.lenderAmount,
       'customerAmount': instance.customerAmount,
       'withholdingAmount': instance.withholdingAmount,
+      'purchasedDate': instance.purchasedDate?.toIso8601String(),
       'address1': instance.address1,
       'address2': instance.address2,
       'city': instance.city,

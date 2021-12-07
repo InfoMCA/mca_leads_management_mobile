@@ -5,9 +5,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mca_leads_management_mobile/models/entities/api/backend_req.dart';
 import 'package:mca_leads_management_mobile/models/entities/api/backend_resp.dart';
+import 'package:mca_leads_management_mobile/models/entities/api/logical_view.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead/lead_summary.dart';
+import 'package:mca_leads_management_mobile/models/entities/marketplace/listing.dart';
 import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
 
 class BackendInterface {
@@ -15,11 +17,11 @@ class BackendInterface {
   final String sessionEndpoint = dotenv.env['API_SESSION_APP_REQUEST'] ?? "";
   final String regionEndpoint = dotenv.env['API_REGION_APP_REQUEST'] ?? "";
   final String userEndpoint = dotenv.env['API_USER_APP_REQUEST'] ?? "";
-  final String marketplaceEndpoint = dotenv.env['API_MARKETPLACE_APP_REQUEST'] ?? "";
+  final String marketplaceEndpoint = dotenv
+      .env['API_MARKETPLACE_APP_REQUEST'] ?? "";
 
   String getEndPoint(BackendReq backendReq) {
     switch (backendReq.object) {
-
       case CommandObject.user:
         return userEndpoint;
       case CommandObject.region:
@@ -33,6 +35,7 @@ class BackendInterface {
         return marketplaceEndpoint;
     }
   }
+
   Dio dio = Dio();
 
   Future<BackendResp> sendPostReq(BackendReq backendReq) async {
@@ -59,7 +62,8 @@ class BackendInterface {
           intent: CommandIntent.action,
           action: CommandAction.userLogin,
           params: {"username": username, "password": password});
-      Response response = await dio.post(getEndPoint(appReq), data: json.encode(appReq));
+      Response response = await dio.post(
+          getEndPoint(appReq), data: json.encode(appReq));
       if (response.statusCode != HttpStatus.ok) {
         return "Username or Password incorrect";
       }
@@ -165,7 +169,6 @@ class BackendInterface {
   }
 
 
-
   Future<BackendResp> getRegion(String zipcode) async {
     return sendPostReq(
         BackendReq(
@@ -188,8 +191,7 @@ class BackendInterface {
         ));
   }
 
-  Future<BackendResp> dispatchLead(
-      Lead lead,
+  Future<BackendResp> dispatchLead(Lead lead,
       String inspector,
       int inspectionTime,
       DateTime scheduleDate) {
@@ -233,7 +235,6 @@ class BackendInterface {
     } catch (e) {
       return [];
     }
-
   }
 
   Future<List<LeadSummary>?> getListings(LogicalView logicalView) async {
@@ -260,7 +261,32 @@ class BackendInterface {
         objectId: sessionId);
     //BackendResp backendResp = await sendPostReq(backendReq);
     sendSessionToInventoryMock(backendReq);
+  }
 
+  Future<List<String>> getMarketPlaces(String sessionId) async {
+    BackendReq backendReq = BackendReq(
+        username: currentUser!.username,
+        object: CommandObject.listing,
+        intent: CommandIntent.action,
+        action: CommandAction.listingGetMarketplaces,
+        objectId: sessionId);
+    return getMarketPlacesMock(backendReq);
+  }
+
+  void createNewListing(String sessionId, int listingPrice, DateTime expirationDate, List<String> selectedMarketPlaces) {
+    BackendReq backendReq = BackendReq(
+        username: currentUser!.username,
+        object: CommandObject.listing,
+        intent: CommandIntent.action,
+        action: CommandAction.listingNew,
+        objectId: sessionId,
+        params: {
+          'listingPrice': listingPrice.toString(),
+          'expirationDate': expirationDate.toString(),
+          'marketPlaceIds': json.encode(selectedMarketPlaces),
+        });
+    dev.log(backendReq.toJson().toString());
+    return createNewListingMock(backendReq);
 
   }
 }

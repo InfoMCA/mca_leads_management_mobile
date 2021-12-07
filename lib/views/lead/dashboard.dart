@@ -9,9 +9,9 @@ import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mca_leads_management_mobile/models/entities/api/backend_resp.dart';
+import 'package:mca_leads_management_mobile/models/entities/api/logical_view.dart';
 import 'package:mca_leads_management_mobile/models/entities/drawer_item.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
-import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead/lead_summary.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
@@ -34,7 +34,7 @@ class _DashBoardState extends State<DashBoard> {
   late ThemeData theme;
 
   int _selectedPage = 0;
-  List<bool> _dataExpansionPanel = [true, false, false, false];
+  List<bool> _dataExpansionPanel = [false, true, true, false];
   final List<LeadSummary> _leadList = [];
   late LogicalView logicalView;
   List<DrawerItem> drawerItems = [];
@@ -44,6 +44,8 @@ class _DashBoardState extends State<DashBoard> {
     _leadList.clear();
     if (logicalView.isInventory()) {
       _leadList.addAll(getInventoriesMock());
+    } else if (logicalView.isMarketplaceView()) {
+      _leadList.addAll(getListingsMock());
     } else {
       List<LeadSummary>? newLeads = await getLeads(logicalView);
       newLeads?.forEach((lead) => _leadList.add(lead));
@@ -97,7 +99,7 @@ class _DashBoardState extends State<DashBoard> {
           icon: MdiIcons.shopping,
           position: 9),
       DrawerItem(panel: DrawerPanel.marketPlace,
-          logicalView: LogicalView.traded,
+          logicalView: LogicalView.marketplace,
           icon: Icons.shopping_bag,
           position: 10)
     ];

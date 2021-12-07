@@ -17,7 +17,7 @@ class Listing {
   String vehicleId;
   ListingState state;
   int initialOfferPrice;
-  int salePrice;
+  int? salePrice;
   DateTime createdTime;
   DateTime lastModifiedTime;
   DateTime expirationTime;

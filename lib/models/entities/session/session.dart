@@ -72,6 +72,7 @@ class Session {
   double? lenderAmount;
   double? customerAmount;
   double? withholdingAmount;
+  DateTime? purchasedDate;
   String address1;
   String? address2;
   String city;

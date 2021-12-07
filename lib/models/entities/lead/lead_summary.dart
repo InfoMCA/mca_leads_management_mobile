@@ -19,7 +19,8 @@ enum LeadViewTag {
   approved,
   rejected,
   complete,
-  inventory
+  inventory,
+  listing
 }
 
 extension LeadViewTagExt on LeadViewTag {
@@ -50,6 +51,8 @@ extension LeadViewTagExt on LeadViewTag {
         return "R";
       case LeadViewTag.inventory:
         return "I";
+      case LeadViewTag.listing:
+        return "L";
     }
   }
 
@@ -69,6 +72,7 @@ extension LeadViewTagExt on LeadViewTag {
       case LeadViewTag.ready:
       case LeadViewTag.activeProgress:
       case LeadViewTag.approved:
+      case LeadViewTag.listing:
         return const Color.fromARGB(255, 234, 241, 254);
       case LeadViewTag.approvalPotentialDeal:
       case LeadViewTag.complete:
@@ -92,6 +96,7 @@ extension LeadViewTagExt on LeadViewTag {
       case LeadViewTag.ready:
       case LeadViewTag.activeProgress:
       case LeadViewTag.approved:
+      case LeadViewTag.listing:
         return const Color.fromARGB(255, 44, 121, 244);
       case LeadViewTag.approvalPotentialDeal:
       case LeadViewTag.complete:

@@ -19,7 +19,7 @@ import 'package:us_states/us_states.dart';
 
 class ListingDetailView extends StatefulWidget {
   final LeadViewArguments args;
-  static String routeName = '/home/session';
+  static String routeName = '/home/listing';
 
   const ListingDetailView({Key? key, required this.args}) : super(key: key);
 

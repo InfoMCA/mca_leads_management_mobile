@@ -4,14 +4,14 @@
 * */
 import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
+import 'package:mca_leads_management_mobile/models/entities/api/logical_view.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
-import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead/lead_summary.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_details_view.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_view_arg.dart';
-import 'package:mca_leads_management_mobile/views/listing/listing_details_view.dart';
+import 'package:mca_leads_management_mobile/views/marketplace/listing_details_view.dart';
 import 'package:mca_leads_management_mobile/views/session/session_details.dart';
 import 'package:mca_leads_management_mobile/views/session/session_details_complete.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';

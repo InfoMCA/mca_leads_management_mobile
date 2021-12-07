@@ -31,7 +31,10 @@ enum CommandAction {
   userLogin,
   // Region Action
   regionGetByZipcode,
-  regionGetInspectors
+  regionGetInspectors,
+  //
+  listingNew,
+  listingGetMarketplaces
 }
 
 @JsonSerializable()

@@ -65,4 +65,6 @@ const _$CommandActionEnumMap = {
   CommandAction.userLogin: 'userLogin',
   CommandAction.regionGetByZipcode: 'regionGetByZipcode',
   CommandAction.regionGetInspectors: 'regionGetInspectors',
+  CommandAction.listingNew: 'listingNew',
+  CommandAction.listingGetMarketplaces: 'listingGetMarketplaces',
 };
