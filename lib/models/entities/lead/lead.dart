@@ -1,6 +1,6 @@
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:mca_leads_management_mobile/views/leads/lead_details_view.dart';
+import 'package:mca_leads_management_mobile/views/lead/lead_details_view.dart';
 import 'package:mca_leads_management_mobile/views/session/session_details.dart';
 import 'package:mca_leads_management_mobile/views/session/session_details_complete.dart';
 

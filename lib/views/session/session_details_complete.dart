@@ -7,11 +7,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:mca_leads_management_mobile/models/entities/lead.dart';
+import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
 import 'package:mca_leads_management_mobile/utils/spacing.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
-import 'package:mca_leads_management_mobile/views/leads/lead_view_arg.dart';
+import 'package:mca_leads_management_mobile/views/lead/lead_view_arg.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 
 class SessionDetailsComplete extends StatefulWidget {
