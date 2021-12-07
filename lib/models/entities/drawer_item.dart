@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:mca_leads_management_mobile/models/entities/lead.dart';
+import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
 
 enum DrawerPanel {
   leads,

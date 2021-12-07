@@ -5,8 +5,8 @@
 import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
-import 'package:mca_leads_management_mobile/models/entities/lead.dart';
-import 'package:mca_leads_management_mobile/models/entities/lead_summary.dart';
+import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
+import 'package:mca_leads_management_mobile/models/entities/lead/lead_summary.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_details_view.dart';

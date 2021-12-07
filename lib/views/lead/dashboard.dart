@@ -8,11 +8,11 @@ import 'dart:developer' as dev;
 
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:mca_leads_management_mobile/models/entities/backend_resp.dart';
+import 'package:mca_leads_management_mobile/models/entities/api/backend_resp.dart';
 import 'package:mca_leads_management_mobile/models/entities/drawer_item.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
-import 'package:mca_leads_management_mobile/models/entities/lead.dart';
-import 'package:mca_leads_management_mobile/models/entities/lead_summary.dart';
+import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
+import 'package:mca_leads_management_mobile/models/entities/lead/lead_summary.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
