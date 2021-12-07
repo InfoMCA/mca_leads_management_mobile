@@ -11,7 +11,7 @@ import 'package:mca_leads_management_mobile/models/entities/lead.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
-import 'package:mca_leads_management_mobile/views/leads/lead_schedule_view.dart';
+import 'package:mca_leads_management_mobile/views/lead/lead_schedule_view.dart';
 import 'package:mca_leads_management_mobile/widgets/button/button.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 import 'package:url_launcher/url_launcher.dart';

@@ -4,14 +4,14 @@
 * */
 import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead_summary.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
-import 'package:mca_leads_management_mobile/views/leads/lead_details_view.dart';
-import 'package:mca_leads_management_mobile/views/leads/lead_view_arg.dart';
+import 'package:mca_leads_management_mobile/views/lead/lead_details_view.dart';
+import 'package:mca_leads_management_mobile/views/lead/lead_view_arg.dart';
+import 'package:mca_leads_management_mobile/views/listing/listing_details_view.dart';
 import 'package:mca_leads_management_mobile/views/session/session_details.dart';
 import 'package:mca_leads_management_mobile/views/session/session_details_complete.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
@@ -33,9 +33,16 @@ class _LeadsViewState extends State<LeadsView> {
 
   void _getLeads() async {
     _leadList.clear();
-    List<LeadSummary>? newLeads = await getLeads(widget.logicalView);
-    newLeads?.forEach((lead) => _leadList.add(lead));
-    dev.log("Leads size (${widget.logicalView}): ${_leadList.length.toString()}");
+    print (widget.logicalView.isInventory());
+    if (widget.logicalView.isInventory()) {
+      _leadList.addAll(getInventoriesMock());
+    } else {
+      List<LeadSummary>? newLeads = await getLeads(widget.logicalView);
+      newLeads?.forEach((lead) => _leadList.add(lead));
+    }
+    dev.log(
+        "Leads size (${widget.logicalView}): ${_leadList.length.toString()}");
+
     setState(() {});
   }
 
@@ -54,6 +61,12 @@ class _LeadsViewState extends State<LeadsView> {
         break;
       case LogicalView.completed:
         routeName = SessionDetailsComplete.routeName;
+        break;
+      case LogicalView.inventory:
+      case LogicalView.trading:
+      case LogicalView.traded:
+      case LogicalView.marketplace:
+        routeName = ListingDetailView.routeName;
         break;
     }
   }
@@ -112,6 +125,7 @@ class _LeadsViewState extends State<LeadsView> {
                           fontWeight: 700,
                           color: theme.colorScheme.onBackground),
                       onTap: () {
+                        print(routeName);
                         Navigator.pushNamed(
                           context,
                           routeName,

@@ -1,6 +1,7 @@
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:mca_leads_management_mobile/views/leads/lead_details_view.dart';
+import 'package:mca_leads_management_mobile/views/lead/lead_details_view.dart';
+import 'package:mca_leads_management_mobile/views/listing/listing_details_view.dart';
 import 'package:mca_leads_management_mobile/views/session/session_details.dart';
 import 'package:mca_leads_management_mobile/views/session/session_details_complete.dart';
 
@@ -14,11 +15,12 @@ enum LogicalView {
   active,
   completed,
   inventory,
+  trading,
+  traded,
   marketplace,
-  traded
 }
 
-extension LeadViewExt on LogicalView {
+extension LogicalViewExt on LogicalView {
   String getName() {
     switch (this) {
       case LogicalView.approval:
@@ -35,10 +37,12 @@ extension LeadViewExt on LogicalView {
         return 'Completed';
       case LogicalView.inventory:
         return 'Inventory';
-      case LogicalView.marketplace:
-        return 'marketplace';
+      case LogicalView.trading:
+        return 'Trading';
       case LogicalView.traded:
-        return 'traded';
+        return 'Traded';
+      case LogicalView.marketplace:
+        return 'Marketplace';
     }
   }
 
@@ -55,8 +59,10 @@ extension LeadViewExt on LogicalView {
       case  LogicalView.completed:
         return SessionDetailsComplete.routeName;
       case LogicalView.inventory:
+        return ListingDetailView.routeName;
       case LogicalView.marketplace:
       case LogicalView.traded:
+      case LogicalView.trading:
         return "";
     }
   }
@@ -71,6 +77,14 @@ extension LeadViewExt on LogicalView {
 
   bool isSessionView() {
     return [LogicalView.dispatched, LogicalView.active, LogicalView.completed].contains(this);
+  }
+
+  bool isInventory() {
+    return [LogicalView.inventory].contains(this);
+  }
+
+  bool isMarketplaceView() {
+    return [LogicalView.trading, LogicalView.traded, LogicalView.marketplace].contains(this);
   }
 }
 

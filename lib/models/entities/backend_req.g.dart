@@ -40,9 +40,12 @@ const _$CommandObjectEnumMap = {
   CommandObject.region: 'region',
   CommandObject.lead: 'lead',
   CommandObject.session: 'session',
+  CommandObject.inventory: 'inventory',
+  CommandObject.listing: 'listing',
 };
 
 const _$CommandIntentEnumMap = {
+  CommandIntent.create: 'create',
   CommandIntent.getById: 'getById',
   CommandIntent.getAll: 'getAll',
   CommandIntent.search: 'search',

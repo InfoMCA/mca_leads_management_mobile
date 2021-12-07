@@ -9,16 +9,15 @@ import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mca_leads_management_mobile/models/entities/backend_resp.dart';
+import 'package:mca_leads_management_mobile/models/entities/drawer_item.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead_summary.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
-import 'package:mca_leads_management_mobile/views/leads/lead_details_view.dart';
-import 'package:mca_leads_management_mobile/views/leads/lead_view_arg.dart';
-import 'package:mca_leads_management_mobile/views/session/session_details.dart';
-import 'package:mca_leads_management_mobile/views/session/session_details_complete.dart';
+import 'package:mca_leads_management_mobile/views/lead/lead_details_view.dart';
+import 'package:mca_leads_management_mobile/views/lead/lead_view_arg.dart';
 import 'package:mca_leads_management_mobile/widgets/common/notifications.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 
@@ -35,15 +34,20 @@ class _DashBoardState extends State<DashBoard> {
   late ThemeData theme;
 
   int _selectedPage = 0;
-  List<bool> _dataExpansionPanel = [false, true, false];
+  List<bool> _dataExpansionPanel = [true, false, false, false];
   final List<LeadSummary> _leadList = [];
   late LogicalView logicalView;
+  List<DrawerItem> drawerItems = [];
 
 
   void _getLeads() async {
     _leadList.clear();
-    List<LeadSummary>? newLeads = await getLeads(logicalView);
-    newLeads?.forEach((lead) => _leadList.add(lead));
+    if (logicalView.isInventory()) {
+      _leadList.addAll(getInventoriesMock());
+    } else {
+      List<LeadSummary>? newLeads = await getLeads(logicalView);
+      newLeads?.forEach((lead) => _leadList.add(lead));
+    }
     dev.log("Leads size ($logicalView): ${_leadList.length.toString()}");
     setState(() {});
   }
@@ -55,6 +59,72 @@ class _DashBoardState extends State<DashBoard> {
     theme = AppTheme.theme;
     logicalView = LogicalView.approval;
     _getLeads();
+    drawerItems = [
+      DrawerItem(panel: DrawerPanel.leads,
+          logicalView: LogicalView.approval,
+          icon: MdiIcons.contain,
+          position: 1),
+      DrawerItem(panel: DrawerPanel.leads,
+          logicalView: LogicalView.followUpManager,
+          icon: MdiIcons.contain,
+          position: 2),
+      DrawerItem(panel: DrawerPanel.leads,
+          logicalView: LogicalView.appraisal,
+          icon: MdiIcons.contain,
+          position: 3),
+      DrawerItem(panel: DrawerPanel.inspections,
+          logicalView: LogicalView.dispatched,
+          icon: MdiIcons.contain,
+          position: 4),
+      DrawerItem(panel: DrawerPanel.inspections,
+          logicalView: LogicalView.active,
+          icon: MdiIcons.contain,
+          position: 5),
+      DrawerItem(panel: DrawerPanel.inspections,
+          logicalView: LogicalView.completed,
+          icon: MdiIcons.contain,
+          position: 6),
+      DrawerItem(panel: DrawerPanel.marketPlace,
+          logicalView: LogicalView.inventory,
+          icon: Icons.inventory,
+          position: 7),
+      DrawerItem(panel: DrawerPanel.marketPlace,
+          logicalView: LogicalView.trading,
+          icon: MdiIcons.storeOutline,
+          position: 8),
+      DrawerItem(panel: DrawerPanel.marketPlace,
+          logicalView: LogicalView.traded,
+          icon: MdiIcons.shopping,
+          position: 9),
+      DrawerItem(panel: DrawerPanel.marketPlace,
+          logicalView: LogicalView.traded,
+          icon: Icons.shopping_bag,
+          position: 10)
+    ];
+  }
+
+  ExpansionPanel _buildExpansionPanel(DrawerPanel panel) {
+    return ExpansionPanel(
+        canTapOnHeader: true,
+        headerBuilder:
+            (BuildContext context, bool isExpanded) {
+          return ListTile(
+            title: FxText.b1(panel.getName(),
+                color: isExpanded
+                    ? theme.colorScheme.primary
+                    : theme.colorScheme.onBackground,
+                fontWeight: isExpanded ? 700 : 600),
+          );
+        },
+        body: Container(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Column(
+              children: drawerItems.where((element) => element.panel == panel)
+                  .map((e) => singleDrawerItem(e))
+                  .toList()
+          ),
+        ),
+        isExpanded: _dataExpansionPanel[DrawerPanel.values.indexOf(panel)]);
   }
 
   Drawer _buildDrawer() {
@@ -68,7 +138,7 @@ class _DashBoardState extends State<DashBoard> {
               child: DrawerHeader(
                 padding: const EdgeInsets.all(0),
                 margin: const EdgeInsets.all(0),
-            child: Padding(
+                child: Padding(
                   padding: const EdgeInsets.only(
                       left: 16.0, bottom: 8, right: 16),
                   child: Column(
@@ -120,95 +190,15 @@ class _DashBoardState extends State<DashBoard> {
                     padding: const EdgeInsets.all(0),
                     children: <Widget>[
                       ExpansionPanelList(
-                        expandedHeaderPadding: const EdgeInsets.all(0),
-                        expansionCallback: (int index, bool isExpanded) {
-                          setState(() {
-                            _dataExpansionPanel[index] = !isExpanded;
-                          });
-                        },
-                        animationDuration: const Duration(milliseconds: 500),
-                        children: <ExpansionPanel>[
-                          ExpansionPanel(
-                              canTapOnHeader: true,
-                              headerBuilder:
-                                  (BuildContext context, bool isExpanded) {
-                                return ListTile(
-                                  title: FxText.b1("Leads",
-                                      color: isExpanded
-                                          ? theme.colorScheme.primary
-                                          : theme.colorScheme.onBackground,
-                                      fontWeight: isExpanded ? 700 : 600),
-                                );
-                              },
-                              body: Container(
-                                padding: const EdgeInsets.only(bottom: 16),
-                                child: Column(
-                                  children: [
-                                    _singleDrawerItem(
-                                        MdiIcons.starOutline, LogicalView.approval,
-                                        1),
-                                    _singleDrawerItem(
-                                        MdiIcons.clockOutline,
-                                        LogicalView.followUpManager, 2),
-                                    _singleDrawerItem(
-                                        MdiIcons.send, LogicalView.appraisal, 3),
-                                  ],
-                                ),
-                              ),
-                              isExpanded: _dataExpansionPanel[0]),
-                          ExpansionPanel(
-                              canTapOnHeader: true,
-                              headerBuilder:
-                                  (BuildContext context, bool isExpanded) {
-                                return ListTile(
-                                  title: FxText.b1("Inspections",
-                                      color: isExpanded
-                                          ? theme.colorScheme.primary
-                                          : theme.colorScheme.onBackground,
-                                      fontWeight: isExpanded ? 700 : 600),
-                                );
-                              },
-                              body: Column(
-                                children: [
-                                  _singleDrawerItem(
-                                      MdiIcons.emailOutline,
-                                      LogicalView.dispatched, 4),
-                                  _singleDrawerItem(
-                                      MdiIcons.accountGroupOutline,
-                                      LogicalView.active, 5),
-                                  _singleDrawerItem(
-                                      MdiIcons.tagOutline, LogicalView.completed,
-                                      6),
-                                ],
-                              ),
-                              isExpanded: _dataExpansionPanel[1]),
-                          ExpansionPanel(
-                              canTapOnHeader: true,
-                              headerBuilder:
-                                  (BuildContext context, bool isExpanded) {
-                                return ListTile(
-                                  title: FxText.b1("Market Place",
-                                      color: isExpanded
-                                          ? theme.colorScheme.primary
-                                          : theme.colorScheme.onBackground,
-                                      fontWeight: isExpanded ? 700 : 600),
-                                );
-                              },
-                              body: Column(
-                                children: [
-                                  _singleDrawerItem(
-                                      MdiIcons.emailOutline,
-                                      LogicalView.inventory, 7),
-                                  _singleDrawerItem(
-                                      MdiIcons.accountGroupOutline,
-                                      LogicalView.marketplace, 8),
-                                  _singleDrawerItem(
-                                      MdiIcons.tagOutline, LogicalView.traded,
-                                      9),
-                                ],
-                              ),
-                              isExpanded: _dataExpansionPanel[2]),
-                        ],
+                          expandedHeaderPadding: const EdgeInsets.all(0),
+                          expansionCallback: (int index, bool isExpanded) {
+                            setState(() {
+                              _dataExpansionPanel[index] = !isExpanded;
+                            });
+                          },
+                          animationDuration: const Duration(milliseconds: 500),
+                          children: DrawerPanel.values.map((e) =>
+                              _buildExpansionPanel(e)).toList()
                       ),
                     ],
                   ),
@@ -251,6 +241,7 @@ class _DashBoardState extends State<DashBoard> {
                   fontWeight: 700,
                   color: theme.colorScheme.onBackground),
               onTap: () {
+                print(logicalView.getRouteName());
                 Navigator.pushNamed(
                   context,
                   logicalView.getRouteName(),
@@ -322,35 +313,6 @@ class _DashBoardState extends State<DashBoard> {
           ),
         ],
       )
-      /*DefaultTabController(
-        length: 6,
-        initialIndex: _selectedPage,
-        child: Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            flexibleSpace: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TabBar(
-                    controller: _tabController,
-                    isScrollable: true,
-                    tabs: LeadView.values.map((e) =>
-                        Tab(child: FxText.sh1(
-                          e.getName(), fontSize: 14,
-                          fontWeight: 500,
-                          color: theme.backgroundColor,)))
-                        .toList()
-                )
-              ],
-            ),
-          ),
-          body: TabBarView(
-              controller: _tabController,
-              children: LeadView.values.map((e) => LeadsView(logicalView: e))
-                  .toList()
-          ),
-        ),
-      ),*/
     );
   }
 
@@ -425,7 +387,9 @@ class _DashBoardState extends State<DashBoard> {
           );
         });
   }
-
+  Widget singleDrawerItem(DrawerItem drawerItem) {
+    return _singleDrawerItem(drawerItem.icon, drawerItem.logicalView, drawerItem.position);
+  }
   Widget _singleDrawerItem(IconData iconData, LogicalView logicalView, int position) {
     return ListTile(
       dense: true,

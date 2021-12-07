@@ -17,24 +17,22 @@ import 'package:mca_leads_management_mobile/widgets/textfield/time_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:us_states/us_states.dart';
 
-class SessionDetails extends StatefulWidget {
+class ListingDetailView extends StatefulWidget {
   final LeadViewArguments args;
   static String routeName = '/home/session';
 
-  const SessionDetails({Key? key, required this.args}) : super(key: key);
+  const ListingDetailView({Key? key, required this.args}) : super(key: key);
 
   @override
-  _SessionDetailsState createState() => _SessionDetailsState();
+  _ListingDetailViewState createState() => _ListingDetailViewState();
 }
 
-class _SessionDetailsState extends State<SessionDetails> {
+class _ListingDetailViewState extends State<ListingDetailView> {
   late CustomTheme customTheme;
   late ThemeData theme;
   late Session? session;
   late Future<Session?> sessionFuture;
   final regionController = TextEditingController();
-  final FocusNode _focus = FocusNode();
-  final _formKey = GlobalKey<FormState>();
 
   late List<String> inspectors = [];
   late String inspector;
@@ -78,12 +76,6 @@ class _SessionDetailsState extends State<SessionDetails> {
       path: phoneNumber,
     );
     await launch(launchUri.toString());
-  }
-
-  void _onFocusChange() async {
-    if (!_focus.hasFocus) {
-      _getInspector();
-    }
   }
 
   Future<void> _getSession(String sessionId) async {

@@ -7,8 +7,7 @@ import 'dart:developer' as dev;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mca_leads_management_mobile/models/entities/globals.dart';
-import 'package:mca_leads_management_mobile/views/leads/lead_schedule_view.dart';
+import 'package:mca_leads_management_mobile/views/lead/lead_schedule_view.dart';
 import 'package:mca_leads_management_mobile/widgets/button/button.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -18,7 +17,7 @@ import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.
 import 'package:mca_leads_management_mobile/utils/spacing.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
-import 'package:mca_leads_management_mobile/views/leads/lead_view_arg.dart';
+import 'package:mca_leads_management_mobile/views/lead/lead_view_arg.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 import 'package:collection/collection.dart';
 
