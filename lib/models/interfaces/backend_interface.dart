@@ -9,12 +9,14 @@ import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead/lead_summary.dart';
 import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
+import 'package:mca_leads_management_mobile/models/interfaces/index.dart';
 
 class BackendInterface {
   final String leadEndpoint = dotenv.env['API_LEAD_APP_REQUEST'] ?? "";
   final String sessionEndpoint = dotenv.env['API_SESSION_APP_REQUEST'] ?? "";
   final String regionEndpoint = dotenv.env['API_REGION_APP_REQUEST'] ?? "";
   final String userEndpoint = dotenv.env['API_USER_APP_REQUEST'] ?? "";
+  final String marketplaceEndpoint = dotenv.env['API_MARKETPLACE_APP_REQUEST'] ?? "";
 
   String getEndPoint(BackendReq backendReq) {
     switch (backendReq.object) {
@@ -27,6 +29,9 @@ class BackendInterface {
         return leadEndpoint;
       case CommandObject.session:
         return sessionEndpoint;
+      case CommandObject.inventory:
+      case CommandObject.listing:
+        return marketplaceEndpoint;
     }
   }
   Dio dio = Dio();
@@ -213,5 +218,54 @@ class BackendInterface {
             intent: CommandIntent.getById,
             objectId: sessionId));
     return backendResp.session;
+  }
+
+  Future<List<LeadSummary>?> getInventories(LogicalView logicalView) async {
+    try {
+      BackendResp appResp = await sendPostReq(
+          BackendReq(
+              username: currentUser!.username,
+              object: CommandObject.inventory,
+              intent: CommandIntent.getAll,
+              params: {
+                'viewType': logicalView.getString()
+              }));
+      return appResp.leadSummaries;
+    } catch (e) {
+      return [];
+    }
+
+  }
+
+  Future<List<LeadSummary>?> getListings(LogicalView logicalView) async {
+    try {
+      BackendResp appResp = await sendPostReq(
+          BackendReq(
+              username: currentUser!.username,
+              object: CommandObject.listing,
+              intent: CommandIntent.getAll,
+              params: {
+                'viewType': logicalView.getString()
+              }));
+      return appResp.leadSummaries;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  void sendSessionToInventory(String sessionId) async {
+    BackendReq backendReq = BackendReq(
+        username: currentUser!.username,
+        object: CommandObject.inventory,
+        intent: CommandIntent.create,
+        objectId: sessionId);
+    //BackendResp backendResp = await sendPostReq(backendReq);
+    // sendSessionToInventoryMock(backendReq);
+
+
+  }
+
+  Future<String> getSessionObject() async{
+    return reportData;
   }
 }

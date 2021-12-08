@@ -18,6 +18,6 @@ class AppModule extends Module {
     ChildRoute('/home/lead-schedule', child: (_, args) => LeadScheduleView(lead: args.data)),
     ChildRoute('/home/session', child: (_, args) =>  SessionDetails(args: args.data)),
     ChildRoute('/home/sessionComplete',
-        child: (_, args) => SessionDetailsComplete()),
+        child: (_, args) => SessionDetailsComplete(args: args.data,)),
   ];
 }
