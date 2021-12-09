@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
+import 'package:mca_leads_management_mobile/views/leads/lead_question_view.dart';
 import 'package:mca_leads_management_mobile/views/leads/lead_schedule_view.dart';
 import 'package:mca_leads_management_mobile/widgets/button/button.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -419,14 +420,15 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                             color: theme.colorScheme.primaryVariant
                                 .withAlpha(220))),
                     InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                          _showUnansweredDialog(context);
-                        },
-                        child: Icon(MdiIcons.phoneMissed,
-                            size: 32,
-                            color: theme.colorScheme.primaryVariant
-                                .withAlpha(220))),
+                      onTap: () {
+                        Navigator.pop(context);
+                        _showUnansweredDialog(context);
+                      },
+                      child: Icon(MdiIcons.phoneMissed,
+                          size: 32,
+                          color:
+                              theme.colorScheme.primaryVariant.withAlpha(220)),
+                    ),
                     InkWell(
                         onTap: () {
                           Navigator.pop(context);
@@ -437,17 +439,33 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                             color: theme.colorScheme.primaryVariant
                                 .withAlpha(220))),
                     InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => QuestionListDialog(lead)),
-                        );
-                      },
-                      child: Icon(MdiIcons.accountQuestion,
-                          size: 32,
-                          color:
-                              theme.colorScheme.primaryVariant.withAlpha(220)),
+                      onTap: lead!.conditionQuestions != null
+                          ? () {
+                              Navigator.pop(context);
+                              Navigator.pushNamed(
+                                  context, LeadQuestionView.routeName,
+                                  arguments: lead);
+                            }
+                          : null,
+                      // onTap: lead!.conditionQuestions != null
+                      //     ? () {
+                      //         Navigator.push(
+                      //           context,
+                      //           MaterialPageRoute(
+                      //               builder: (context) =>
+                      //                   QuestionListDialog(lead)),
+                      //         );
+                      //       }
+                      //     : null,
+                      child: (lead!.conditionQuestions != null)
+                          ? Icon(MdiIcons.accountQuestion,
+                              size: 32,
+                              color: theme.colorScheme.primaryVariant
+                                  .withAlpha(220))
+                          : Icon(MdiIcons.accountQuestion,
+                              size: 32,
+                              color: theme.colorScheme.primaryVariant
+                                  .withAlpha(350)),
                     ),
                     InkWell(
                       onTap: () {

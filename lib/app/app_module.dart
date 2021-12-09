@@ -1,6 +1,7 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mca_leads_management_mobile/views/leads/DashBoard.dart';
 import 'package:mca_leads_management_mobile/views/leads/lead_details_view.dart';
+import 'package:mca_leads_management_mobile/views/leads/lead_question_view.dart';
 import 'package:mca_leads_management_mobile/views/leads/lead_schedule_view.dart';
 import 'package:mca_leads_management_mobile/views/leads/question_dialog.dart';
 import 'package:mca_leads_management_mobile/views/session/session_details.dart';
@@ -20,10 +21,14 @@ class AppModule extends Module {
     ChildRoute('/home/lead-schedule',
         child: (_, args) => LeadScheduleView(lead: args.data)),
     ChildRoute('/home/session',
-        child: (_, args) => SessionDetails(args: args.data, )),
+        child: (_, args) => SessionDetails(
+              args: args.data,
+            )),
     ChildRoute('/home/sessionComplete',
         child: (_, args) => SessionDetailsComplete()),
     ChildRoute('/home/lead/lead-details/questions',
         child: (_, args) => QuestionListDialog(args.data)),
+    ChildRoute('/home/lead-question',
+        child: (_, args) => LeadQuestionView(lead: args.data)),
   ];
 }

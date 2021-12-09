@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -40,26 +39,29 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
   late TimeOfDay scheduleTime;
   late String state;
 
-
   Future<void> _getInspector() async {
     try {
       inspectors.clear();
       regionController.text = '';
       inspector = '';
-      BackendResp backendResp = await BackendInterface().getInspectors(
-          widget.lead.zipCode!);
+      BackendResp backendResp =
+          await BackendInterface().getInspectors(widget.lead.zipCode!);
       setState(() {
         inspectors.addAll(backendResp.inspectors!
-            .where((element) => element.isNotEmpty).toList());
+            .where((element) => element.isNotEmpty)
+            .toList());
         regionController.text = backendResp.region!;
       });
     } catch (e, s) {
-      showSnackBar(context: context,
+      showSnackBar(
+          context: context,
           text: 'There is no inspector working in the selected area');
     }
   }
 
-  _validate(value,) {
+  _validate(
+    value,
+  ) {
     if (value == null || value.isEmpty) {
       return 'Please enter valid information';
     }
@@ -126,9 +128,8 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                 ),
               ),
             ],
-            title:
-            FxText.sh1(widget.lead.name, fontWeight: 600,
-                color: theme.backgroundColor),
+            title: FxText.sh1(widget.lead.name,
+                fontWeight: 600, color: theme.backgroundColor),
           ),
           floatingActionButton: FloatingActionButton(
               onPressed: () {
@@ -136,9 +137,8 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                   showSnackBar(
                       context: context, text: 'Information is not completed!');
                 } else {
-                  scheduleDate = DateTime(
-                      scheduleDate.year, scheduleDate.month, scheduleDate.day,
-                      scheduleTime.hour, scheduleTime.minute);
+                  scheduleDate = DateTime(scheduleDate.year, scheduleDate.month,
+                      scheduleDate.day, scheduleTime.hour, scheduleTime.minute);
                   BackendInterface().dispatchLead(
                       widget.lead, inspector, inspectionTime, scheduleDate);
                   Navigator.popUntil(context, ModalRoute.withName('/home'));
@@ -173,7 +173,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                         enabledBorder: theme.inputDecorationTheme.border,
                         focusedBorder: theme.inputDecorationTheme.focusedBorder,
                         prefixIcon:
-                        const Icon(MdiIcons.accountChildOutline, size: 24),
+                            const Icon(MdiIcons.accountChildOutline, size: 24),
                       ),
                     ),
                   ),
@@ -188,8 +188,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                         border: theme.inputDecorationTheme.border,
                         enabledBorder: theme.inputDecorationTheme.border,
                         focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                        prefixIcon:
-                        const Icon(MdiIcons.map, size: 24),
+                        prefixIcon: const Icon(MdiIcons.map, size: 24),
                       ),
                     ),
                   ),
@@ -203,8 +202,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                         border: theme.inputDecorationTheme.border,
                         enabledBorder: theme.inputDecorationTheme.border,
                         focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                        prefixIcon:
-                        const Icon(MdiIcons.mapMarker, size: 24),
+                        prefixIcon: const Icon(MdiIcons.mapMarker, size: 24),
                       ),
                     ),
                   ),
@@ -219,21 +217,20 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                         border: theme.inputDecorationTheme.border,
                         enabledBorder: theme.inputDecorationTheme.border,
                         focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                        prefixIcon:
-                        const Icon(MdiIcons.city, size: 24),
+                        prefixIcon: const Icon(MdiIcons.city, size: 24),
                       ),
                     ),
                   ),
                   Container(
                       margin: const EdgeInsets.only(top: 8),
-                      child: FxListText(label: 'State',
+                      child: FxListText(
+                          label: 'State',
                           initialValue: state,
                           values: USStates.getAllAbbreviations(),
                           onListChanged: (newState) {
                             widget.lead.state = newState;
                           },
-                          validator: (value) => _validate(value))
-                  ),
+                          validator: (value) => _validate(value))),
                   Container(
                     margin: const EdgeInsets.only(top: 8),
                     child: TextFormField(
@@ -246,8 +243,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                         border: theme.inputDecorationTheme.border,
                         enabledBorder: theme.inputDecorationTheme.border,
                         focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                        prefixIcon:
-                        const Icon(MdiIcons.codeArray, size: 24),
+                        prefixIcon: const Icon(MdiIcons.codeArray, size: 24),
                       ),
                     ),
                   ),
@@ -263,8 +259,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                         border: theme.inputDecorationTheme.border,
                         enabledBorder: theme.inputDecorationTheme.border,
                         focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                        prefixIcon:
-                        const Icon(MdiIcons.qrcodeRemove, size: 24),
+                        prefixIcon: const Icon(MdiIcons.qrcodeRemove, size: 24),
                       ),
                     ),
                   ),
@@ -273,15 +268,15 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                     child: FxText.sh1("Service Information", fontWeight: 600),
                   ),
                   Container(
-                    margin: const EdgeInsets.only(top: 8),
-                    child: FxListText(label: 'Inspector',
-                      initialValue: inspector,
-                      values: inspectors,
-                      onListChanged: (newState) {
-                        inspector = newState;
-                      },
-                      validator: (value) => _validate(value))
-                  ),
+                      margin: const EdgeInsets.only(top: 8),
+                      child: FxListText(
+                          label: 'Inspector',
+                          initialValue: inspector,
+                          values: inspectors,
+                          onListChanged: (newState) {
+                            inspector = newState;
+                          },
+                          validator: (value) => _validate(value))),
                   Container(
                     margin: const EdgeInsets.only(top: 8),
                     child: TextFormField(
@@ -295,24 +290,24 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                         enabledBorder: theme.inputDecorationTheme.border,
                         focusedBorder: theme.inputDecorationTheme.focusedBorder,
                         prefixIcon:
-                        const Icon(MdiIcons.gamepadCircleOutline, size: 24),
+                            const Icon(MdiIcons.gamepadCircleOutline, size: 24),
                       ),
                     ),
                   ),
                   Container(
                       margin: const EdgeInsets.only(top: 8),
-                      child: FxDateText(label: 'Schedule Date',
+                      child: FxDateText(
+                          label: 'Schedule Date',
                           initValue: DateTime.now(),
                           onDateChanged: (newDate) => scheduleDate = newDate,
-                          validator: (value) => _validate(value))
-                  ),
+                          validator: (value) => _validate(value))),
                   Container(
                       margin: const EdgeInsets.only(top: 8),
-                      child: FxTimeText(label: 'Schedule Time',
+                      child: FxTimeText(
+                          label: 'Schedule Time',
                           initValue: TimeOfDay.now(),
                           onTimeChanged: (newTime) => scheduleTime = newTime,
-                          validator: (value) => _validate(value))
-                  ),
+                          validator: (value) => _validate(value))),
                 ],
               ),
             ),
