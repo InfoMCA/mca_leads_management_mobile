@@ -28,7 +28,12 @@ Session _$SessionFromJson(Map<String, dynamic> json) => Session(
       service: json['service'] as String,
       staff: json['staff'] as String,
       scheduledDateTime: json['scheduledDateTime'] as String,
-    );
+    )
+      ..purchasedPrice = (json['purchasedPrice'] as num?)?.toDouble()
+      ..deductionsAmount = (json['deductionsAmount'] as num?)?.toDouble()
+      ..lenderAmount = (json['lenderAmount'] as num?)?.toDouble()
+      ..customerAmount = (json['customerAmount'] as num?)?.toDouble()
+      ..withholdingAmount = (json['withholdingAmount'] as num?)?.toDouble();
 
 Map<String, dynamic> _$SessionToJson(Session instance) => <String, dynamic>{
       'id': instance.id,
@@ -41,6 +46,11 @@ Map<String, dynamic> _$SessionToJson(Session instance) => <String, dynamic>{
       'offeredPrice': instance.offeredPrice,
       'requestedPrice': instance.requestedPrice,
       'mmr': instance.mmr,
+      'purchasedPrice': instance.purchasedPrice,
+      'deductionsAmount': instance.deductionsAmount,
+      'lenderAmount': instance.lenderAmount,
+      'customerAmount': instance.customerAmount,
+      'withholdingAmount': instance.withholdingAmount,
       'address1': instance.address1,
       'address2': instance.address2,
       'city': instance.city,

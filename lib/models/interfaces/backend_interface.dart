@@ -16,11 +16,11 @@ class BackendInterface {
   final String sessionEndpoint = dotenv.env['API_SESSION_APP_REQUEST'] ?? "";
   final String regionEndpoint = dotenv.env['API_REGION_APP_REQUEST'] ?? "";
   final String userEndpoint = dotenv.env['API_USER_APP_REQUEST'] ?? "";
-  final String marketplaceEndpoint = dotenv.env['API_MARKETPLACE_APP_REQUEST'] ?? "";
+  final String marketplaceEndpoint =
+      dotenv.env['API_MARKETPLACE_APP_REQUEST'] ?? "";
 
   String getEndPoint(BackendReq backendReq) {
     switch (backendReq.object) {
-
       case CommandObject.user:
         return userEndpoint;
       case CommandObject.region:
@@ -34,12 +34,13 @@ class BackendInterface {
         return marketplaceEndpoint;
     }
   }
+
   Dio dio = Dio();
 
   Future<BackendResp> sendPostReq(BackendReq backendReq) async {
     try {
-      Response response =
-      await dio.post(getEndPoint(backendReq), data: json.encode(backendReq));
+      Response response = await dio.post(getEndPoint(backendReq),
+          data: json.encode(backendReq));
       BackendResp appResp = BackendResp.fromJson(response.data);
       dev.log(appResp.message.toString());
       if (response.statusCode == HttpStatus.ok) {
@@ -60,7 +61,8 @@ class BackendInterface {
           intent: CommandIntent.action,
           action: CommandAction.userLogin,
           params: {"username": username, "password": password});
-      Response response = await dio.post(getEndPoint(appReq), data: json.encode(appReq));
+      Response response =
+          await dio.post(getEndPoint(appReq), data: json.encode(appReq));
       if (response.statusCode != HttpStatus.ok) {
         return "Username or Password incorrect";
       }
@@ -73,14 +75,11 @@ class BackendInterface {
 
   Future<List<LeadSummary>?> getLeads(LogicalView logicalView) async {
     try {
-      BackendResp appResp = await sendPostReq(
-          BackendReq(
-              username: currentUser!.username,
-              object: CommandObject.lead,
-              intent: CommandIntent.getAll,
-              params: {
-                'viewType': logicalView.getString()
-              }));
+      BackendResp appResp = await sendPostReq(BackendReq(
+          username: currentUser!.username,
+          object: CommandObject.lead,
+          intent: CommandIntent.getAll,
+          params: {'viewType': logicalView.getString()}));
       return appResp.leadSummaries;
     } catch (e) {
       return [];
@@ -89,14 +88,11 @@ class BackendInterface {
 
   Future<List<LeadSummary>?> getSessions(LogicalView logicalView) async {
     try {
-      BackendResp appResp = await sendPostReq(
-          BackendReq(
-              username: currentUser!.username,
-              object: CommandObject.session,
-              intent: CommandIntent.getAll,
-              params: {
-                'viewType': logicalView.getString()
-              }));
+      BackendResp appResp = await sendPostReq(BackendReq(
+          username: currentUser!.username,
+          object: CommandObject.session,
+          intent: CommandIntent.getAll,
+          params: {'viewType': logicalView.getString()}));
       return appResp.leadSummaries;
     } catch (e) {
       return [];
@@ -104,149 +100,121 @@ class BackendInterface {
   }
 
   Future<Lead?> getLead(String leadId) async {
-    BackendResp appResp = await sendPostReq(
-        BackendReq(
-            username: currentUser!.username,
-            object: CommandObject.lead,
-            intent: CommandIntent.getById,
-            objectId: leadId));
+    BackendResp appResp = await sendPostReq(BackendReq(
+        username: currentUser!.username,
+        object: CommandObject.lead,
+        intent: CommandIntent.getById,
+        objectId: leadId));
     return appResp.lead;
   }
 
-
-  Future<BackendResp> putLeadAsFollowUp(String leadId,
-      DateTime followupDate,
-      String comment) async {
-    return sendPostReq(
-        BackendReq(
-            username: currentUser!.username,
-            object: CommandObject.lead,
-            intent: CommandIntent.action,
-            action: CommandAction.leadFollowUp,
-            params: {
-              "followUpDate": followupDate.toString(),
-              "followUpComment": comment
-            },
-            objectId: leadId
-        ));
+  Future<BackendResp> putLeadAsFollowUp(
+      String leadId, DateTime followupDate, String comment) async {
+    return sendPostReq(BackendReq(
+        username: currentUser!.username,
+        object: CommandObject.lead,
+        intent: CommandIntent.action,
+        action: CommandAction.leadFollowUp,
+        params: {
+          "followUpDate": followupDate.toString(),
+          "followUpComment": comment
+        },
+        objectId: leadId));
   }
 
-  Future<BackendResp> putLeadAsUnAnswered(String leadId,
-      bool sendSms,
-      bool leftMessage) async {
-    return sendPostReq(
-        BackendReq(
-            username: currentUser!.username,
-            object: CommandObject.lead,
-            intent: CommandIntent.action,
-            action: CommandAction.leadUnanswered,
-            params: {
-              "sendSms": sendSms.toString(),
-              "leftMessage": leftMessage.toString()
-            }));
+  Future<BackendResp> putLeadAsUnAnswered(
+      String leadId, bool sendSms, bool leftMessage) async {
+    return sendPostReq(BackendReq(
+        username: currentUser!.username,
+        object: CommandObject.lead,
+        intent: CommandIntent.action,
+        action: CommandAction.leadUnanswered,
+        params: {
+          "sendSms": sendSms.toString(),
+          "leftMessage": leftMessage.toString()
+        }));
   }
 
   Future<BackendResp> putLeadAsLost(String leadId, String lostReason) async {
-    return sendPostReq(
-        BackendReq(
-            username: currentUser!.username,
-            object: CommandObject.lead,
-            intent: CommandIntent.action,
-            action: CommandAction.leadLost,
-            params: {"lostReason": lostReason}));
+    return sendPostReq(BackendReq(
+        username: currentUser!.username,
+        object: CommandObject.lead,
+        intent: CommandIntent.action,
+        action: CommandAction.leadLost,
+        params: {"lostReason": lostReason}));
   }
 
   Future<BackendResp> searchLead(String keyword) async {
-    return sendPostReq(
-        BackendReq(
-            username: currentUser!.username,
-            object: CommandObject.lead,
-            intent: CommandIntent.search,
-            params: {"keyword": keyword}));
+    return sendPostReq(BackendReq(
+        username: currentUser!.username,
+        object: CommandObject.lead,
+        intent: CommandIntent.search,
+        params: {"keyword": keyword}));
   }
 
-
-
   Future<BackendResp> getRegion(String zipcode) async {
-    return sendPostReq(
-        BackendReq(
-            username: currentUser!.username,
-            object: CommandObject.region,
-            intent: CommandIntent.action,
-            action: CommandAction.regionGetByZipcode,
-            params: {"zipcode": zipcode}
-        ));
+    return sendPostReq(BackendReq(
+        username: currentUser!.username,
+        object: CommandObject.region,
+        intent: CommandIntent.action,
+        action: CommandAction.regionGetByZipcode,
+        params: {"zipcode": zipcode}));
   }
 
   Future<BackendResp> getInspectors(String region) async {
-    return sendPostReq(
-        BackendReq(
-            username: currentUser!.username,
-            object: CommandObject.region,
-            intent: CommandIntent.action,
-            action: CommandAction.regionGetInspectors,
-            params: {"region": region}
-        ));
+    return sendPostReq(BackendReq(
+        username: currentUser!.username,
+        object: CommandObject.region,
+        intent: CommandIntent.action,
+        action: CommandAction.regionGetInspectors,
+        params: {"region": region}));
   }
 
   Future<BackendResp> dispatchLead(
-      Lead lead,
-      String inspector,
-      int inspectionTime,
-      DateTime scheduleDate) {
-    return sendPostReq(
-        BackendReq(
-            username: currentUser!.username,
-            object: CommandObject.lead,
-            intent: CommandIntent.action,
-            action: CommandAction.leadDispatch,
-            lead: lead,
-            objectId: lead.id,
-            params: {
-              "inspector": inspector,
-              "inspectionTime": inspectionTime.toString(),
-              "scheduleDate": scheduleDate.toString()
-            }
-        ));
+      Lead lead, String inspector, int inspectionTime, DateTime scheduleDate) {
+    return sendPostReq(BackendReq(
+        username: currentUser!.username,
+        object: CommandObject.lead,
+        intent: CommandIntent.action,
+        action: CommandAction.leadDispatch,
+        lead: lead,
+        objectId: lead.id,
+        params: {
+          "inspector": inspector,
+          "inspectionTime": inspectionTime.toString(),
+          "scheduleDate": scheduleDate.toString()
+        }));
   }
 
   Future<Session?> getSession(String sessionId) async {
-    BackendResp backendResp = await sendPostReq(
-        BackendReq(
-            username: currentUser!.username,
-            object: CommandObject.session,
-            intent: CommandIntent.getById,
-            objectId: sessionId));
+    BackendResp backendResp = await sendPostReq(BackendReq(
+        username: currentUser!.username,
+        object: CommandObject.session,
+        intent: CommandIntent.getById,
+        objectId: sessionId));
     return backendResp.session;
   }
 
   Future<List<LeadSummary>?> getInventories(LogicalView logicalView) async {
     try {
-      BackendResp appResp = await sendPostReq(
-          BackendReq(
-              username: currentUser!.username,
-              object: CommandObject.inventory,
-              intent: CommandIntent.getAll,
-              params: {
-                'viewType': logicalView.getString()
-              }));
+      BackendResp appResp = await sendPostReq(BackendReq(
+          username: currentUser!.username,
+          object: CommandObject.inventory,
+          intent: CommandIntent.getAll,
+          params: {'viewType': logicalView.getString()}));
       return appResp.leadSummaries;
     } catch (e) {
       return [];
     }
-
   }
 
   Future<List<LeadSummary>?> getListings(LogicalView logicalView) async {
     try {
-      BackendResp appResp = await sendPostReq(
-          BackendReq(
-              username: currentUser!.username,
-              object: CommandObject.listing,
-              intent: CommandIntent.getAll,
-              params: {
-                'viewType': logicalView.getString()
-              }));
+      BackendResp appResp = await sendPostReq(BackendReq(
+          username: currentUser!.username,
+          object: CommandObject.listing,
+          intent: CommandIntent.getAll,
+          params: {'viewType': logicalView.getString()}));
       return appResp.leadSummaries;
     } catch (e) {
       return [];
@@ -261,11 +229,20 @@ class BackendInterface {
         objectId: sessionId);
     //BackendResp backendResp = await sendPostReq(backendReq);
     // sendSessionToInventoryMock(backendReq);
-
-
   }
 
-  Future<String> getSessionObject() async{
-    return reportData;
+  Future<BackendResp> getSessionObject(String sessionId, List<String> reportItems) async {
+    BackendReq backendReq = BackendReq(
+        username: currentUser!.username,
+        object: CommandObject.session,
+        intent: CommandIntent.action,
+        action: CommandAction.sessionReport,
+        objectId: sessionId,
+        params: {
+          "reportItems": reportItems,
+          "viewType": "active"
+        });
+    BackendResp resp = await sendPostReq(backendReq);
+    return resp;
   }
 }

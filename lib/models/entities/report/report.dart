@@ -1,11 +1,5 @@
 // ignore_for_file: constant_identifier_names
-
-import 'dart:collection';
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:enum_to_string/enum_to_string.dart';
-import 'package:flutter/services.dart';
 
 class ReportItem {
   String name;

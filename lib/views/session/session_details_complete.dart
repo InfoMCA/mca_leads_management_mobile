@@ -4,12 +4,13 @@
 * */
 
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
+import 'package:mca_leads_management_mobile/models/entities/api/backend_resp.dart';
 import 'package:mca_leads_management_mobile/models/entities/report/report.dart';
 import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
@@ -18,6 +19,7 @@ import 'package:mca_leads_management_mobile/utils/theme/app_colors.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_view_arg.dart';
+import 'package:mca_leads_management_mobile/widgets/image/image_zoom_viewer.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 
 class SessionDetailsComplete extends StatefulWidget {
@@ -34,9 +36,13 @@ class SessionDetailsComplete extends StatefulWidget {
 class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
   late CustomTheme customTheme;
   late ThemeData theme;
-  late Session? session;
+  late Session session;
   late Future<Session?> sessionFuture;
-  final List<bool> _isExpanded = [false, false, false, false];
+  final List<bool> _isExpanded = [false, false, false, false, false, false];
+
+  Report? reportQA;
+  List<String>? reportImages;
+  List<String>? reportPdfs;
 
   Future<void> _getSession(String sessionId) async {
     sessionFuture = BackendInterface().getSession(sessionId);
@@ -48,14 +54,38 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
     super.initState();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
-    _getSession(widget.args.id);
+    _getSession(widget.args.id).whenComplete(() => fetchInspectionQA());
+  }
+
+  void fetchInspectionQA() async {
+    try {
+      await BackendInterface().getSessionObject(widget.args.id, ["index"]).then(
+          (BackendResp backendResp) async {
+        reportQA = Report.fromJson(json.decode(backendResp.indexContents));
+        reportImages = await _fetchInspectionObjects(reportQA!.reportItems
+            .where((element) => element.responseFormat == ResponseFormat.Image)
+            .map((e) => e.name)
+            .toList());
+        reportPdfs = await _fetchInspectionObjects(reportQA!.reportItems
+            .where((element) => element.responseFormat == ResponseFormat.Pdf)
+            .map((e) => e.name)
+            .toList());
+        setState(() {});
+      });
+    } catch (e, s) {
+      log("Error getting report items: " + e.toString(), stackTrace: s);
+    }
+  }
+
+  Future<List<String>?> _fetchInspectionObjects(List<String> imageList) async {
+    BackendResp backendResp =
+        await BackendInterface().getSessionObject(widget.args.id, imageList);
+    return backendResp.reportItemLinks
+      ?..removeWhere((element) => element.isEmpty);
   }
 
   @override
   Widget build(BuildContext context) {
-    final args =
-        ModalRoute.of(context)!.settings.arguments as LeadViewArguments;
-
     return FutureBuilder(
         future: sessionFuture,
         builder: (context, AsyncSnapshot<Session?> snapshot) {
@@ -74,7 +104,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
               ),
             );
           }
-          session = snapshot.data;
+          session = snapshot.data!;
           return Scaffold(
             appBar: AppBar(
               elevation: 0,
@@ -96,7 +126,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                 ),
               ],
               title: FxText.sh1(
-                session!.title,
+                session.title,
                 fontWeight: 600,
                 color: theme.backgroundColor,
               ),
@@ -137,14 +167,18 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                         ),
                         isExpanded: _isExpanded[1]),
                     buildExpansionPanel(
-                        header:
-                            FxText.sh1("Inspection report", fontWeight: 600),
-                        child: _getInspectionReport(),
+                        header: FxText.sh1("Inspection QA", fontWeight: 600),
+                        child: _getInspectionQA(),
                         isExpanded: _isExpanded[2]),
                     buildExpansionPanel(
-                        header: FxText.sh1("Purchase report", fontWeight: 600),
-                        child: Text("tes"),
-                        isExpanded: _isExpanded[2]),
+                        header:
+                            FxText.sh1("Inspection images", fontWeight: 600),
+                        child: _getInspectionGallery(),
+                        isExpanded: _isExpanded[3]),
+                    // buildExpansionPanel(
+                    //     header: FxText.sh1("Purchase report", fontWeight: 600),
+                    //     child: _getInspectionPdfs(),
+                    //     isExpanded: _isExpanded[4]),
                     buildExpansionPanel(
                         header:
                             FxText.sh1("Customer Information", fontWeight: 600),
@@ -153,7 +187,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                             Container(
                               margin: const EdgeInsets.only(top: 8),
                               child: TextFormField(
-                                initialValue: session!.customerName,
+                                initialValue: session.customerName,
                                 decoration: InputDecoration(
                                   labelText: "Customer Name",
                                   border: theme.inputDecorationTheme.border,
@@ -170,7 +204,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                             Container(
                               margin: const EdgeInsets.only(top: 8),
                               child: TextFormField(
-                                initialValue: session!.phone,
+                                initialValue: session.phone,
                                 decoration: InputDecoration(
                                   labelText: "Customer Contact",
                                   border: theme.inputDecorationTheme.border,
@@ -186,7 +220,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                             ),
                           ],
                         ),
-                        isExpanded: _isExpanded[3])
+                        isExpanded: _isExpanded[4])
                   ],
                 ),
               ),
@@ -207,14 +241,17 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
             title: header,
           );
         },
-        body: child,
+        body: Padding(
+          padding: const EdgeInsets.only(bottom: 10.0),
+          child: child,
+        ),
         isExpanded: isExpanded);
   }
 
   List<Widget> _buildVehicleInfo() {
     return [
       TextFormField(
-        initialValue: session!.vin,
+        initialValue: session.vin,
         readOnly: true,
         decoration: InputDecoration(
           labelText: "VIN",
@@ -228,7 +265,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
         margin: const EdgeInsets.only(top: 8),
         child: TextFormField(
           readOnly: true,
-          initialValue: session!.mileage.toString(),
+          initialValue: session.mileage.toString(),
           decoration: InputDecoration(
             labelText: "Mileage",
             border: theme.inputDecorationTheme.border,
@@ -245,7 +282,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
         margin: const EdgeInsets.only(top: 8),
         child: TextFormField(
           readOnly: true,
-          initialValue: session!.color,
+          initialValue: session.color,
           decoration: InputDecoration(
             labelText: "Color",
             border: theme.inputDecorationTheme.border,
@@ -261,7 +298,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
           readOnly: true,
           initialValue: "Estimated CR",
           decoration: InputDecoration(
-            labelText: session!.estimatedCr.toString(),
+            labelText: session.estimatedCr.toString(),
             border: theme.inputDecorationTheme.border,
             enabledBorder: theme.inputDecorationTheme.border,
             focusedBorder: theme.inputDecorationTheme.focusedBorder,
@@ -298,7 +335,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                     TextButton.icon(
                       label: FxText.sh1('Inventory'),
                       onPressed: () {
-                        BackendInterface().sendSessionToInventory(session!.id);
+                        BackendInterface().sendSessionToInventory(session.id);
                         Navigator.pop(context);
                         Navigator.pop(context);
                       },
@@ -329,7 +366,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
         margin: const EdgeInsets.only(top: 8),
         child: TextFormField(
           readOnly: true,
-          initialValue: session!.mmr.toString(),
+          initialValue: session.mmr.toString(),
           decoration: InputDecoration(
             labelText: "MMR",
             border: theme.inputDecorationTheme.border,
@@ -346,9 +383,9 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
         margin: const EdgeInsets.only(top: 8),
         child: TextFormField(
           readOnly: true,
-          initialValue: ((session!.purchasedPrice ?? 0) -
-                  (session!.deductionsAmount ?? 0))
-              .toString(),
+          initialValue:
+              ((session.purchasedPrice ?? 0) - (session.deductionsAmount ?? 0))
+                  .toString(),
           decoration: InputDecoration(
             labelText: "Purchased Price",
             border: theme.inputDecorationTheme.border,
@@ -365,7 +402,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
         margin: const EdgeInsets.only(top: 8),
         child: TextFormField(
           readOnly: true,
-          initialValue: (session!.lenderAmount ?? 0).toString(),
+          initialValue: (session.lenderAmount ?? 0).toString(),
           decoration: InputDecoration(
             labelText: "Lender",
             border: theme.inputDecorationTheme.border,
@@ -382,7 +419,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
         margin: const EdgeInsets.only(top: 8),
         child: TextFormField(
           readOnly: true,
-          initialValue: (session!.withholdingAmount ?? 0).toString(),
+          initialValue: (session.withholdingAmount ?? 0).toString(),
           decoration: InputDecoration(
             labelText: "Withholding",
             border: theme.inputDecorationTheme.border,
@@ -399,7 +436,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
         margin: const EdgeInsets.only(top: 8),
         child: TextFormField(
           readOnly: true,
-          initialValue: (session!.customerAmount ?? 0).toString(),
+          initialValue: (session.customerAmount ?? 0).toString(),
           decoration: InputDecoration(
             labelText: "Customer Check",
             border: theme.inputDecorationTheme.border,
@@ -415,52 +452,107 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
     ];
   }
 
-  Widget _getInspectionReport() {
-    return FutureBuilder(
-        future: BackendInterface().getSessionObject(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Container(
-              color: Colors.white,
-              child: SizedBox(
-                width: double.maxFinite,
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    CircularProgressIndicator(),
-                  ],
-                ),
-              ),
-            );
-          }
-          Report report =
-              Report.fromJson(json.decode(snapshot.data.toString()));
-          return Column(
+  Widget _getInspectionQA() {
+    if (reportQA == null) {
+      return Container(
+        color: Colors.white,
+        child: SizedBox(
+          width: double.maxFinite,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              CircularProgressIndicator(),
+            ],
+          ),
+        ),
+      );
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: reportQA!.reportItems.map((e) {
+        if (e.responseFormat != ResponseFormat.Text || e.value.isEmpty) {
+          return Container();
+        }
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 8.0, left: 8),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: report.reportItems.map((e) {
-              if (e.responseFormat != ResponseFormat.Text || e.value.isEmpty) {
-                return Container();
-              }
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 8.0, left: 8),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      e.name,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      e.value,
-                      style: const TextStyle(color: AppColors.alizarinCrimson),
-                    )
-                  ],
-                ),
-              );
-            }).toList(),
-          );
-        });
+            children: [
+              Text(
+                e.name,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(
+                e.value,
+                style: const TextStyle(color: AppColors.alizarinCrimson),
+              )
+            ],
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _getInspectionGallery() {
+    if (reportImages == null) {
+      return Container(
+        color: Colors.white,
+        child: SizedBox(
+          width: double.maxFinite,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              CircularProgressIndicator(),
+            ],
+          ),
+        ),
+      );
+    } else if (reportImages?.isEmpty ?? true) {
+      return const Text("No objects to show");
+    }
+    return SizedBox(
+      height: 200,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: reportImages
+                ?.map((e) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: ImageZoomViewer(e, context: context),
+                  );
+                })
+                .toList()
+                .cast<Widget>() ??
+            [Container()],
+      ),
+    );
+  }
+
+  Widget _getInspectionPdfs() {
+    if (reportPdfs == null) {
+      return Container(
+        color: Colors.white,
+        child: SizedBox(
+          width: double.maxFinite,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              CircularProgressIndicator(),
+            ],
+          ),
+        ),
+      );
+    } else if (reportPdfs?.isEmpty ?? true) {
+      return const Text("No objects to show");
+    }
+    print(reportPdfs);
+    return Column(
+      children: reportPdfs?.map((e) => Text("pdf: " + e)).toList() ??
+          [const Text("Nothing to show")],
+    );
   }
 }

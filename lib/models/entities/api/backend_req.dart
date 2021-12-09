@@ -27,6 +27,7 @@ enum CommandAction {
   // Session Actions
   sessionSchedule,
   sessionLost,
+  sessionReport,
   // User Action
   userLogin,
   // Region Action
@@ -45,7 +46,7 @@ class BackendReq {
   Session? session;
 
   ///Either LeadAction, SessionAction or UserAction enums
-  Map<String, String>? params;
+  Map<String, dynamic>? params;
 
   BackendReq({required this.username,
     required this.object,

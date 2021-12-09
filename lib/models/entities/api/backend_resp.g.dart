@@ -22,7 +22,10 @@ BackendResp _$BackendRespFromJson(Map<String, dynamic> json) => BackendResp(
           ?.map((e) => e as String)
           .toList(),
       region: json['region'] as String?,
-    );
+      reportItemLinks: (json['reportItemLinks'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+    )..indexContents = json['indexContents'];
 
 Map<String, dynamic> _$BackendRespToJson(BackendResp instance) =>
     <String, dynamic>{
@@ -33,4 +36,6 @@ Map<String, dynamic> _$BackendRespToJson(BackendResp instance) =>
       'session': instance.session,
       'inspectors': instance.inspectors,
       'region': instance.region,
+      'reportItemLinks': instance.reportItemLinks,
+      'indexContents': instance.indexContents,
     };

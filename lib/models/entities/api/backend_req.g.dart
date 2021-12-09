@@ -18,9 +18,7 @@ BackendReq _$BackendReqFromJson(Map<String, dynamic> json) => BackendReq(
       session: json['session'] == null
           ? null
           : Session.fromJson(json['session'] as Map<String, dynamic>),
-      params: (json['params'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, e as String),
-      ),
+      params: json['params'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$BackendReqToJson(BackendReq instance) =>
@@ -40,9 +38,12 @@ const _$CommandObjectEnumMap = {
   CommandObject.region: 'region',
   CommandObject.lead: 'lead',
   CommandObject.session: 'session',
+  CommandObject.inventory: 'inventory',
+  CommandObject.listing: 'listing',
 };
 
 const _$CommandIntentEnumMap = {
+  CommandIntent.create: 'create',
   CommandIntent.getById: 'getById',
   CommandIntent.getAll: 'getAll',
   CommandIntent.search: 'search',
@@ -59,6 +60,7 @@ const _$CommandActionEnumMap = {
   CommandAction.leadLost: 'leadLost',
   CommandAction.sessionSchedule: 'sessionSchedule',
   CommandAction.sessionLost: 'sessionLost',
+  CommandAction.sessionReport: 'sessionReport',
   CommandAction.userLogin: 'userLogin',
   CommandAction.regionGetByZipcode: 'regionGetByZipcode',
   CommandAction.regionGetInspectors: 'regionGetInspectors',
