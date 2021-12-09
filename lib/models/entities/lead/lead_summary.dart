@@ -114,8 +114,7 @@ class LeadSummary {
     if (updateDate == null) {
       return "";
     }
-    return updateDate.day.toString() +
-        " " +
+    return updateDate.day.toString() + " " +
         DateFormat('MMM').format(DateTime(0, updateDate.month));
   }
 
@@ -126,3 +125,4 @@ class LeadSummary {
     return title.substring(0, 27) + "...";
   }
 }
+
