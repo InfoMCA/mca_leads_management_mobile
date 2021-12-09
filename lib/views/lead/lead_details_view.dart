@@ -8,20 +8,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
-import 'package:mca_leads_management_mobile/views/leads/lead_question_view.dart';
-import 'package:mca_leads_management_mobile/views/leads/lead_schedule_view.dart';
+import 'package:mca_leads_management_mobile/views/lead/lead_question_view.dart';
+import 'package:mca_leads_management_mobile/views/lead/lead_schedule_view.dart';
 import 'package:mca_leads_management_mobile/widgets/button/button.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:mca_leads_management_mobile/models/entities/lead.dart';
+import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
 import 'package:mca_leads_management_mobile/utils/spacing.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
-import 'package:mca_leads_management_mobile/views/leads/lead_view_arg.dart';
-import 'package:mca_leads_management_mobile/views/leads/followup_dialog.dart';
-import 'package:mca_leads_management_mobile/views/leads/question_dialog.dart';
+import 'package:mca_leads_management_mobile/views/lead/lead_view_arg.dart';
+import 'package:mca_leads_management_mobile/views/lead/followup_dialog.dart';
 
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 import 'package:collection/collection.dart';
@@ -420,15 +419,14 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                             color: theme.colorScheme.primaryVariant
                                 .withAlpha(220))),
                     InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                        _showUnansweredDialog(context);
-                      },
-                      child: Icon(MdiIcons.phoneMissed,
-                          size: 32,
-                          color:
-                              theme.colorScheme.primaryVariant.withAlpha(220)),
-                    ),
+                        onTap: () {
+                          Navigator.pop(context);
+                          _showUnansweredDialog(context);
+                        },
+                        child: Icon(MdiIcons.phoneMissed,
+                            size: 32,
+                            color: theme.colorScheme.primaryVariant
+                                .withAlpha(220))),
                     InkWell(
                         onTap: () {
                           Navigator.pop(context);
@@ -447,16 +445,6 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                                   arguments: lead);
                             }
                           : null,
-                      // onTap: lead!.conditionQuestions != null
-                      //     ? () {
-                      //         Navigator.push(
-                      //           context,
-                      //           MaterialPageRoute(
-                      //               builder: (context) =>
-                      //                   QuestionListDialog(lead)),
-                      //         );
-                      //       }
-                      //     : null,
                       child: (lead!.conditionQuestions != null)
                           ? Icon(MdiIcons.accountQuestion,
                               size: 32,

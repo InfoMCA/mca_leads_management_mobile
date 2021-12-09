@@ -3,22 +3,24 @@ import 'dart:developer' as dev;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:mca_leads_management_mobile/models/entities/lead.dart';
+import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
 import 'package:mca_leads_management_mobile/utils/spacing.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class QuestionListDialog extends StatefulWidget {
-  final Lead? lead;
-  const QuestionListDialog(this.lead, {Key? key}) : super(key: key);
+class LeadQuestionView extends StatefulWidget {
+  final Lead lead;
+  static String routeName = '/home/lead-question';
+
+  const LeadQuestionView({Key? key, required this.lead}) : super(key: key);
 
   @override
-  _QuestionListDialogState createState() => _QuestionListDialogState();
+  _LeadQuestionViewState createState() => _LeadQuestionViewState();
 }
 
-class _QuestionListDialogState extends State<QuestionListDialog> {
+class _LeadQuestionViewState extends State<LeadQuestionView> {
   late CustomTheme customTheme;
   late ThemeData theme;
 
@@ -32,12 +34,9 @@ class _QuestionListDialogState extends State<QuestionListDialog> {
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
 
-    conditionQuestion = json.decode(widget.lead?.conditionQuestions ?? "");
+    conditionQuestion = json.decode(widget.lead.conditionQuestions ?? "");
     conditionQuestion?.forEach((k, v) => questionList?.add('${k}'));
     conditionQuestion?.forEach((k, v) => answerList?.add('${v}'));
-
-    print(questionList);
-    print(answerList);
   }
 
   Future<void> _makePhoneCall(String phoneNumber) async {
@@ -64,7 +63,7 @@ class _QuestionListDialogState extends State<QuestionListDialog> {
           Padding(
             padding: const EdgeInsets.only(right: 16),
             child: InkWell(
-              onTap: () => _makePhoneCall(widget.lead!.mobileNumber),
+              onTap: () => _makePhoneCall(widget.lead.mobileNumber),
               child: Icon(
                 Icons.phone,
                 color: theme.backgroundColor,

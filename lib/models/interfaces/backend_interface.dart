@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:mca_leads_management_mobile/models/entities/backend_req.dart';
-import 'package:mca_leads_management_mobile/models/entities/backend_resp.dart';
+import 'package:mca_leads_management_mobile/models/entities/api/backend_req.dart';
+import 'package:mca_leads_management_mobile/models/entities/api/backend_resp.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
-import 'package:mca_leads_management_mobile/models/entities/lead.dart';
-import 'package:mca_leads_management_mobile/models/entities/lead_summary.dart';
-import 'package:mca_leads_management_mobile/models/entities/session.dart';
+import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
+import 'package:mca_leads_management_mobile/models/entities/lead/lead_summary.dart';
+import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
 
 class BackendInterface {
   final String leadEndpoint = dotenv.env['API_LEAD_APP_REQUEST'] ?? "";

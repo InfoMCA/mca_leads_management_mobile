@@ -1,7 +1,7 @@
-import 'package:mca_leads_management_mobile/models/entities/session.dart';
+import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
 
-import 'lead.dart';
-import 'lead_summary.dart';
+import '../lead/lead.dart';
+import '../lead/lead_summary.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'backend_resp.g.dart';

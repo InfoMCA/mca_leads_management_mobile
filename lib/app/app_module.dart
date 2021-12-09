@@ -1,9 +1,8 @@
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:mca_leads_management_mobile/views/leads/DashBoard.dart';
-import 'package:mca_leads_management_mobile/views/leads/lead_details_view.dart';
-import 'package:mca_leads_management_mobile/views/leads/lead_question_view.dart';
-import 'package:mca_leads_management_mobile/views/leads/lead_schedule_view.dart';
-import 'package:mca_leads_management_mobile/views/leads/question_dialog.dart';
+import 'package:mca_leads_management_mobile/views/lead/DashBoard.dart';
+import 'package:mca_leads_management_mobile/views/lead/lead_details_view.dart';
+import 'package:mca_leads_management_mobile/views/lead/lead_question_view.dart';
+import 'package:mca_leads_management_mobile/views/lead/lead_schedule_view.dart';
 import 'package:mca_leads_management_mobile/views/session/session_details.dart';
 import 'package:mca_leads_management_mobile/views/session/session_details_complete.dart';
 import 'package:mca_leads_management_mobile/views/security/login_page.dart';
@@ -26,8 +25,6 @@ class AppModule extends Module {
             )),
     ChildRoute('/home/sessionComplete',
         child: (_, args) => SessionDetailsComplete()),
-    ChildRoute('/home/lead/lead-details/questions',
-        child: (_, args) => QuestionListDialog(args.data)),
     ChildRoute('/home/lead-question',
         child: (_, args) => LeadQuestionView(lead: args.data)),
   ];

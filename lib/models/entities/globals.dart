@@ -1,8 +1,8 @@
 import 'dart:collection';
 
 import 'package:mca_leads_management_mobile/models/entities/auth_user.dart';
-import 'package:mca_leads_management_mobile/models/entities/lead.dart';
-import 'package:mca_leads_management_mobile/models/entities/lead_summary.dart';
+import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
+import 'package:mca_leads_management_mobile/models/entities/lead/lead_summary.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
 
 String? inspectionConfigStr;
