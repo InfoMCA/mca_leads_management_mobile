@@ -37,8 +37,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
 
   @override
   Widget build(BuildContext context) {
-    final args =
-        ModalRoute.of(context)!.settings.arguments as LeadViewArguments;
+    final args = ModalRoute.of(context)!.settings.arguments as LeadViewArguments;
 
     return Scaffold(
       appBar: AppBar(
