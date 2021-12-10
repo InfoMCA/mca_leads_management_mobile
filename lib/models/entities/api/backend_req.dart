@@ -5,9 +5,10 @@ import '../lead/lead.dart';
 
 part 'backend_req.g.dart';
 
-enum CommandObject { user, region, lead, session }
+enum CommandObject { user, region, lead, session, inventory, listing, offer }
 
 enum CommandIntent {
+  create,
   getById,
   getAll,
   search,
@@ -26,11 +27,15 @@ enum CommandAction {
   // Session Actions
   sessionSchedule,
   sessionLost,
+  sessionReport,
   // User Action
   userLogin,
   // Region Action
   regionGetByZipcode,
-  regionGetInspectors
+  regionGetInspectors,
+  //
+  listingNew,
+  listingGetMarketplaces
 }
 
 @JsonSerializable()

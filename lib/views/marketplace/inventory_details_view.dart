@@ -2,39 +2,45 @@ import 'dart:developer' as dev;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
-import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
-import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
+import 'package:mca_leads_management_mobile/models/entities/marketplace/inventory.dart';
+import 'package:mca_leads_management_mobile/models/entities/marketplace/vehicle.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/marketplace_interface.dart';
 import 'package:mca_leads_management_mobile/utils/spacing.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_view_arg.dart';
+import 'package:mca_leads_management_mobile/views/marketplace/listing_new_request_dialog.dart';
+import 'package:mca_leads_management_mobile/views/marketplace/listing_request_view.dart';
+import 'package:mca_leads_management_mobile/widgets/common/notifications.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 
-class SessionDetailsComplete extends StatefulWidget {
+class InventoryDetailView extends StatefulWidget {
   final LeadViewArguments args;
-  static String routeName = '/home/sessionComplete';
-  const SessionDetailsComplete({Key? key, required this.args}) : super(key: key);
+  static String routeName = '/home/inventory';
+
+  const InventoryDetailView({Key? key, required this.args}) : super(key: key);
 
   @override
-  _SessionDetailsCompleteState createState() => _SessionDetailsCompleteState();
+  _InventoryDetailViewState createState() => _InventoryDetailViewState();
 }
 
-class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
+class _InventoryDetailViewState extends State<InventoryDetailView> {
   late CustomTheme customTheme;
   late ThemeData theme;
-  late Session? session;
-  late Future<Session?> sessionFuture;
+  late InventoryVehicle? inventoryVehicle;
+  late InventoryItem inventoryItem;
+  late Vehicle vehicle;
+  late Future<InventoryVehicle?> inventoryVehicleFuture;
 
-  final _panelsExpansionStatus = [false, false, false];
+  var _currentIndex = 0;
 
-  var _currentIndex = 2;
+  final _panelsExpansionStatus = [false, false, false, false];
 
-  Future<void> _getSession(String sessionId) async {
-    sessionFuture = BackendInterface().getSession(sessionId);
-    sessionFuture.whenComplete(() => setState(() {}));
+  Future<void> _getInventoryVehicle(String inventoryId) async {
+    inventoryVehicleFuture =
+        MarketplaceInterface().getInventoryVehicle(inventoryId);
+    inventoryVehicleFuture.whenComplete(() => setState(() {}));
   }
 
   @override
@@ -42,16 +48,14 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
     super.initState();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
-    _getSession(widget.args.id);
+    _getInventoryVehicle(widget.args.id);
   }
-
 
   @override
   Widget build(BuildContext context) {
-
     return FutureBuilder(
-        future: sessionFuture,
-        builder: (context, AsyncSnapshot<Session?> snapshot) {
+        future: inventoryVehicleFuture,
+        builder: (context, AsyncSnapshot<InventoryVehicle?> snapshot) {
           if (!snapshot.hasData) {
             return Container(
               color: Colors.white,
@@ -67,7 +71,9 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
               ),
             );
           }
-          session = snapshot.data;
+          inventoryVehicle = snapshot.data;
+          inventoryItem = inventoryVehicle!.inventoryItem;
+          vehicle = inventoryVehicle!.vehicle;
           return Scaffold(
             appBar: AppBar(
               elevation: 0,
@@ -79,17 +85,8 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                   color: theme.backgroundColor,
                 ),
               ),
-              actions: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 16),
-                  child: Icon(
-                    Icons.phone,
-                    color: theme.backgroundColor,
-                  ),
-                ),
-              ],
               title: FxText.sh1(
-                "Session Details",
+                'Inventory Details',
                 fontWeight: 600,
                 color: theme.backgroundColor,
               ),
@@ -101,21 +98,28 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
               selectedItemColor: Colors.white.withOpacity(.80),
               unselectedItemColor: Colors.white.withOpacity(.80),
               onTap: (value) {
-                dev.log(value.toString());
-                switch (value) {
-                  case 0:
-                    MarketplaceInterface().sendSessionToInventory(session!.id);
-                    Navigator.popUntil(
-                        context, ModalRoute.withName('/home'));
-                    break;
-                  case 1:
-                    Navigator.popUntil(
-                        context, ModalRoute.withName('/home'));
-                    break;
-                  case 2:
-                    Navigator.popUntil(
-                        context, ModalRoute.withName('/home'));
-                    break;
+                if (value == 0) {
+                  if (inventoryItem.state == InventoryItemState.ACTIVE) {
+                    MarketplaceInterface().getMarketPlaces().then((
+                        marketplaces) {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) =>
+                              ListingNewDialog(
+                                onSubmit: (listingNewReq) {
+                                  MarketplaceInterface().createNewListing(
+                                      vehicle.id, inventoryItem.id,
+                                      listingNewReq);
+                                },
+                                initOfferPrice: inventoryItem.purchasedPrice
+                                    .toInt(),
+                                marketplaces: marketplaces,
+                              ));
+                    });
+                  } else {
+                    showSnackBar(context: context,
+                        text: "You can't put this vehicle in marketplace");
+                  }
                 }
 
                 setState(() =>
@@ -123,17 +127,17 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
               },
               items: const [
                 BottomNavigationBarItem(
-                  label: 'Inventory',
-                  icon: Icon(Icons.store_mall_directory),
+                  label: 'MarketPlace',
+                  icon: Icon(Icons.storefront),
                 ),
                 BottomNavigationBarItem(
                   label: 'Transfer',
                   icon: Icon(Icons.emoji_transportation),
                 ),
                 BottomNavigationBarItem(
-                  label: 'Close',
-                  icon: Icon(Icons.close),
-                ),
+                  label: 'Sold',
+                  icon: Icon(Icons.sell),
+                )
               ],
             ),
             body: SingleChildScrollView(
@@ -145,7 +149,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                     Container(
                         margin: const EdgeInsets.only(
                             top: 16, left: 16, right: 16, bottom: 16),
-                        child: FxText.sh1(session!.title, fontWeight: 700)
+                        child: FxText.sh1(vehicle.ymmt, fontWeight: 700)
                     ),
                     ExpansionPanelList(
                       expandedHeaderPadding: const EdgeInsets.all(0),
@@ -179,7 +183,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                                           top: 8, left: 8, right: 8),
                                       child: TextFormField(
                                         readOnly: true,
-                                        initialValue: session!.vin,
+                                        initialValue: vehicle.vin,
                                         decoration: InputDecoration(
                                           labelText: "VIN",
                                           border: theme
@@ -203,7 +207,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                                           top: 8, left: 8, right: 8),
                                       child: TextFormField(
                                         readOnly: true,
-                                        initialValue: session!.color,
+                                        initialValue: vehicle.color,
                                         decoration: InputDecoration(
                                           labelText: "Color",
                                           border: theme
@@ -226,7 +230,8 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                                           top: 8, left: 8, right: 8),
                                       child: TextFormField(
                                         readOnly: true,
-                                        initialValue: session!.mileage.toString(),
+                                        initialValue: vehicle.mileage
+                                            .toString(),
                                         decoration: InputDecoration(
                                           labelText: "Mileage",
                                           border: theme
@@ -250,7 +255,8 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                                           top: 8, left: 8, right: 8),
                                       child: TextFormField(
                                         readOnly: true,
-                                        initialValue: session!.estimatedCr.toString(),
+                                        initialValue: vehicle.estimatedCr
+                                            .toString(),
                                         decoration: InputDecoration(
                                           labelText: "Estimated CR",
                                           border: theme
@@ -296,7 +302,8 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                                           top: 8, left: 8, right: 8),
                                       child: TextFormField(
                                         readOnly: true,
-                                        initialValue: session!.askingPrice.toString(),
+                                        initialValue: vehicle.askingPrice
+                                            .toString(),
                                         decoration: InputDecoration(
                                           labelText: "Listing Price",
                                           border: theme
@@ -320,7 +327,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                                           top: 8, left: 8, right: 8),
                                       child: TextFormField(
                                         readOnly: true,
-                                        initialValue: session!.mmr.toString(),
+                                        initialValue: vehicle.mmr.toString(),
                                         decoration: InputDecoration(
                                           labelText: "MMR",
                                           border: theme
@@ -339,56 +346,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                                         ),
                                       ),
                                     ),
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 8, left: 8, right: 8),
-                                      child: TextFormField(
-                                        readOnly: true,
-                                        initialValue: (session!.offeredPrice ?? 0).toString(),
-                                        decoration: InputDecoration(
-                                          labelText: "Offered Price",
-                                          border: theme
-                                              .inputDecorationTheme
-                                              .border,
-                                          enabledBorder:
-                                          theme.inputDecorationTheme
-                                              .border,
-                                          focusedBorder:
-                                          theme.inputDecorationTheme
-                                              .focusedBorder,
-                                          prefixIcon: const Icon(
-                                            Icons.price_change_outlined,
-                                            size: 24,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 8, left: 8, right: 8),
-                                      child: TextFormField(
-                                        readOnly: true,
-                                        initialValue: (session!.requestedPrice ?? 0).toString(),
-                                        decoration: InputDecoration(
-                                          labelText: "Requested Price",
-                                          border: theme
-                                              .inputDecorationTheme
-                                              .border,
-                                          enabledBorder:
-                                          theme.inputDecorationTheme
-                                              .border,
-                                          focusedBorder:
-                                          theme.inputDecorationTheme
-                                              .focusedBorder,
-                                          prefixIcon: const Icon(
-                                            Icons.price_change,
-                                            size: 24,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ]
-                              ),
+                                  ]),
                             ),
                             isExpanded: _panelsExpansionStatus[1]),
                         ExpansionPanel(
@@ -397,7 +355,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                             headerBuilder:
                                 (BuildContext context, bool isExpanded) {
                               return ListTile(
-                                title: FxText.b1("Purchase Detail",
+                                title: FxText.b1("Purchase Information",
                                     color: isExpanded
                                         ? lightColor.primary
                                         : theme.colorScheme.onBackground,
@@ -412,37 +370,20 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                                       margin: const EdgeInsets.only(
                                           top: 8, left: 8, right: 8),
                                       child: TextFormField(
-                                        initialValue: session!.customerName,
                                         readOnly: true,
-                                        decoration: InputDecoration(
-                                          labelText: "Customer Name",
-                                          border: theme
-                                              .inputDecorationTheme
-                                              .border,
-                                          enabledBorder:
-                                          theme.inputDecorationTheme
-                                              .border,
-                                          focusedBorder:
-                                          theme.inputDecorationTheme
-                                              .focusedBorder,
-                                          prefixIcon: const Icon(
-                                              MdiIcons
-                                                  .accountChildOutline,
-                                              size: 24),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 8, left: 8, right: 8),
-                                      child: TextFormField(
-                                        readOnly: true,
-                                        initialValue: ((session!.purchasedPrice ?? 0) - (session!.deductionsAmount ?? 0)).toString(),
+                                        initialValue: (inventoryItem
+                                            .purchasedPrice -
+                                            inventoryItem.deductionsAmount)
+                                            .toString(),
                                         decoration: InputDecoration(
                                           labelText: "Purchased Price",
-                                          border: theme.inputDecorationTheme.border,
-                                          enabledBorder: theme.inputDecorationTheme.border,
-                                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                                          border: theme.inputDecorationTheme
+                                              .border,
+                                          enabledBorder: theme
+                                              .inputDecorationTheme.border,
+                                          focusedBorder: theme
+                                              .inputDecorationTheme
+                                              .focusedBorder,
                                           prefixIcon: const Icon(
                                             Icons.price_change,
                                             size: 24,
@@ -455,12 +396,17 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                                           top: 8, left: 8, right: 8),
                                       child: TextFormField(
                                         readOnly: true,
-                                        initialValue: (session!.lenderAmount ?? 0).toString(),
+                                        initialValue: inventoryItem.lenderAmount
+                                            .toString(),
                                         decoration: InputDecoration(
-                                          labelText: "Lender",
-                                          border: theme.inputDecorationTheme.border,
-                                          enabledBorder: theme.inputDecorationTheme.border,
-                                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                                          labelText: "Lender Amount",
+                                          border: theme.inputDecorationTheme
+                                              .border,
+                                          enabledBorder: theme
+                                              .inputDecorationTheme.border,
+                                          focusedBorder: theme
+                                              .inputDecorationTheme
+                                              .focusedBorder,
                                           prefixIcon: const Icon(
                                             Icons.price_change,
                                             size: 24,
@@ -473,12 +419,17 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                                           top: 8, left: 8, right: 8),
                                       child: TextFormField(
                                         readOnly: true,
-                                        initialValue: (session!.withholdingAmount ?? 0).toString(),
+                                        initialValue: inventoryItem
+                                            .withholdingAmount.toString(),
                                         decoration: InputDecoration(
                                           labelText: "Withholding",
-                                          border: theme.inputDecorationTheme.border,
-                                          enabledBorder: theme.inputDecorationTheme.border,
-                                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                                          border: theme.inputDecorationTheme
+                                              .border,
+                                          enabledBorder: theme
+                                              .inputDecorationTheme.border,
+                                          focusedBorder: theme
+                                              .inputDecorationTheme
+                                              .focusedBorder,
                                           prefixIcon: const Icon(
                                             Icons.price_change,
                                             size: 24,
@@ -491,12 +442,17 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                                           top: 8, left: 8, right: 8),
                                       child: TextFormField(
                                         readOnly: true,
-                                        initialValue: (session!.customerAmount ?? 0).toString(),
+                                        initialValue: inventoryItem
+                                            .customerAmount.toString(),
                                         decoration: InputDecoration(
                                           labelText: "Customer Check",
-                                          border: theme.inputDecorationTheme.border,
-                                          enabledBorder: theme.inputDecorationTheme.border,
-                                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                                          border: theme.inputDecorationTheme
+                                              .border,
+                                          enabledBorder: theme
+                                              .inputDecorationTheme.border,
+                                          focusedBorder: theme
+                                              .inputDecorationTheme
+                                              .focusedBorder,
                                           prefixIcon: const Icon(
                                             Icons.price_change,
                                             size: 24,
@@ -507,15 +463,85 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                                   ]
                               ),
                             ),
-                            isExpanded: _panelsExpansionStatus[2]),
+                            isExpanded: _panelsExpansionStatus[2] && (
+                                    inventoryItem.state == InventoryItemState.TRANSFERRED_OUT ||
+                                    inventoryItem.state == InventoryItemState.ACTIVE
+                            )),
+                        ExpansionPanel(
+                            backgroundColor: Colors.grey[100],
+                            canTapOnHeader: true,
+                            headerBuilder:
+                                (BuildContext context, bool isExpanded) {
+                              return ListTile(
+                                title: FxText.b1("Trade Information",
+                                    color: isExpanded
+                                        ? lightColor.primary
+                                        : theme.colorScheme.onBackground,
+                                    fontWeight: isExpanded ? 700 : 600),
+                              );
+                            },
+                            body: Container(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: Column(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: inventoryItem.sellerId,
+                                        decoration: InputDecoration(
+                                          labelText: "Seller Name",
+                                          border: theme.inputDecorationTheme
+                                              .border,
+                                          enabledBorder: theme
+                                              .inputDecorationTheme.border,
+                                          focusedBorder: theme
+                                              .inputDecorationTheme
+                                              .focusedBorder,
+                                          prefixIcon: const Icon(
+                                            Icons.price_change,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: inventoryItem.tradedPrice
+                                            .toString(),
+                                        decoration: InputDecoration(
+                                          labelText: "Traded Price",
+                                          border: theme.inputDecorationTheme
+                                              .border,
+                                          enabledBorder: theme
+                                              .inputDecorationTheme.border,
+                                          focusedBorder: theme
+                                              .inputDecorationTheme
+                                              .focusedBorder,
+                                          prefixIcon: const Icon(
+                                            Icons.price_change,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ]
+                              ),
+                            ),
+                            isExpanded: _panelsExpansionStatus[3] &&
+                                inventoryItem.state == InventoryItemState.TRANSFERRED_OUT ||
+                                inventoryItem.state == InventoryItemState.TRANSFERRED_IN),
                       ],
                     ),
                   ],
                 ),
               ),
             ),
-        );
-      }
-    );
+          );
+        });
   }
 }

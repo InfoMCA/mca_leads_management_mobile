@@ -18,7 +18,11 @@ enum LeadViewTag {
   activePendingApproval,
   approved,
   rejected,
-  complete
+  complete,
+  inventory,
+  listing,
+  transferIn,
+  transferOut,
 }
 
 extension LeadViewTagExt on LeadViewTag {
@@ -47,6 +51,15 @@ extension LeadViewTagExt on LeadViewTag {
         return "A";
       case LeadViewTag.rejected:
         return "R";
+      case LeadViewTag.inventory:
+        return "I";
+      case LeadViewTag.listing:
+        return "L";
+      case LeadViewTag.transferIn:
+        return "TI";
+      case LeadViewTag.transferOut:
+        return "TO";
+
     }
   }
 
@@ -58,6 +71,7 @@ extension LeadViewTagExt on LeadViewTag {
       case LeadViewTag.followUpAuction:
       case LeadViewTag.activePendingApproval:
       case LeadViewTag.rejected:
+      case LeadViewTag.inventory:
         return const Color.fromARGB(255, 255, 236, 235);
       case LeadViewTag.approvalDealMade:
       case LeadViewTag.followUpAppraisal:
@@ -65,9 +79,12 @@ extension LeadViewTagExt on LeadViewTag {
       case LeadViewTag.ready:
       case LeadViewTag.activeProgress:
       case LeadViewTag.approved:
+      case LeadViewTag.listing:
+      case LeadViewTag.transferIn:
         return const Color.fromARGB(255, 234, 241, 254);
       case LeadViewTag.approvalPotentialDeal:
       case LeadViewTag.complete:
+      case LeadViewTag.transferOut:
         return const Color.fromARGB(255, 233, 249, 236);
     }
   }
@@ -80,6 +97,7 @@ extension LeadViewTagExt on LeadViewTag {
       case LeadViewTag.followUpAuction:
       case LeadViewTag.activePendingApproval:
       case LeadViewTag.rejected:
+      case LeadViewTag.inventory:
         return const Color.fromARGB(255, 245, 45, 59);
       case LeadViewTag.approvalDealMade:
       case LeadViewTag.followUpAppraisal:
@@ -87,9 +105,12 @@ extension LeadViewTagExt on LeadViewTag {
       case LeadViewTag.ready:
       case LeadViewTag.activeProgress:
       case LeadViewTag.approved:
+      case LeadViewTag.listing:
+      case LeadViewTag.transferIn:
         return const Color.fromARGB(255, 44, 121, 244);
       case LeadViewTag.approvalPotentialDeal:
       case LeadViewTag.complete:
+      case LeadViewTag.transferOut:
         return const Color.fromARGB(255, 50, 175, 84);
     }
   }
@@ -97,13 +118,14 @@ extension LeadViewTagExt on LeadViewTag {
 
 @JsonSerializable()
 class LeadSummary {
-  LeadSummary(this.id, this.title, this.vin, this.viewTag, this.updateDate);
+  LeadSummary(this.id, this.vehicleId, this.title, this.vin, this.viewTag, this.updateDate);
 
   String id;
+  String vehicleId;
   String title;
   String vin;
   LeadViewTag viewTag;
-  DateTime updateDate;
+  DateTime? updateDate;
 
   factory LeadSummary.fromJson(Map<String, dynamic> json) =>
       _$LeadSummaryFromJson(json);
@@ -114,8 +136,8 @@ class LeadSummary {
     if (updateDate == null) {
       return "";
     }
-    return updateDate.day.toString() + " " +
-        DateFormat('MMM').format(DateTime(0, updateDate.month));
+    return updateDate!.day.toString() + " " +
+        DateFormat('MMM').format(DateTime(0, updateDate!.month));
   }
 
   String getCompactTitle() {

@@ -67,6 +67,12 @@ class Session {
   int? offeredPrice;
   int? requestedPrice;
   int mmr;
+  double? purchasedPrice;
+  double? deductionsAmount;
+  double? lenderAmount;
+  double? customerAmount;
+  double? withholdingAmount;
+  DateTime? purchasedDate;
   String address1;
   String? address2;
   String city;

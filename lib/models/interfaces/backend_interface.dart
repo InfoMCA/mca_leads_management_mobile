@@ -5,9 +5,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mca_leads_management_mobile/models/entities/api/backend_req.dart';
 import 'package:mca_leads_management_mobile/models/entities/api/backend_resp.dart';
+import 'package:mca_leads_management_mobile/models/entities/api/logical_view.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead/lead_summary.dart';
+import 'package:mca_leads_management_mobile/models/entities/marketplace/listing.dart';
+import 'package:mca_leads_management_mobile/models/entities/marketplace/offer.dart';
 import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
 
 class BackendInterface {
@@ -15,6 +18,8 @@ class BackendInterface {
   final String sessionEndpoint = dotenv.env['API_SESSION_APP_REQUEST'] ?? "";
   final String regionEndpoint = dotenv.env['API_REGION_APP_REQUEST'] ?? "";
   final String userEndpoint = dotenv.env['API_USER_APP_REQUEST'] ?? "";
+  final String marketplaceEndpoint = dotenv
+      .env['API_MARKETPLACE_APP_REQUEST'] ?? "";
 
   String getEndPoint(BackendReq backendReq) {
     switch (backendReq.object) {
@@ -27,6 +32,10 @@ class BackendInterface {
         return leadEndpoint;
       case CommandObject.session:
         return sessionEndpoint;
+      case CommandObject.inventory:
+      case CommandObject.listing:
+      case CommandObject.offer:
+        return marketplaceEndpoint;
     }
   }
   Dio dio = Dio();
@@ -110,8 +119,7 @@ class BackendInterface {
 
 
   Future<BackendResp> putLeadAsFollowUp(String leadId,
-      DateTime followupDate,
-      String comment) async {
+      LeadFollowUpInfo followUpInfo) async {
     return sendPostReq(
         BackendReq(
             username: currentUser!.username,
@@ -119,16 +127,14 @@ class BackendInterface {
             intent: CommandIntent.action,
             action: CommandAction.leadFollowUp,
             params: {
-              "followUpDate": followupDate.toString(),
-              "followUpComment": comment
+              "followUpDate": followUpInfo.date.toUtc().toIso8601String(),
+              "followUpComment": followUpInfo.comment
             },
             objectId: leadId
         ));
   }
 
-  Future<BackendResp> putLeadAsUnAnswered(String leadId,
-      bool sendSms,
-      bool leftMessage) async {
+  Future<BackendResp> putLeadAsUnAnswered(String leadId, LeadUnAnsweredInfo unAnsweredInfo) async {
     return sendPostReq(
         BackendReq(
             username: currentUser!.username,
@@ -136,8 +142,8 @@ class BackendInterface {
             intent: CommandIntent.action,
             action: CommandAction.leadUnanswered,
             params: {
-              "sendSms": sendSms.toString(),
-              "leftMessage": leftMessage.toString()
+              "sendSms": unAnsweredInfo.sendSms.toString(),
+              "leftMessage": unAnsweredInfo.leftMessage.toString()
             }));
   }
 
@@ -213,5 +219,20 @@ class BackendInterface {
             intent: CommandIntent.getById,
             objectId: sessionId));
     return backendResp.session;
+  }
+
+  Future<BackendResp> getSessionObject(String sessionId, List<String> reportItems) async {
+    BackendReq backendReq = BackendReq(
+        username: currentUser!.username,
+        object: CommandObject.session,
+        intent: CommandIntent.action,
+        action: CommandAction.sessionReport,
+        objectId: sessionId,
+        params: {
+          "reportItems": reportItems.join(","),
+          "viewType": "active"
+        });
+    BackendResp resp = await sendPostReq(backendReq);
+    return resp;
   }
 }

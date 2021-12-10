@@ -40,9 +40,13 @@ const _$CommandObjectEnumMap = {
   CommandObject.region: 'region',
   CommandObject.lead: 'lead',
   CommandObject.session: 'session',
+  CommandObject.inventory: 'inventory',
+  CommandObject.listing: 'listing',
+  CommandObject.offer: 'offer',
 };
 
 const _$CommandIntentEnumMap = {
+  CommandIntent.create: 'create',
   CommandIntent.getById: 'getById',
   CommandIntent.getAll: 'getAll',
   CommandIntent.search: 'search',
@@ -59,7 +63,10 @@ const _$CommandActionEnumMap = {
   CommandAction.leadLost: 'leadLost',
   CommandAction.sessionSchedule: 'sessionSchedule',
   CommandAction.sessionLost: 'sessionLost',
+  CommandAction.sessionReport: 'sessionReport',
   CommandAction.userLogin: 'userLogin',
   CommandAction.regionGetByZipcode: 'regionGetByZipcode',
   CommandAction.regionGetInspectors: 'regionGetInspectors',
+  CommandAction.listingNew: 'listingNew',
+  CommandAction.listingGetMarketplaces: 'listingGetMarketplaces',
 };

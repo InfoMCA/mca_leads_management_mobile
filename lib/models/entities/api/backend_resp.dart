@@ -15,6 +15,8 @@ class BackendResp {
   Session? session;
   List<String>? inspectors;
   String? region;
+  List<String>? reportItemLinks;
+  dynamic indexContents;
 
   BackendResp({this.message,
     this.status,
@@ -22,7 +24,9 @@ class BackendResp {
     this.lead,
     this.session,
     this.inspectors,
-    this.region});
+    this.region,
+    this.reportItemLinks,
+    this.indexContents});
 
   factory BackendResp.fromJson(Map<String, dynamic> json) =>
       _$BackendRespFromJson(json);
