@@ -2,6 +2,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mca_leads_management_mobile/views/dashboard.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_details_view.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_schedule_view.dart';
+import 'package:mca_leads_management_mobile/views/lead/lead_question_view.dart';
 import 'package:mca_leads_management_mobile/views/marketplace/inventory_details_view.dart';
 import 'package:mca_leads_management_mobile/views/marketplace/listing_details_view.dart';
 import 'package:mca_leads_management_mobile/views/marketplace/listing_request_view.dart';
@@ -39,10 +40,9 @@ class AppModule extends Module {
     ChildRoute('/home/inventory',
         child: (_, args) => InventoryDetailView(args: args.data)),
     ChildRoute('/home/sessionComplete',
-        child: (_, args) => SessionDetailsComplete()),
+        child: (_, args) => SessionDetailsComplete(args: args.data)),
     ChildRoute('/home/lead-question',
         child: (_, args) => LeadQuestionView(lead: args.data)),
-        child: (_, args) => SessionDetailsComplete(args: args.data)),
     ChildRoute('/home/session-complete-report',
         child: (_, args) => SessionDetailsCompleteReport(args: args.data)),
   ];
