@@ -38,6 +38,14 @@ class _OfferDetailViewState extends State<OfferDetailView> {
     offersFuture.whenComplete(() => setState(() {}));
   }
 
+  Future<Null> _onRefresh() async {
+    await Future.delayed(Duration(milliseconds: 2000));
+    _getOffers(widget.args.id, widget.args.logicalView);
+    setState(() {
+
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -48,8 +56,6 @@ class _OfferDetailViewState extends State<OfferDetailView> {
   }
 
   bool isOfferAcceptable(OfferState offerState) {
-    print(offerState.toString());
-    print(logicalView.toString());
     if (offerState == OfferState.BUYER_ACCEPTED ||
         offerState == OfferState.BUYER_REJECTED ||
         offerState == OfferState.SELLER_ACCEPTED ||
@@ -68,207 +74,235 @@ class _OfferDetailViewState extends State<OfferDetailView> {
   }
 
   Widget _buildItemList() {
-    return ListView.separated(
-        itemCount: offers!.length,
-        itemBuilder: (context, index) {
-          return Ink(
-            child: Column(
-              children: [
-                Container(height: 16),
-                FxCard(
-                  margin: FxSpacing.fromLTRB(8, 0, 8, 0),
-                  color: offers![index].state
-                      .getBackgroundColor(logicalView),
-                  borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(12),
-                      bottomRight: Radius.circular(12),
-                      bottomLeft: Radius.circular(12)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      FxText.h6(
-                        offers![index].state.getTitle(),
-                        fontWeight: 600,
-                        color: lightColor.primary,
-                        xMuted: true,
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 130,
-                            child: FxText.b2(
-                              "Buyer: ",
-                              fontWeight: 700,
+    return RefreshIndicator(
+      onRefresh: _onRefresh,
+      child: ListView.separated(
+          itemCount: offers!.length,
+          itemBuilder: (context, index) {
+            return Ink(
+              child: Column(
+                children: [
+                  Container(height: 16),
+                  FxCard(
+                    margin: FxSpacing.fromLTRB(8, 0, 8, 0),
+                    color: offers![index].state
+                        .getBackgroundColor(logicalView),
+                    borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(12),
+                        bottomRight: Radius.circular(12),
+                        bottomLeft: Radius.circular(12)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        FxText.h6(
+                          offers![index].state.getTitle(),
+                          fontWeight: 600,
+                          color: lightColor.primary,
+                          xMuted: true,
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 150,
+                              child: FxText.b2(
+                                "Buyer: ",
+                                fontWeight: 700,
+                                color: Colors.black,
+                                xMuted: true,
+                              ),
+                            ),
+                            FxText.b2(
+                              offers![index].buyerId,
+                              fontWeight: 800,
                               color: Colors.black,
                               xMuted: true,
                             ),
-                          ),
-                          FxText.b2(
-                            offers![index].buyerId,
-                            fontWeight: 800,
-                            color: Colors.black,
-                            xMuted: true,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 130,
-                            child: FxText.b2(
-                              "Offer: ",
-                              fontWeight: 700,
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 150,
+                              child: FxText.b2(
+                                "Seller: ",
+                                fontWeight: 700,
+                                color: Colors.black,
+                                xMuted: true,
+                              ),
+                            ),
+                            FxText.b2(
+                              offers![index].sellerId,
+                              fontWeight: 800,
                               color: Colors.black,
                               xMuted: true,
                             ),
-                          ),
-                          FxText.b2(
-                            oCcy.format(offers![index].buyerOfferPrice),
-                            fontWeight: 800,
-                            color: Colors.black,
-                            xMuted: true,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 130,
-                            child: FxText.b2(
-                              "Last Seller Price: ",
-                              fontWeight: 700,
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 150,
+                              child: FxText.b2(
+                                "Offer: ",
+                                fontWeight: 700,
+                                color: Colors.black,
+                                xMuted: true,
+                              ),
+                            ),
+                            FxText.b2(
+                              oCcy.format(offers![index].buyerOfferPrice),
+                              fontWeight: 800,
                               color: Colors.black,
                               xMuted: true,
                             ),
-                          ),
-                          FxText.b2(
-                            oCcy.format(offers![index].sellerOfferPrice),
-                            fontWeight: 800,
-                            color: Colors.black,
-                            xMuted: true,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 130,
-                            child: FxText.b2(
-                              "Initial Seller Price: ",
-                              fontWeight: 700,
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 150,
+                              child: FxText.b2(
+                                "Last Seller Price: ",
+                                fontWeight: 700,
+                                color: Colors.black,
+                                xMuted: true,
+                              ),
+                            ),
+                            FxText.b2(
+                              oCcy.format(offers![index].sellerOfferPrice),
+                              fontWeight: 800,
                               color: Colors.black,
                               xMuted: true,
                             ),
-                          ),
-                          FxText.b2(
-                            oCcy.format(offers![index].sellerOfferPrice),
-                            fontWeight: 800,
-                            color: Colors.black,
-                            xMuted: true,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 130,
-                            child: FxText.b2(
-                              "Offer put at: ",
-                              fontWeight: 700,
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 150,
+                              child: FxText.b2(
+                                "Initial Seller Price: ",
+                                fontWeight: 700,
+                                color: Colors.black,
+                                xMuted: true,
+                              ),
+                            ),
+                            FxText.b2(
+                              oCcy.format(offers![index].initialOfferPrice),
+                              fontWeight: 800,
                               color: Colors.black,
                               xMuted: true,
                             ),
-                          ),
-                          FxText.b2(
-                            DateFormat.yMMMd().format(
-                                offers![index].lastModifiedTime),
-                            fontWeight: 800,
-                            color: Colors.black,
-                            xMuted: true,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 130,
-                            child: FxText.b2(
-                              "Listing expires at: ",
-                              fontWeight: 700,
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 150,
+                              child: FxText.b2(
+                                "Offer put at: ",
+                                fontWeight: 700,
+                                color: Colors.black,
+                                xMuted: true,
+                              ),
+                            ),
+                            FxText.b2(
+                              DateFormat.yMMMd().format(
+                                  offers![index].lastModifiedTime),
+                              fontWeight: 800,
                               color: Colors.black,
                               xMuted: true,
                             ),
-                          ),
-                          FxText.b2(
-                            DateFormat.yMMMd().format(
-                                offers![index].expirationTime),
-                            fontWeight: 800,
-                            color: Colors.black,
-                            xMuted: true,
-                          ),
-                        ],
-                      ),
-                      const Divider(height: 16,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          FxButton.rounded(
-                            onPressed: () {
-                              if (isOfferAcceptable(offers![index].state)) {
-                                Navigator.pop(context);
-                                MarketplaceInterface().acceptOffer(
-                                    offers![index].id,
-                                    offers![index].listingId);
-                              }
-                            },
-                            child: Icon(Icons.check, color: isOfferAcceptable(offers![index].state) ? Colors.green : Colors.grey),
-                            backgroundColor: theme.backgroundColor,),
-                          FxButton.rounded(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              MarketplaceInterface().rejectOffer(offers![index].id, offers![index].listingId);
-                            },
-                            child: const Icon(Icons.clear, color: Colors.red,),
-                            backgroundColor: theme.backgroundColor,),
-                          FxButton.rounded(
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 150,
+                              child: FxText.b2(
+                                "Listing expires at: ",
+                                fontWeight: 700,
+                                color: Colors.black,
+                                xMuted: true,
+                              ),
+                            ),
+                            FxText.b2(
+                              DateFormat.yMMMd().format(
+                                  offers![index].expirationTime),
+                              fontWeight: 800,
+                              color: Colors.black,
+                              xMuted: true,
+                            ),
+                          ],
+                        ),
+                        const Divider(height: 16,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            FxButton.rounded(
                               onPressed: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        OfferPriceDialog(
-                                          onSubmit: (text) {
-                                            MarketplaceInterface().counterOffer(
-                                                offers![index].id, offers![index].listingId, int.parse(text));
-                                          },));
+                                if (isOfferAcceptable(offers![index].state)) {
+                                  Navigator.pop(context);
+                                  MarketplaceInterface().acceptOffer(
+                                      offers![index].id,
+                                      offers![index].listingId);
+                                }
                               },
-                              child: Icon(Icons.sell, color: theme
-                                  .primaryColor,),
-                              backgroundColor: theme.backgroundColor),
-                          FxButton.rounded(onPressed: () {},
-                              child: Icon(Icons.history, color: theme
-                                  .primaryColor,),
-                              backgroundColor: theme.backgroundColor),
-                        ],
-                      )
-                    ],
+                              child: Icon(Icons.check, color: isOfferAcceptable(offers![index].state) ? Colors.green : Colors.grey),
+                              backgroundColor: theme.backgroundColor,),
+                            FxButton.rounded(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                MarketplaceInterface().rejectOffer(offers![index].id, offers![index].listingId);
+                              },
+                              child: const Icon(Icons.clear, color: Colors.red,),
+                              backgroundColor: theme.backgroundColor,),
+                            FxButton.rounded(
+                                onPressed: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          OfferPriceDialog(
+                                            onSubmit: (text) {
+                                              MarketplaceInterface().counterOffer(
+                                                  offers![index].id, offers![index].listingId, int.parse(text));
+                                              _getOffers(offers![index].listingId, logicalView);
+                                              setState(() {
+
+                                              });
+
+                                            },));
+                                },
+                                child: Icon(Icons.sell, color: theme
+                                    .primaryColor,),
+                                backgroundColor: theme.backgroundColor),
+                            FxButton.rounded(onPressed: () {},
+                                child: Icon(Icons.history, color: theme
+                                    .primaryColor,),
+                                backgroundColor: theme.backgroundColor),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          );
-        },
-        separatorBuilder: (_, __) =>
-            Divider(
-              height: 0.5,
-              color: theme.dividerColor,
-            ));
+                ],
+              ),
+            );
+          },
+          separatorBuilder: (_, __) =>
+              Divider(
+                height: 0.5,
+                color: theme.dividerColor,
+              )),
+    );
   }
 
   @override

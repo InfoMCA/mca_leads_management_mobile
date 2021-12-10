@@ -44,7 +44,7 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
   late ScrollController _controller;
   int _currentIndex = 0;
 
-  final _panelsExpansionStatus = [true, false, false];
+  final _panelsExpansionStatus = [false, false, false];
 
   @override
   void initState() {
@@ -119,7 +119,7 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                   ),
                 ],
                 title: FxText.sh1(
-                  lead!.name,
+                  "Lead Details",
                   fontWeight: 600,
                   color: theme.backgroundColor,
                 ),

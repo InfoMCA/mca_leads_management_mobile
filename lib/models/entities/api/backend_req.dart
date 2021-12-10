@@ -27,6 +27,7 @@ enum CommandAction {
   // Session Actions
   sessionSchedule,
   sessionLost,
+  sessionReport,
   // User Action
   userLogin,
   // Region Action

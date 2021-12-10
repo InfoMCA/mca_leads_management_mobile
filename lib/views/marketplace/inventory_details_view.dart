@@ -463,7 +463,78 @@ class _InventoryDetailViewState extends State<InventoryDetailView> {
                                   ]
                               ),
                             ),
-                            isExpanded: _panelsExpansionStatus[2]),
+                            isExpanded: _panelsExpansionStatus[2] && (
+                                    inventoryItem.state == InventoryItemState.TRANSFERRED_OUT ||
+                                    inventoryItem.state == InventoryItemState.ACTIVE
+                            )),
+                        ExpansionPanel(
+                            backgroundColor: Colors.grey[100],
+                            canTapOnHeader: true,
+                            headerBuilder:
+                                (BuildContext context, bool isExpanded) {
+                              return ListTile(
+                                title: FxText.b1("Trade Information",
+                                    color: isExpanded
+                                        ? lightColor.primary
+                                        : theme.colorScheme.onBackground,
+                                    fontWeight: isExpanded ? 700 : 600),
+                              );
+                            },
+                            body: Container(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: Column(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: inventoryItem.sellerId,
+                                        decoration: InputDecoration(
+                                          labelText: "Seller Name",
+                                          border: theme.inputDecorationTheme
+                                              .border,
+                                          enabledBorder: theme
+                                              .inputDecorationTheme.border,
+                                          focusedBorder: theme
+                                              .inputDecorationTheme
+                                              .focusedBorder,
+                                          prefixIcon: const Icon(
+                                            Icons.price_change,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: inventoryItem.tradedPrice
+                                            .toString(),
+                                        decoration: InputDecoration(
+                                          labelText: "Traded Price",
+                                          border: theme.inputDecorationTheme
+                                              .border,
+                                          enabledBorder: theme
+                                              .inputDecorationTheme.border,
+                                          focusedBorder: theme
+                                              .inputDecorationTheme
+                                              .focusedBorder,
+                                          prefixIcon: const Icon(
+                                            Icons.price_change,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ]
+                              ),
+                            ),
+                            isExpanded: _panelsExpansionStatus[3] &&
+                                inventoryItem.state == InventoryItemState.TRANSFERRED_OUT ||
+                                inventoryItem.state == InventoryItemState.TRANSFERRED_IN),
                       ],
                     ),
                   ],
@@ -473,64 +544,4 @@ class _InventoryDetailViewState extends State<InventoryDetailView> {
           );
         });
   }
-
-  void _showBottomSheet(context) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext buildContext) {
-          return Container(
-            height: 80,
-            color: Colors.transparent,
-            child: Container(
-              decoration: BoxDecoration(
-                  color: theme.backgroundColor,
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16))),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    TextButton.icon(
-                      label: FxText.sh1('MarketPlace', fontSize: 14,),
-                      onPressed: () {
-                        Navigator.pop(context);
-                        Navigator.pushNamed(
-                          context,
-                          ListingRequestView.routeName,
-                          arguments: inventoryVehicle,
-                        );
-                      },
-                      icon: Icon(Icons.storefront,
-                          size: 20,
-                          color: theme.colorScheme.primaryVariant
-                              .withAlpha(220)),
-                    ),
-                    TextButton.icon(
-                      label: FxText.sh1('Transfer', fontSize: 14,),
-                      onPressed: () {},
-                      icon: Icon(Icons.emoji_transportation,
-                          size: 20,
-                          color: theme.colorScheme.primaryVariant
-                              .withAlpha(220)),
-                    ),
-                    TextButton.icon(
-                      label: FxText.sh1('Sold', fontSize: 14,),
-                      onPressed: () {},
-                      icon: Icon(Icons.sell,
-                          size: 20,
-                          color: theme.colorScheme.primaryVariant
-                              .withAlpha(220)),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        });
-  }
-
 }

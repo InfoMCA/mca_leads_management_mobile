@@ -63,6 +63,7 @@ const _$CommandActionEnumMap = {
   CommandAction.leadLost: 'leadLost',
   CommandAction.sessionSchedule: 'sessionSchedule',
   CommandAction.sessionLost: 'sessionLost',
+  CommandAction.sessionReport: 'sessionReport',
   CommandAction.userLogin: 'userLogin',
   CommandAction.regionGetByZipcode: 'regionGetByZipcode',
   CommandAction.regionGetInspectors: 'regionGetInspectors',

@@ -220,4 +220,18 @@ class BackendInterface {
     return backendResp.session;
   }
 
+  Future<BackendResp> getSessionObject(String sessionId, List<String> reportItems) async {
+    BackendReq backendReq = BackendReq(
+        username: currentUser!.username,
+        object: CommandObject.session,
+        intent: CommandIntent.action,
+        action: CommandAction.sessionReport,
+        objectId: sessionId,
+        params: {
+          "reportItems": reportItems.join(","),
+          "viewType": "active"
+        });
+    BackendResp resp = await sendPostReq(backendReq);
+    return resp;
+  }
 }

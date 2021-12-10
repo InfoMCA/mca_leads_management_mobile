@@ -150,7 +150,7 @@ class _SessionDetailsState extends State<SessionDetails> {
                 ),
               ],
               title: FxText.sh1(
-                session!.title,
+                "Session Detail",
                 fontWeight: 600,
                 color: theme.backgroundColor,
               ),

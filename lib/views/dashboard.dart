@@ -6,7 +6,6 @@
 
 import 'dart:developer' as dev;
 
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mca_leads_management_mobile/models/entities/api/backend_resp.dart';
@@ -35,7 +34,7 @@ class _DashBoardState extends State<DashBoard> {
   late ThemeData theme;
 
   int _selectedPage = 0;
-  List<bool> _panelsExpansionStatus = [];
+  final List<bool> _panelsExpansionStatus = [];
   final List<LeadSummary> _leadList = [];
   late LogicalView logicalView;
   List<DrawerItem> drawerItems = [];
@@ -60,7 +59,7 @@ class _DashBoardState extends State<DashBoard> {
     drawerItems = [
       DrawerItem(panel: DrawerPanel.leads,
           logicalView: LogicalView.approval,
-          icon: MdiIcons.contain,
+          icon: Icons.approval,
           position: 1),
       DrawerItem(panel: DrawerPanel.leads,
           logicalView: LogicalView.followUpManager,
@@ -68,19 +67,19 @@ class _DashBoardState extends State<DashBoard> {
           position: 2),
       DrawerItem(panel: DrawerPanel.leads,
           logicalView: LogicalView.appraisal,
-          icon: MdiIcons.contain,
+          icon: Icons.price_check,
           position: 3),
       DrawerItem(panel: DrawerPanel.inspections,
           logicalView: LogicalView.dispatched,
-          icon: MdiIcons.contain,
+          icon: Icons.schedule_sharp,
           position: 4),
       DrawerItem(panel: DrawerPanel.inspections,
           logicalView: LogicalView.active,
-          icon: MdiIcons.contain,
+          icon: Icons.play_arrow,
           position: 5),
       DrawerItem(panel: DrawerPanel.inspections,
           logicalView: LogicalView.completed,
-          icon: MdiIcons.contain,
+          icon: Icons.done_outline,
           position: 6),
       DrawerItem(panel: DrawerPanel.marketPlace,
           logicalView: LogicalView.inventory,
@@ -97,7 +96,23 @@ class _DashBoardState extends State<DashBoard> {
       DrawerItem(panel: DrawerPanel.marketPlace,
           logicalView: LogicalView.marketplace,
           icon: Icons.shopping_bag,
-          position: 10)
+          position: 10),
+      DrawerItem(panel: DrawerPanel.transport,
+          logicalView: LogicalView.transferPlaced,
+          icon: Icons.emoji_transportation,
+          position: 11),
+      DrawerItem(panel: DrawerPanel.transport,
+          logicalView: LogicalView.transferRequest,
+          icon: Icons.ev_station,
+          position: 12),
+      DrawerItem(panel: DrawerPanel.transport,
+          logicalView: LogicalView.transferActive,
+          icon: Icons.car_rental,
+          position: 13),
+      DrawerItem(panel: DrawerPanel.transport,
+          logicalView: LogicalView.transferCompleted,
+          icon: Icons.car_repair,
+          position: 14),
     ];
   }
 
@@ -338,61 +353,6 @@ class _DashBoardState extends State<DashBoard> {
     }
   }
 
-  void _showSearchDialog(context) {
-    double height = 100;
-    String keyword = "";
-    bool isSearching = false;
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext buildContext) {
-          return Container(
-              color: Colors.transparent,
-              child: Container(
-                height: height,
-                decoration: BoxDecoration(
-                    color: theme.backgroundColor,
-                    borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(8),
-                        topRight: Radius.circular(8))),
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: ListView(
-                    children: <Widget>[
-                      Container(
-                          margin: const EdgeInsets.only(top: 8),
-                          child: FocusScope(
-                            onFocusChange: (value) {
-                              if (height == 100) {
-                                height = 400;
-                              } else if (!isSearching) {
-                                Navigator.popUntil(
-                                    context, ModalRoute.withName('/home'));
-                                isSearching = true;
-                                _searchLead(context, keyword);
-                              }
-                            },
-                            child: TextFormField(
-                              onChanged: (text) => keyword = text,
-                              decoration: InputDecoration(
-                                labelText: "VIN or Last Six",
-                                border: theme.inputDecorationTheme.border,
-                                enabledBorder: theme.inputDecorationTheme
-                                    .border,
-                                focusedBorder: theme.inputDecorationTheme
-                                    .focusedBorder,
-                                prefixIcon:
-                                const Icon(MdiIcons.numeric, size: 24),
-                              ),
-                            ),
-                          )
-                      ),
-                    ],
-                  ),
-                ),
-              )
-          );
-        });
-  }
   Widget singleDrawerItem(DrawerItem drawerItem) {
     return _singleDrawerItem(drawerItem.icon, drawerItem.logicalView, drawerItem.position);
   }

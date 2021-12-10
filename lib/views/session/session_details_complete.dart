@@ -1,4 +1,4 @@
-
+import 'dart:developer' as dev;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -28,7 +28,9 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
   late Session? session;
   late Future<Session?> sessionFuture;
 
-  var _panelsExpansionStatus = [true, false, false];
+  final _panelsExpansionStatus = [false, false, false];
+
+  var _currentIndex = 2;
 
   Future<void> _getSession(String sessionId) async {
     sessionFuture = BackendInterface().getSession(sessionId);
@@ -87,28 +89,64 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                 ),
               ],
               title: FxText.sh1(
-                session!.title,
+                "Session Details",
                 fontWeight: 600,
                 color: theme.backgroundColor,
               ),
             ),
-            floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  _showBottomSheet(context);
-                },
-                child: Icon(
-                  MdiIcons.menu,
-                  size: 26,
-                  color: theme.colorScheme.onPrimary,
+            bottomNavigationBar: BottomNavigationBar(
+              currentIndex: _currentIndex,
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: lightColor.primary,
+              selectedItemColor: Colors.white.withOpacity(.80),
+              unselectedItemColor: Colors.white.withOpacity(.80),
+              onTap: (value) {
+                dev.log(value.toString());
+                switch (value) {
+                  case 0:
+                    MarketplaceInterface().sendSessionToInventory(session!.id);
+                    Navigator.popUntil(
+                        context, ModalRoute.withName('/home'));
+                    break;
+                  case 1:
+                    Navigator.popUntil(
+                        context, ModalRoute.withName('/home'));
+                    break;
+                  case 2:
+                    Navigator.popUntil(
+                        context, ModalRoute.withName('/home'));
+                    break;
+                }
+
+                setState(() =>
+                _currentIndex = value); // Respond to item press.
+              },
+              items: const [
+                BottomNavigationBarItem(
+                  label: 'Inventory',
+                  icon: Icon(Icons.store_mall_directory),
                 ),
-                elevation: 2,
-                backgroundColor: theme.floatingActionButtonTheme.backgroundColor),
+                BottomNavigationBarItem(
+                  label: 'Transfer',
+                  icon: Icon(Icons.emoji_transportation),
+                ),
+                BottomNavigationBarItem(
+                  label: 'Close',
+                  icon: Icon(Icons.close),
+                ),
+              ],
+            ),
             body: SingleChildScrollView(
               child: Container(
                 padding: FxSpacing.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    Container(
+                        margin: const EdgeInsets.only(
+                            top: 16, left: 16, right: 16, bottom: 16),
+                        child: FxText.sh1(session!.title, fontWeight: 700)
+                    ),
                     ExpansionPanelList(
                       expandedHeaderPadding: const EdgeInsets.all(0),
                       expansionCallback: (int index, bool isExpanded) {
@@ -349,6 +387,51 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                                         ),
                                       ),
                                     ),
+                                  ]
+                              ),
+                            ),
+                            isExpanded: _panelsExpansionStatus[1]),
+                        ExpansionPanel(
+                            backgroundColor: Colors.grey[100],
+                            canTapOnHeader: true,
+                            headerBuilder:
+                                (BuildContext context, bool isExpanded) {
+                              return ListTile(
+                                title: FxText.b1("Purchase Detail",
+                                    color: isExpanded
+                                        ? lightColor.primary
+                                        : theme.colorScheme.onBackground,
+                                    fontWeight: isExpanded ? 700 : 600),
+                              );
+                            },
+                            body: Container(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: Column(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        initialValue: session!.customerName,
+                                        readOnly: true,
+                                        decoration: InputDecoration(
+                                          labelText: "Customer Name",
+                                          border: theme
+                                              .inputDecorationTheme
+                                              .border,
+                                          enabledBorder:
+                                          theme.inputDecorationTheme
+                                              .border,
+                                          focusedBorder:
+                                          theme.inputDecorationTheme
+                                              .focusedBorder,
+                                          prefixIcon: const Icon(
+                                              MdiIcons
+                                                  .accountChildOutline,
+                                              size: 24),
+                                        ),
+                                      ),
+                                    ),
                                     Container(
                                       margin: const EdgeInsets.only(
                                           top: 8, left: 8, right: 8),
@@ -420,48 +503,6 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                                           ),
                                         ),
                                       ),
-                                    ),                                  ]
-                              ),
-                            ),
-                            isExpanded: _panelsExpansionStatus[1]),
-                        ExpansionPanel(
-                            backgroundColor: Colors.grey[100],
-                            canTapOnHeader: true,
-                            headerBuilder:
-                                (BuildContext context, bool isExpanded) {
-                              return ListTile(
-                                title: FxText.b1("Inspection Address",
-                                    color: isExpanded
-                                        ? lightColor.primary
-                                        : theme.colorScheme.onBackground,
-                                    fontWeight: isExpanded ? 700 : 600),
-                              );
-                            },
-                            body: Container(
-                              padding: const EdgeInsets.only(bottom: 16),
-                              child: Column(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 8, left: 8, right: 8),
-                                      child: TextFormField(
-                                        decoration: InputDecoration(
-                                          labelText: "Customer Name",
-                                          border: theme
-                                              .inputDecorationTheme
-                                              .border,
-                                          enabledBorder:
-                                          theme.inputDecorationTheme
-                                              .border,
-                                          focusedBorder:
-                                          theme.inputDecorationTheme
-                                              .focusedBorder,
-                                          prefixIcon: const Icon(
-                                              MdiIcons
-                                                  .accountChildOutline,
-                                              size: 24),
-                                        ),
-                                      ),
                                     ),
                                   ]
                               ),
@@ -477,53 +518,4 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
       }
     );
   }
-
-  void _showBottomSheet(context) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext buildContext) {
-          return Container(
-            height: 80,
-            color: Colors.transparent,
-            child: Container(
-              decoration: BoxDecoration(
-                  color: theme.backgroundColor,
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16))),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    TextButton.icon(
-                      label: FxText.sh1('Inventory'),
-                      onPressed: () {
-                        MarketplaceInterface().sendSessionToInventory(session!.id);
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                      },
-                      icon: Icon(Icons.inventory,
-                          size: 26,
-                          color: theme.colorScheme.primaryVariant
-                              .withAlpha(220)),
-                    ),
-                    TextButton.icon(
-                      label: FxText.sh1('Transfer'),
-                      onPressed: () {},
-                      icon: Icon(Icons.emoji_transportation,
-                          size: 26,
-                          color: theme.colorScheme.primaryVariant
-                              .withAlpha(220)),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        });
-  }
-
 }

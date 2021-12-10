@@ -7,6 +7,7 @@ import 'package:mca_leads_management_mobile/views/marketplace/listing_details_vi
 import 'package:mca_leads_management_mobile/views/marketplace/listing_request_view.dart';
 import 'package:mca_leads_management_mobile/views/marketplace/marketplace_listing_details_view.dart';
 import 'package:mca_leads_management_mobile/views/marketplace/offer_details_view.dart';
+import 'package:mca_leads_management_mobile/views/session/session_complete_report.dart';
 import 'package:mca_leads_management_mobile/views/session/session_details.dart';
 import 'package:mca_leads_management_mobile/views/session/session_details_complete.dart';
 import 'package:mca_leads_management_mobile/views/security/login_page.dart';
@@ -39,5 +40,7 @@ class AppModule extends Module {
         child: (_, args) => InventoryDetailView(args: args.data)),
     ChildRoute('/home/sessionComplete',
         child: (_, args) => SessionDetailsComplete(args: args.data)),
+    ChildRoute('/home/session-complete-report',
+        child: (_, args) => SessionDetailsCompleteReport(args: args.data)),
   ];
 }

@@ -30,6 +30,7 @@ dependencies:
   us_states: ^1.1.5
   time_machine: ^0.9.16
   flex_color_scheme: ^4.1.1
+  cached_network_image: ^3.2.0
 
 dev_dependencies:
   flutter_test:
