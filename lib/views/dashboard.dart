@@ -6,6 +6,7 @@
 
 import 'dart:developer' as dev;
 
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mca_leads_management_mobile/models/entities/api/backend_resp.dart';
@@ -34,7 +35,7 @@ class _DashBoardState extends State<DashBoard> {
   late ThemeData theme;
 
   int _selectedPage = 0;
-  List<bool> _dataExpansionPanel = [false, true, true, false];
+  List<bool> _panelsExpansionStatus = [];
   final List<LeadSummary> _leadList = [];
   late LogicalView logicalView;
   List<DrawerItem> drawerItems = [];
@@ -42,14 +43,8 @@ class _DashBoardState extends State<DashBoard> {
 
   void _getLeads() async {
     _leadList.clear();
-    if (logicalView.isInventory()) {
-      _leadList.addAll(getInventoriesMock());
-    } else if (logicalView.isMarketplaceView()) {
-      _leadList.addAll(getListingsMock());
-    } else {
-      List<LeadSummary>? newLeads = await getLeads(logicalView);
-      newLeads?.forEach((lead) => _leadList.add(lead));
-    }
+    List<LeadSummary>? newLeads = await getLeads(logicalView);
+    newLeads?.forEach((lead) => _leadList.add(lead));
     dev.log("Leads size ($logicalView): ${_leadList.length.toString()}");
     setState(() {});
   }
@@ -61,6 +56,7 @@ class _DashBoardState extends State<DashBoard> {
     theme = AppTheme.theme;
     logicalView = LogicalView.approval;
     _getLeads();
+    for (var element in DrawerPanel.values) {_panelsExpansionStatus.add(false);}
     drawerItems = [
       DrawerItem(panel: DrawerPanel.leads,
           logicalView: LogicalView.approval,
@@ -91,12 +87,12 @@ class _DashBoardState extends State<DashBoard> {
           icon: Icons.inventory,
           position: 7),
       DrawerItem(panel: DrawerPanel.marketPlace,
-          logicalView: LogicalView.trading,
+          logicalView: LogicalView.receivedOffer,
           icon: MdiIcons.storeOutline,
           position: 8),
       DrawerItem(panel: DrawerPanel.marketPlace,
-          logicalView: LogicalView.traded,
-          icon: MdiIcons.shopping,
+          logicalView: LogicalView.sentOffer,
+          icon: MdiIcons.storeOutline,
           position: 9),
       DrawerItem(panel: DrawerPanel.marketPlace,
           logicalView: LogicalView.marketplace,
@@ -113,7 +109,7 @@ class _DashBoardState extends State<DashBoard> {
           return ListTile(
             title: FxText.b1(panel.getName(),
                 color: isExpanded
-                    ? theme.colorScheme.primary
+                    ? lightColor.primary
                     : theme.colorScheme.onBackground,
                 fontWeight: isExpanded ? 700 : 600),
           );
@@ -126,10 +122,10 @@ class _DashBoardState extends State<DashBoard> {
                   .toList()
           ),
         ),
-        isExpanded: _dataExpansionPanel[DrawerPanel.values.indexOf(panel)]);
+        isExpanded: _panelsExpansionStatus[DrawerPanel.values.indexOf(panel)]);
   }
 
-  Drawer _buildDrawer() {
+  Widget _buildDrawer() {
     return Drawer(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -140,41 +136,44 @@ class _DashBoardState extends State<DashBoard> {
               child: DrawerHeader(
                 padding: const EdgeInsets.all(0),
                 margin: const EdgeInsets.all(0),
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 16.0, bottom: 8, right: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Expanded(
-                        flex: 1,
-                        child: Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
+                child: Container(
+                  color: lightColor.primaryVariant,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 16.0, bottom: 8, right: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          flex: 1,
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Row(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                children: const <Widget>[
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment:
+                          CrossAxisAlignment.start,
                           children: <Widget>[
-                            Row(
-                              crossAxisAlignment:
-                              CrossAxisAlignment.start,
-                              children: const <Widget>[
-                              ],
-                            ),
+                            FxText.h6(currentUser!.username,
+                                color: theme.colorScheme.onPrimary,
+                                fontWeight: 600),
+                            FxText.b2("manager1@mycarauction.com",
+                                color: theme.colorScheme.onPrimary,
+                                fontWeight: 400)
                           ],
                         ),
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment:
-                        CrossAxisAlignment.start,
-                        children: <Widget>[
-                          FxText.h6(currentUser!.username,
-                              color: theme.colorScheme.onPrimary,
-                              fontWeight: 600),
-                          FxText.b2("manager1@mycarauction.com",
-                              color: theme.colorScheme.onPrimary,
-                              fontWeight: 400)
-                        ],
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 decoration: BoxDecoration(color: theme.primaryColor),
@@ -195,7 +194,7 @@ class _DashBoardState extends State<DashBoard> {
                           expandedHeaderPadding: const EdgeInsets.all(0),
                           expansionCallback: (int index, bool isExpanded) {
                             setState(() {
-                              _dataExpansionPanel[index] = !isExpanded;
+                              _panelsExpansionStatus[index] = !isExpanded;
                             });
                           },
                           animationDuration: const Duration(milliseconds: 500),
@@ -243,12 +242,14 @@ class _DashBoardState extends State<DashBoard> {
                   fontWeight: 700,
                   color: theme.colorScheme.onBackground),
               onTap: () {
-                print(logicalView.getRouteName());
                 Navigator.pushNamed(
                   context,
                   logicalView.getRouteName(),
                   arguments: LeadViewArguments(
                       _leadList[index].id,
+                      _leadList[index].vehicleId,
+                      _leadList[index].vin,
+                      _leadList[index].title,
                       logicalView
                   ),
                 );
@@ -326,6 +327,9 @@ class _DashBoardState extends State<DashBoard> {
         LeadDetailsView.routeName,
         arguments: LeadViewArguments(
             resp.lead!.id,
+            resp.lead!.id,
+            resp.lead!.vin,
+            resp.lead!.name,
             LogicalView.approval
         ),
       );
@@ -409,11 +413,12 @@ class _DashBoardState extends State<DashBoard> {
               ? theme.colorScheme.primary
               : theme.colorScheme.onBackground.withAlpha(240)),
       onTap: () {
-        setState(() {
-          this.logicalView = logicalView;
-          _getLeads();
-          _selectedPage = position;
-        });
+          setState(() {
+            this.logicalView = logicalView;
+            _getLeads();
+            _selectedPage = position;
+          });
+
         _scaffoldKey.currentState!.openEndDrawer();
       }
     );

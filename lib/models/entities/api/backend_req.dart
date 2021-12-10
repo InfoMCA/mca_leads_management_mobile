@@ -5,7 +5,7 @@ import '../lead/lead.dart';
 
 part 'backend_req.g.dart';
 
-enum CommandObject { user, region, lead, session, inventory, listing }
+enum CommandObject { user, region, lead, session, inventory, listing, offer }
 
 enum CommandIntent {
   create,

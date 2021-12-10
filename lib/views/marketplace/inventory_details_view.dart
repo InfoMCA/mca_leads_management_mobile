@@ -1,22 +1,19 @@
+import 'dart:developer' as dev;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:mca_leads_management_mobile/models/entities/api/backend_resp.dart';
-import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
-import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
+import 'package:mca_leads_management_mobile/models/entities/globals.dart';
+import 'package:mca_leads_management_mobile/models/entities/marketplace/inventory.dart';
+import 'package:mca_leads_management_mobile/models/entities/marketplace/vehicle.dart';
+import 'package:mca_leads_management_mobile/models/interfaces/marketplace_interface.dart';
 import 'package:mca_leads_management_mobile/utils/spacing.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_view_arg.dart';
+import 'package:mca_leads_management_mobile/views/marketplace/listing_new_request_dialog.dart';
 import 'package:mca_leads_management_mobile/views/marketplace/listing_request_view.dart';
 import 'package:mca_leads_management_mobile/widgets/common/notifications.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
-import 'package:mca_leads_management_mobile/widgets/textfield/date_text.dart';
-import 'package:mca_leads_management_mobile/widgets/textfield/select_text.dart';
-import 'package:mca_leads_management_mobile/widgets/textfield/time_text.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:us_states/us_states.dart';
 
 class InventoryDetailView extends StatefulWidget {
   final LeadViewArguments args;
@@ -31,12 +28,19 @@ class InventoryDetailView extends StatefulWidget {
 class _InventoryDetailViewState extends State<InventoryDetailView> {
   late CustomTheme customTheme;
   late ThemeData theme;
-  late Session? session;
-  late Future<Session?> sessionFuture;
+  late InventoryVehicle? inventoryVehicle;
+  late InventoryItem inventoryItem;
+  late Vehicle vehicle;
+  late Future<InventoryVehicle?> inventoryVehicleFuture;
 
-  Future<void> _getSession(String sessionId) async {
-    sessionFuture = BackendInterface().getSession(sessionId);
-    sessionFuture.whenComplete(() => setState(() {}));
+  var _currentIndex = 0;
+
+  final _panelsExpansionStatus = [false, false, false, false];
+
+  Future<void> _getInventoryVehicle(String inventoryId) async {
+    inventoryVehicleFuture =
+        MarketplaceInterface().getInventoryVehicle(inventoryId);
+    inventoryVehicleFuture.whenComplete(() => setState(() {}));
   }
 
   @override
@@ -44,14 +48,14 @@ class _InventoryDetailViewState extends State<InventoryDetailView> {
     super.initState();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
-    _getSession(widget.args.id);
+    _getInventoryVehicle(widget.args.id);
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: sessionFuture,
-        builder: (context, AsyncSnapshot<Session?> snapshot) {
+        future: inventoryVehicleFuture,
+        builder: (context, AsyncSnapshot<InventoryVehicle?> snapshot) {
           if (!snapshot.hasData) {
             return Container(
               color: Colors.white,
@@ -67,7 +71,9 @@ class _InventoryDetailViewState extends State<InventoryDetailView> {
               ),
             );
           }
-          session = snapshot.data;
+          inventoryVehicle = snapshot.data;
+          inventoryItem = inventoryVehicle!.inventoryItem;
+          vehicle = inventoryVehicle!.vehicle;
           return Scaffold(
             appBar: AppBar(
               elevation: 0,
@@ -80,23 +86,60 @@ class _InventoryDetailViewState extends State<InventoryDetailView> {
                 ),
               ),
               title: FxText.sh1(
-                session!.title,
+                'Inventory Details',
                 fontWeight: 600,
                 color: theme.backgroundColor,
               ),
             ),
-            floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  _showBottomSheet(context);
-                },
-                child: Icon(
-                  MdiIcons.menu,
-                  size: 26,
-                  color: theme.colorScheme.onPrimary,
+            bottomNavigationBar: BottomNavigationBar(
+              currentIndex: _currentIndex,
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: lightColor.primary,
+              selectedItemColor: Colors.white.withOpacity(.80),
+              unselectedItemColor: Colors.white.withOpacity(.80),
+              onTap: (value) {
+                if (value == 0) {
+                  if (inventoryItem.state == InventoryItemState.ACTIVE) {
+                    MarketplaceInterface().getMarketPlaces().then((
+                        marketplaces) {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) =>
+                              ListingNewDialog(
+                                onSubmit: (listingNewReq) {
+                                  MarketplaceInterface().createNewListing(
+                                      vehicle.id, inventoryItem.id,
+                                      listingNewReq);
+                                },
+                                initOfferPrice: inventoryItem.purchasedPrice
+                                    .toInt(),
+                                marketplaces: marketplaces,
+                              ));
+                    });
+                  } else {
+                    showSnackBar(context: context,
+                        text: "You can't put this vehicle in marketplace");
+                  }
+                }
+
+                setState(() =>
+                _currentIndex = value); // Respond to item press.
+              },
+              items: const [
+                BottomNavigationBarItem(
+                  label: 'MarketPlace',
+                  icon: Icon(Icons.storefront),
                 ),
-                elevation: 2,
-                backgroundColor:
-                    theme.floatingActionButtonTheme.backgroundColor),
+                BottomNavigationBarItem(
+                  label: 'Transfer',
+                  icon: Icon(Icons.emoji_transportation),
+                ),
+                BottomNavigationBarItem(
+                  label: 'Sold',
+                  icon: Icon(Icons.sell),
+                )
+              ],
+            ),
             body: SingleChildScrollView(
               child: Container(
                 padding: FxSpacing.all(20),
@@ -104,180 +147,324 @@ class _InventoryDetailViewState extends State<InventoryDetailView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
-                      padding: const EdgeInsets.only(
-                          left: 0, right: 20, top: 0, bottom: 12),
-                      child: FxText.sh1("Vehicle Information", fontWeight: 600),
+                        margin: const EdgeInsets.only(
+                            top: 16, left: 16, right: 16, bottom: 16),
+                        child: FxText.sh1(vehicle.ymmt, fontWeight: 700)
                     ),
-                    TextFormField(
-                      initialValue: session!.vin,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        labelText: "VIN",
-                        border: theme.inputDecorationTheme.border,
-                        enabledBorder: theme.inputDecorationTheme.border,
-                        focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                        prefixIcon: const Icon(
-                            Icons.confirmation_number_outlined,
-                            size: 24),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        readOnly: true,
-                        initialValue: session!.title,
-                        decoration: InputDecoration(
-                          labelText: "Title",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder:
-                              theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon: const Icon(
-                              Icons.confirmation_number_outlined,
-                              size: 24),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        readOnly: true,
-                        initialValue: session!.color,
-                        decoration: InputDecoration(
-                          labelText: "Color",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder:
-                              theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon:
-                              const Icon(Icons.color_lens_outlined, size: 24),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        readOnly: true,
-                        initialValue: session!.mileage.toString(),
-                        decoration: InputDecoration(
-                          labelText: "Mileage",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder:
-                              theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon: const Icon(
-                            Icons.speed,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        readOnly: true,
-                        initialValue: session!.estimatedCr.toString(),
-                        decoration: InputDecoration(
-                          labelText: "Estimated CR",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder:
-                              theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon: const Icon(
-                            Icons.high_quality,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: FxText.sh1("Purchase Details", fontWeight: 600),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        readOnly: true,
-                        initialValue: ((session!.purchasedPrice ?? 0) - (session!.deductionsAmount ?? 0)).toString(),
-                        decoration: InputDecoration(
-                          labelText: "Purchased Price",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon: const Icon(
-                            Icons.price_change,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        readOnly: true,
-                        initialValue: (session!.purchasedDate?? "").toString(),
-                        decoration: InputDecoration(
-                          labelText: "Purchased Date",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon: const Icon(
-                            Icons.date_range_rounded,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        readOnly: true,
-                        initialValue: (session!.lenderAmount ?? 0).toString(),
-                        decoration: InputDecoration(
-                          labelText: "Lender Amount",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon: const Icon(
-                            Icons.price_change,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        readOnly: true,
-                        initialValue: (session!.withholdingAmount ?? 0).toString(),
-                        decoration: InputDecoration(
-                          labelText: "Withholding Amount",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon: const Icon(
-                            Icons.price_change,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        readOnly: true,
-                        initialValue: (session!.customerAmount ?? 0).toString(),
-                        decoration: InputDecoration(
-                          labelText: "Customer Check",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon: const Icon(
-                            Icons.price_change,
-                            size: 24,
-                          ),
-                        ),
-                      ),
+                    ExpansionPanelList(
+                      expandedHeaderPadding: const EdgeInsets.all(0),
+                      expansionCallback: (int index, bool isExpanded) {
+                        setState(() {
+                          _panelsExpansionStatus[index] = !isExpanded;
+                        });
+                      },
+                      animationDuration: const Duration(
+                          milliseconds: 500),
+                      children: [
+                        ExpansionPanel(
+                            backgroundColor: Colors.grey[100],
+                            canTapOnHeader: true,
+                            headerBuilder:
+                                (BuildContext context, bool isExpanded) {
+                              return ListTile(
+                                title: FxText.b1("Vehicle Information",
+                                    color: isExpanded
+                                        ? lightColor.primary
+                                        : theme.colorScheme.onBackground,
+                                    fontWeight: isExpanded ? 700 : 600),
+                              );
+                            },
+                            body: Container(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: Column(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: vehicle.vin,
+                                        decoration: InputDecoration(
+                                          labelText: "VIN",
+                                          border: theme
+                                              .inputDecorationTheme
+                                              .border,
+                                          enabledBorder: theme
+                                              .inputDecorationTheme
+                                              .border,
+                                          focusedBorder:
+                                          theme.inputDecorationTheme
+                                              .focusedBorder,
+                                          prefixIcon: const Icon(
+                                              Icons
+                                                  .confirmation_number_outlined,
+                                              size: 24),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: vehicle.color,
+                                        decoration: InputDecoration(
+                                          labelText: "Color",
+                                          border: theme
+                                              .inputDecorationTheme
+                                              .border,
+                                          enabledBorder:
+                                          theme.inputDecorationTheme
+                                              .border,
+                                          focusedBorder:
+                                          theme.inputDecorationTheme
+                                              .focusedBorder,
+                                          prefixIcon: const Icon(
+                                              Icons.color_lens_outlined,
+                                              size: 24),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: vehicle.mileage
+                                            .toString(),
+                                        decoration: InputDecoration(
+                                          labelText: "Mileage",
+                                          border: theme
+                                              .inputDecorationTheme
+                                              .border,
+                                          enabledBorder:
+                                          theme.inputDecorationTheme
+                                              .border,
+                                          focusedBorder:
+                                          theme.inputDecorationTheme
+                                              .focusedBorder,
+                                          prefixIcon: const Icon(
+                                            Icons.speed,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: vehicle.estimatedCr
+                                            .toString(),
+                                        decoration: InputDecoration(
+                                          labelText: "Estimated CR",
+                                          border: theme
+                                              .inputDecorationTheme
+                                              .border,
+                                          enabledBorder:
+                                          theme.inputDecorationTheme
+                                              .border,
+                                          focusedBorder:
+                                          theme.inputDecorationTheme
+                                              .focusedBorder,
+                                          prefixIcon: const Icon(
+                                            Icons.high_quality,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+
+                                  ]
+                              ),
+                            ),
+                            isExpanded: _panelsExpansionStatus[0]),
+                        ExpansionPanel(
+                            backgroundColor: Colors.grey[100],
+                            canTapOnHeader: true,
+                            headerBuilder:
+                                (BuildContext context, bool isExpanded) {
+                              return ListTile(
+                                title: FxText.b1("Price Information",
+                                    color: isExpanded
+                                        ? lightColor.primary
+                                        : theme.colorScheme.onBackground,
+                                    fontWeight: isExpanded ? 700 : 600),
+                              );
+                            },
+                            body: Container(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: Column(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: vehicle.askingPrice
+                                            .toString(),
+                                        decoration: InputDecoration(
+                                          labelText: "Listing Price",
+                                          border: theme
+                                              .inputDecorationTheme
+                                              .border,
+                                          enabledBorder:
+                                          theme.inputDecorationTheme
+                                              .border,
+                                          focusedBorder:
+                                          theme.inputDecorationTheme
+                                              .focusedBorder,
+                                          prefixIcon: const Icon(
+                                            Icons.list,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: vehicle.mmr.toString(),
+                                        decoration: InputDecoration(
+                                          labelText: "MMR",
+                                          border: theme
+                                              .inputDecorationTheme
+                                              .border,
+                                          enabledBorder:
+                                          theme.inputDecorationTheme
+                                              .border,
+                                          focusedBorder:
+                                          theme.inputDecorationTheme
+                                              .focusedBorder,
+                                          prefixIcon: const Icon(
+                                            Icons.price_change,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ]),
+                            ),
+                            isExpanded: _panelsExpansionStatus[1]),
+                        ExpansionPanel(
+                            backgroundColor: Colors.grey[100],
+                            canTapOnHeader: true,
+                            headerBuilder:
+                                (BuildContext context, bool isExpanded) {
+                              return ListTile(
+                                title: FxText.b1("Purchase Information",
+                                    color: isExpanded
+                                        ? lightColor.primary
+                                        : theme.colorScheme.onBackground,
+                                    fontWeight: isExpanded ? 700 : 600),
+                              );
+                            },
+                            body: Container(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: Column(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: (inventoryItem
+                                            .purchasedPrice -
+                                            inventoryItem.deductionsAmount)
+                                            .toString(),
+                                        decoration: InputDecoration(
+                                          labelText: "Purchased Price",
+                                          border: theme.inputDecorationTheme
+                                              .border,
+                                          enabledBorder: theme
+                                              .inputDecorationTheme.border,
+                                          focusedBorder: theme
+                                              .inputDecorationTheme
+                                              .focusedBorder,
+                                          prefixIcon: const Icon(
+                                            Icons.price_change,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: inventoryItem.lenderAmount
+                                            .toString(),
+                                        decoration: InputDecoration(
+                                          labelText: "Lender Amount",
+                                          border: theme.inputDecorationTheme
+                                              .border,
+                                          enabledBorder: theme
+                                              .inputDecorationTheme.border,
+                                          focusedBorder: theme
+                                              .inputDecorationTheme
+                                              .focusedBorder,
+                                          prefixIcon: const Icon(
+                                            Icons.price_change,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: inventoryItem
+                                            .withholdingAmount.toString(),
+                                        decoration: InputDecoration(
+                                          labelText: "Withholding",
+                                          border: theme.inputDecorationTheme
+                                              .border,
+                                          enabledBorder: theme
+                                              .inputDecorationTheme.border,
+                                          focusedBorder: theme
+                                              .inputDecorationTheme
+                                              .focusedBorder,
+                                          prefixIcon: const Icon(
+                                            Icons.price_change,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: inventoryItem
+                                            .customerAmount.toString(),
+                                        decoration: InputDecoration(
+                                          labelText: "Customer Check",
+                                          border: theme.inputDecorationTheme
+                                              .border,
+                                          enabledBorder: theme
+                                              .inputDecorationTheme.border,
+                                          focusedBorder: theme
+                                              .inputDecorationTheme
+                                              .focusedBorder,
+                                          prefixIcon: const Icon(
+                                            Icons.price_change,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ]
+                              ),
+                            ),
+                            isExpanded: _panelsExpansionStatus[2]),
+                      ],
                     ),
                   ],
                 ),
@@ -314,7 +501,7 @@ class _InventoryDetailViewState extends State<InventoryDetailView> {
                         Navigator.pushNamed(
                           context,
                           ListingRequestView.routeName,
-                          arguments: session!,
+                          arguments: inventoryVehicle,
                         );
                       },
                       icon: Icon(Icons.storefront,
@@ -324,8 +511,7 @@ class _InventoryDetailViewState extends State<InventoryDetailView> {
                     ),
                     TextButton.icon(
                       label: FxText.sh1('Transfer', fontSize: 14,),
-                      onPressed: () {
-                      },
+                      onPressed: () {},
                       icon: Icon(Icons.emoji_transportation,
                           size: 20,
                           color: theme.colorScheme.primaryVariant

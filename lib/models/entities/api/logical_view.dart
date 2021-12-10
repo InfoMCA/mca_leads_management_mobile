@@ -1,6 +1,7 @@
 import 'package:mca_leads_management_mobile/views/lead/lead_details_view.dart';
 import 'package:mca_leads_management_mobile/views/marketplace/inventory_details_view.dart';
-import 'package:mca_leads_management_mobile/views/marketplace/listing_details_view.dart';
+import 'package:mca_leads_management_mobile/views/marketplace/marketplace_listing_details_view.dart';
+import 'package:mca_leads_management_mobile/views/marketplace/offer_details_view.dart';
 import 'package:mca_leads_management_mobile/views/session/session_details.dart';
 import 'package:mca_leads_management_mobile/views/session/session_details_complete.dart';
 
@@ -12,8 +13,8 @@ enum LogicalView {
   active,
   completed,
   inventory,
-  trading,
-  traded,
+  receivedOffer,
+  sentOffer,
   marketplace,
 }
 
@@ -34,10 +35,10 @@ extension LogicalViewExt on LogicalView {
         return 'Completed';
       case LogicalView.inventory:
         return 'Inventory';
-      case LogicalView.trading:
-        return 'Trading';
-      case LogicalView.traded:
-        return 'Traded';
+      case LogicalView.receivedOffer:
+        return 'Received Offers';
+      case LogicalView.sentOffer:
+        return 'Sent Offer';
       case LogicalView.marketplace:
         return 'Marketplace';
     }
@@ -53,15 +54,15 @@ extension LogicalViewExt on LogicalView {
         return SessionDetails.routeName;
       case LogicalView.active:
         return SessionDetailsComplete.routeName;
-      case  LogicalView.completed:
+      case LogicalView.completed:
         return SessionDetailsComplete.routeName;
       case LogicalView.inventory:
         return InventoryDetailView.routeName;
       case LogicalView.marketplace:
-        return ListingDetailView.routeName;
-      case LogicalView.traded:
-      case LogicalView.trading:
-        return "";
+        return MarketListingDetailView.routeName;
+      case LogicalView.sentOffer:
+      case LogicalView.receivedOffer:
+        return OfferDetailView.routeName;
     }
   }
 
@@ -70,18 +71,27 @@ extension LogicalViewExt on LogicalView {
   }
 
   bool isLeadView() {
-    return [LogicalView.approval, LogicalView.followUpManager, LogicalView.appraisal].contains(this);
+    return [
+      LogicalView.approval,
+      LogicalView.followUpManager,
+      LogicalView.appraisal
+    ].contains(this);
   }
 
   bool isSessionView() {
-    return [LogicalView.dispatched, LogicalView.active, LogicalView.completed].contains(this);
+    return [LogicalView.dispatched, LogicalView.active, LogicalView.completed]
+        .contains(this);
   }
 
   bool isInventory() {
     return [LogicalView.inventory].contains(this);
   }
 
+  bool isOfferView() {
+    return [LogicalView.sentOffer, LogicalView.receivedOffer].contains(this);
+  }
+
   bool isMarketplaceView() {
-    return [LogicalView.trading, LogicalView.traded, LogicalView.marketplace].contains(this);
+    return [LogicalView.marketplace].contains(this);
   }
 }

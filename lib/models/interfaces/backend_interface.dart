@@ -10,6 +10,7 @@ import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead/lead_summary.dart';
 import 'package:mca_leads_management_mobile/models/entities/marketplace/listing.dart';
+import 'package:mca_leads_management_mobile/models/entities/marketplace/offer.dart';
 import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
 
 class BackendInterface {
@@ -32,6 +33,7 @@ class BackendInterface {
         return sessionEndpoint;
       case CommandObject.inventory:
       case CommandObject.listing:
+      case CommandObject.offer:
         return marketplaceEndpoint;
     }
   }
@@ -118,8 +120,7 @@ class BackendInterface {
 
 
   Future<BackendResp> putLeadAsFollowUp(String leadId,
-      DateTime followupDate,
-      String comment) async {
+      LeadFollowUpInfo followUpInfo) async {
     return sendPostReq(
         BackendReq(
             username: currentUser!.username,
@@ -127,16 +128,14 @@ class BackendInterface {
             intent: CommandIntent.action,
             action: CommandAction.leadFollowUp,
             params: {
-              "followUpDate": followupDate.toString(),
-              "followUpComment": comment
+              "followUpDate": followUpInfo.date.toUtc().toIso8601String(),
+              "followUpComment": followUpInfo.comment
             },
             objectId: leadId
         ));
   }
 
-  Future<BackendResp> putLeadAsUnAnswered(String leadId,
-      bool sendSms,
-      bool leftMessage) async {
+  Future<BackendResp> putLeadAsUnAnswered(String leadId, LeadUnAnsweredInfo unAnsweredInfo) async {
     return sendPostReq(
         BackendReq(
             username: currentUser!.username,
@@ -144,8 +143,8 @@ class BackendInterface {
             intent: CommandIntent.action,
             action: CommandAction.leadUnanswered,
             params: {
-              "sendSms": sendSms.toString(),
-              "leftMessage": leftMessage.toString()
+              "sendSms": unAnsweredInfo.sendSms.toString(),
+              "leftMessage": unAnsweredInfo.leftMessage.toString()
             }));
   }
 
@@ -221,72 +220,4 @@ class BackendInterface {
     return backendResp.session;
   }
 
-  Future<List<LeadSummary>?> getInventories(LogicalView logicalView) async {
-    try {
-      BackendResp appResp = await sendPostReq(
-          BackendReq(
-              username: currentUser!.username,
-              object: CommandObject.inventory,
-              intent: CommandIntent.getAll,
-              params: {
-                'viewType': logicalView.getString()
-              }));
-      return appResp.leadSummaries;
-    } catch (e) {
-      return [];
-    }
-  }
-
-  Future<List<LeadSummary>?> getListings(LogicalView logicalView) async {
-    try {
-      BackendResp appResp = await sendPostReq(
-          BackendReq(
-              username: currentUser!.username,
-              object: CommandObject.listing,
-              intent: CommandIntent.getAll,
-              params: {
-                'viewType': logicalView.getString()
-              }));
-      return appResp.leadSummaries;
-    } catch (e) {
-      return [];
-    }
-  }
-
-  void sendSessionToInventory(String sessionId) async {
-    BackendReq backendReq = BackendReq(
-        username: currentUser!.username,
-        object: CommandObject.inventory,
-        intent: CommandIntent.create,
-        objectId: sessionId);
-    //BackendResp backendResp = await sendPostReq(backendReq);
-    sendSessionToInventoryMock(backendReq);
-  }
-
-  Future<List<String>> getMarketPlaces(String sessionId) async {
-    BackendReq backendReq = BackendReq(
-        username: currentUser!.username,
-        object: CommandObject.listing,
-        intent: CommandIntent.action,
-        action: CommandAction.listingGetMarketplaces,
-        objectId: sessionId);
-    return getMarketPlacesMock(backendReq);
-  }
-
-  void createNewListing(String sessionId, int listingPrice, DateTime expirationDate, List<String> selectedMarketPlaces) {
-    BackendReq backendReq = BackendReq(
-        username: currentUser!.username,
-        object: CommandObject.listing,
-        intent: CommandIntent.action,
-        action: CommandAction.listingNew,
-        objectId: sessionId,
-        params: {
-          'listingPrice': listingPrice.toString(),
-          'expirationDate': expirationDate.toString(),
-          'marketPlaceIds': json.encode(selectedMarketPlaces),
-        });
-    dev.log(backendReq.toJson().toString());
-    return createNewListingMock(backendReq);
-
-  }
 }

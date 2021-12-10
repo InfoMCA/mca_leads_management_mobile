@@ -1,15 +1,12 @@
-/*
-* File : Personal Information Form
-* Version : 1.0.0
-* */
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
+import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
+import 'package:mca_leads_management_mobile/models/interfaces/marketplace_interface.dart';
 import 'package:mca_leads_management_mobile/utils/spacing.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
@@ -31,6 +28,8 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
   late Session? session;
   late Future<Session?> sessionFuture;
 
+  var _panelsExpansionStatus = [true, false, false];
+
   Future<void> _getSession(String sessionId) async {
     sessionFuture = BackendInterface().getSession(sessionId);
     sessionFuture.whenComplete(() => setState(() {}));
@@ -47,7 +46,6 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as LeadViewArguments;
 
     return FutureBuilder(
         future: sessionFuture,
@@ -111,198 +109,365 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Container(
-                      padding: const EdgeInsets.only(
-                          left: 0, right: 20, top: 0, bottom: 12),
-                      child: FxText.sh1("Vehicle Information", fontWeight: 600),
-                    ),
-                    TextFormField(
-                      initialValue: session!.vin,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        labelText: "VIN",
-                        border: theme.inputDecorationTheme.border,
-                        enabledBorder: theme.inputDecorationTheme.border,
-                        focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                        prefixIcon:
-                            const Icon(Icons.confirmation_number_outlined, size: 24),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        readOnly: true,
-                        initialValue: session!.mileage.toString(),
-                        decoration: InputDecoration(
-                          labelText: "Mileage",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon: const Icon(
-                            Icons.speed,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        readOnly: true,
-                        initialValue: session!.color,
-                        decoration: InputDecoration(
-                          labelText: "Color",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon: const Icon(Icons.color_lens_outlined, size: 24),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        readOnly: true,
-                        initialValue: "Estimated CR",
-                        decoration: InputDecoration(
-                          labelText: session!.estimatedCr.toString(),
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon: const Icon(
-                            Icons.high_quality,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: FxText.sh1("Price", fontWeight: 600),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        readOnly: true,
-                        initialValue: session!.mmr.toString(),
-                        decoration: InputDecoration(
-                          labelText: "MMR",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon: const Icon(
-                            Icons.price_change,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        readOnly: true,
-                        initialValue: ((session!.purchasedPrice ?? 0) - (session!.deductionsAmount ?? 0)).toString(),
-                        decoration: InputDecoration(
-                          labelText: "Purchased Price",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon: const Icon(
-                            Icons.price_change,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        readOnly: true,
-                        initialValue: (session!.lenderAmount ?? 0).toString(),
-                        decoration: InputDecoration(
-                          labelText: "Lender",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon: const Icon(
-                            Icons.price_change,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        readOnly: true,
-                        initialValue: (session!.withholdingAmount ?? 0).toString(),
-                        decoration: InputDecoration(
-                          labelText: "Withholding",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon: const Icon(
-                            Icons.price_change,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        readOnly: true,
-                        initialValue: (session!.customerAmount ?? 0).toString(),
-                        decoration: InputDecoration(
-                          labelText: "Customer Check",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder: theme.inputDecorationTheme.border,
-                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon: const Icon(
-                            Icons.price_change,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: FxText.sh1("Customer Information",
-                          fontWeight: 600),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        initialValue: session!.customerName,
-                        decoration: InputDecoration(
-                          labelText: "Customer Name",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder:
-                          theme.inputDecorationTheme.border,
-                          focusedBorder:
-                          theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon: const Icon(
-                              MdiIcons.accountChildOutline,
-                              size: 24),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: TextFormField(
-                        initialValue: session!.phone,
-                        decoration: InputDecoration(
-                          labelText: "Customer Contact",
-                          border: theme.inputDecorationTheme.border,
-                          enabledBorder:
-                          theme.inputDecorationTheme.border,
-                          focusedBorder:
-                          theme.inputDecorationTheme.focusedBorder,
-                          prefixIcon: const Icon(
-                              MdiIcons.gamepadCircleOutline,
-                              size: 24),
-                        ),
-                      ),
+                    ExpansionPanelList(
+                      expandedHeaderPadding: const EdgeInsets.all(0),
+                      expansionCallback: (int index, bool isExpanded) {
+                        setState(() {
+                          _panelsExpansionStatus[index] = !isExpanded;
+                        });
+                      },
+                      animationDuration: const Duration(
+                          milliseconds: 500),
+                      children: [
+                        ExpansionPanel(
+                            backgroundColor: Colors.grey[100],
+                            canTapOnHeader: true,
+                            headerBuilder:
+                                (BuildContext context, bool isExpanded) {
+                              return ListTile(
+                                title: FxText.b1("Vehicle Information",
+                                    color: isExpanded
+                                        ? lightColor.primary
+                                        : theme.colorScheme.onBackground,
+                                    fontWeight: isExpanded ? 700 : 600),
+                              );
+                            },
+                            body: Container(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: Column(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: session!.vin,
+                                        decoration: InputDecoration(
+                                          labelText: "VIN",
+                                          border: theme
+                                              .inputDecorationTheme
+                                              .border,
+                                          enabledBorder: theme
+                                              .inputDecorationTheme
+                                              .border,
+                                          focusedBorder:
+                                          theme.inputDecorationTheme
+                                              .focusedBorder,
+                                          prefixIcon: const Icon(
+                                              Icons
+                                                  .confirmation_number_outlined,
+                                              size: 24),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: session!.color,
+                                        decoration: InputDecoration(
+                                          labelText: "Color",
+                                          border: theme
+                                              .inputDecorationTheme
+                                              .border,
+                                          enabledBorder:
+                                          theme.inputDecorationTheme
+                                              .border,
+                                          focusedBorder:
+                                          theme.inputDecorationTheme
+                                              .focusedBorder,
+                                          prefixIcon: const Icon(
+                                              Icons.color_lens_outlined,
+                                              size: 24),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: session!.mileage.toString(),
+                                        decoration: InputDecoration(
+                                          labelText: "Mileage",
+                                          border: theme
+                                              .inputDecorationTheme
+                                              .border,
+                                          enabledBorder:
+                                          theme.inputDecorationTheme
+                                              .border,
+                                          focusedBorder:
+                                          theme.inputDecorationTheme
+                                              .focusedBorder,
+                                          prefixIcon: const Icon(
+                                            Icons.speed,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: session!.estimatedCr.toString(),
+                                        decoration: InputDecoration(
+                                          labelText: "Estimated CR",
+                                          border: theme
+                                              .inputDecorationTheme
+                                              .border,
+                                          enabledBorder:
+                                          theme.inputDecorationTheme
+                                              .border,
+                                          focusedBorder:
+                                          theme.inputDecorationTheme
+                                              .focusedBorder,
+                                          prefixIcon: const Icon(
+                                            Icons.high_quality,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+
+                                  ]
+                              ),
+                            ),
+                            isExpanded: _panelsExpansionStatus[0]),
+                        ExpansionPanel(
+                            backgroundColor: Colors.grey[100],
+                            canTapOnHeader: true,
+                            headerBuilder:
+                                (BuildContext context, bool isExpanded) {
+                              return ListTile(
+                                title: FxText.b1("Price Information",
+                                    color: isExpanded
+                                        ? lightColor.primary
+                                        : theme.colorScheme.onBackground,
+                                    fontWeight: isExpanded ? 700 : 600),
+                              );
+                            },
+                            body: Container(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: Column(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: session!.askingPrice.toString(),
+                                        decoration: InputDecoration(
+                                          labelText: "Listing Price",
+                                          border: theme
+                                              .inputDecorationTheme
+                                              .border,
+                                          enabledBorder:
+                                          theme.inputDecorationTheme
+                                              .border,
+                                          focusedBorder:
+                                          theme.inputDecorationTheme
+                                              .focusedBorder,
+                                          prefixIcon: const Icon(
+                                            Icons.list,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: session!.mmr.toString(),
+                                        decoration: InputDecoration(
+                                          labelText: "MMR",
+                                          border: theme
+                                              .inputDecorationTheme
+                                              .border,
+                                          enabledBorder:
+                                          theme.inputDecorationTheme
+                                              .border,
+                                          focusedBorder:
+                                          theme.inputDecorationTheme
+                                              .focusedBorder,
+                                          prefixIcon: const Icon(
+                                            Icons.price_change,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: (session!.offeredPrice ?? 0).toString(),
+                                        decoration: InputDecoration(
+                                          labelText: "Offered Price",
+                                          border: theme
+                                              .inputDecorationTheme
+                                              .border,
+                                          enabledBorder:
+                                          theme.inputDecorationTheme
+                                              .border,
+                                          focusedBorder:
+                                          theme.inputDecorationTheme
+                                              .focusedBorder,
+                                          prefixIcon: const Icon(
+                                            Icons.price_change_outlined,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: (session!.requestedPrice ?? 0).toString(),
+                                        decoration: InputDecoration(
+                                          labelText: "Requested Price",
+                                          border: theme
+                                              .inputDecorationTheme
+                                              .border,
+                                          enabledBorder:
+                                          theme.inputDecorationTheme
+                                              .border,
+                                          focusedBorder:
+                                          theme.inputDecorationTheme
+                                              .focusedBorder,
+                                          prefixIcon: const Icon(
+                                            Icons.price_change,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: ((session!.purchasedPrice ?? 0) - (session!.deductionsAmount ?? 0)).toString(),
+                                        decoration: InputDecoration(
+                                          labelText: "Purchased Price",
+                                          border: theme.inputDecorationTheme.border,
+                                          enabledBorder: theme.inputDecorationTheme.border,
+                                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                                          prefixIcon: const Icon(
+                                            Icons.price_change,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: (session!.lenderAmount ?? 0).toString(),
+                                        decoration: InputDecoration(
+                                          labelText: "Lender",
+                                          border: theme.inputDecorationTheme.border,
+                                          enabledBorder: theme.inputDecorationTheme.border,
+                                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                                          prefixIcon: const Icon(
+                                            Icons.price_change,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: (session!.withholdingAmount ?? 0).toString(),
+                                        decoration: InputDecoration(
+                                          labelText: "Withholding",
+                                          border: theme.inputDecorationTheme.border,
+                                          enabledBorder: theme.inputDecorationTheme.border,
+                                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                                          prefixIcon: const Icon(
+                                            Icons.price_change,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        initialValue: (session!.customerAmount ?? 0).toString(),
+                                        decoration: InputDecoration(
+                                          labelText: "Customer Check",
+                                          border: theme.inputDecorationTheme.border,
+                                          enabledBorder: theme.inputDecorationTheme.border,
+                                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                                          prefixIcon: const Icon(
+                                            Icons.price_change,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ),                                  ]
+                              ),
+                            ),
+                            isExpanded: _panelsExpansionStatus[1]),
+                        ExpansionPanel(
+                            backgroundColor: Colors.grey[100],
+                            canTapOnHeader: true,
+                            headerBuilder:
+                                (BuildContext context, bool isExpanded) {
+                              return ListTile(
+                                title: FxText.b1("Inspection Address",
+                                    color: isExpanded
+                                        ? lightColor.primary
+                                        : theme.colorScheme.onBackground,
+                                    fontWeight: isExpanded ? 700 : 600),
+                              );
+                            },
+                            body: Container(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: Column(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        decoration: InputDecoration(
+                                          labelText: "Customer Name",
+                                          border: theme
+                                              .inputDecorationTheme
+                                              .border,
+                                          enabledBorder:
+                                          theme.inputDecorationTheme
+                                              .border,
+                                          focusedBorder:
+                                          theme.inputDecorationTheme
+                                              .focusedBorder,
+                                          prefixIcon: const Icon(
+                                              MdiIcons
+                                                  .accountChildOutline,
+                                              size: 24),
+                                        ),
+                                      ),
+                                    ),
+                                  ]
+                              ),
+                            ),
+                            isExpanded: _panelsExpansionStatus[2]),
+                      ],
                     ),
                   ],
                 ),
@@ -336,7 +501,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                     TextButton.icon(
                       label: FxText.sh1('Inventory'),
                       onPressed: () {
-                        BackendInterface().sendSessionToInventory(session!.id);
+                        MarketplaceInterface().sendSessionToInventory(session!.id);
                         Navigator.pop(context);
                         Navigator.pop(context);
                       },

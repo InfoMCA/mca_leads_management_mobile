@@ -8,6 +8,20 @@ import 'package:mca_leads_management_mobile/views/session/session_details_comple
 
 part 'lead.g.dart';
 
+@JsonSerializable()
+class LeadFollowUpInfo {
+  String comment;
+  DateTime date;
+
+  LeadFollowUpInfo(this.comment, this.date);
+}
+
+class LeadUnAnsweredInfo {
+  bool sendSms;
+  bool leftMessage;
+
+  LeadUnAnsweredInfo(this.sendSms, this.leftMessage);
+}
 
 
 @JsonSerializable()

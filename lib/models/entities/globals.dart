@@ -2,14 +2,17 @@ import 'dart:convert';
 import 'dart:developer' as dev;
 import 'dart:collection';
 
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:mca_leads_management_mobile/models/entities/auth_user.dart';
 import 'package:mca_leads_management_mobile/models/entities/api/backend_req.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead/lead_summary.dart';
 import 'package:mca_leads_management_mobile/models/entities/marketplace/listing.dart';
 import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
+import 'package:mca_leads_management_mobile/models/interfaces/marketplace_interface.dart';
 
 import 'api/logical_view.dart';
+import 'marketplace/offer.dart';
 
 String? inspectionConfigStr;
 AuthUserModel? _user;
@@ -18,9 +21,20 @@ Map<LogicalView, List<LeadSummary>?> leadSummaries = HashMap();
 List<Session> inventories = [];
 List<Listing> listings = [];
 List<Session> vehicles = [];
+List<Offer> offers = [];
+
+FlexSchemeColor darkColor = FlexColor.deepPurple.dark;
+FlexSchemeColor lightColor = FlexColor.deepPurple.light;
 
 AuthUserModel? get currentUser {
   return _user;
+}
+
+String get currentDealer {
+  if (currentUser!.username == 'manager1') {
+    return 'dealer1';
+  }
+  return 'dealer2';
 }
 
 set currentUser(AuthUserModel? newUser) {
@@ -34,19 +48,18 @@ Future<List<LeadSummary>?> getLeads(LogicalView logicalView) async {
   } else if (logicalView.isSessionView()) {
     newLeads = await BackendInterface().getSessions(logicalView);
   } else if (logicalView.isInventory()) {
-    newLeads = await BackendInterface().getInventories(logicalView);
+    newLeads = await MarketplaceInterface().getInventoriesSummary();
   } else if (logicalView.isMarketplaceView()) {
-    newLeads = await BackendInterface().getListings(logicalView);
+    newLeads = await MarketplaceInterface().getListingsSummary();
+  } else if (logicalView == LogicalView.receivedOffer) {
+    newLeads = await MarketplaceInterface().getListingsReceivedOffer();
+  }  else if (logicalView == LogicalView.sentOffer) {
+    newLeads = await MarketplaceInterface().getListingsSentOffer();
   }
-
-
-if (newLeads!.isNotEmpty) {
-    leadSummaries.putIfAbsent(logicalView, () => newLeads);
-  }
-  return leadSummaries[logicalView];
+  return newLeads;
 }
 
-sendSessionToInventoryMock(BackendReq backendReq) async {
+void sendSessionToInventoryMock(BackendReq backendReq) async {
   Session? session = await BackendInterface().getSession(backendReq.objectId!);
   inventories.add(session!);
   vehicles.add(session);
@@ -54,42 +67,34 @@ sendSessionToInventoryMock(BackendReq backendReq) async {
 }
 
 List<LeadSummary> getInventoriesMock() {
-  return inventories.map((e) => LeadSummary(e.id, e.title, e.vin, LeadViewTag.inventory, DateTime.now())).toList();
+  return inventories.map((e) => LeadSummary(e.id, e.id, e.title, e.vin, LeadViewTag.inventory, DateTime.now())).toList();
 }
 
 
 List<LeadSummary> getListingsMock() {
-  return listings.map((e) {
+  return getUniqueList(listings.map((e) {
     Session session = vehicles
         .where((element) => e.vehicleId == element.id)
         .first;
     return LeadSummary(
-        session.id, session.title, session.vin, LeadViewTag.listing,
+        e.id, e.id, session.title, session.vin, LeadViewTag.listing,
         e.expirationTime);
-  }).toList();
+  }).toList());
 }
 
 Future<List<String>> getMarketPlacesMock(BackendReq backendReq) {
   return Future.value(['First MarketPlace', 'Lexus MarketPlace', 'Irvine MarketPlace']);
 }
 
-createNewListingMock(BackendReq backendReq) {
-  List<String> marketPlaces = json.decode(backendReq.params!['marketPlaceIds']!).cast<String>();
-
-  listings.addAll(marketPlaces.map((element) =>
-    Listing(
-        backendReq.objectId! + "_" + element,
-        element,
-        currentUser!.username,
-        backendReq.objectId!,
-        ListingState.ACTIVE,
-        int.parse(backendReq.params!['listingPrice']!),
-        0,
-        DateTime.now(), DateTime.now(),
-        DateTime.parse(backendReq.params!['expirationDate']!))
-
-  ).toList());
-  dev.log("Listing Size: ${listings.length}");
-  inventories.remove(inventories.where((element) => element.id == backendReq.objectId).first);
-
+List<LeadSummary> getUniqueList(List<LeadSummary> list) {
+  Set<String> visitedVin = {};
+  List<LeadSummary> result = [];
+  for (var leadSummary in list) {
+    if (visitedVin.contains(leadSummary.vin)) {
+      continue;
+    }
+    visitedVin.add(leadSummary.vin);
+    result.add(leadSummary);
+  }
+  return result;
 }

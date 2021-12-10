@@ -6,7 +6,10 @@ import 'package:mca_leads_management_mobile/models/entities/api/logical_view.dar
 
 class LeadViewArguments {
   final String id;
+  final String vehicleId;
+  final String title;
+  final String vin;
   final LogicalView logicalView;
 
-  LeadViewArguments(this.id, this.logicalView);
+  LeadViewArguments(this.id, this.vehicleId, this.vin, this.title, this.logicalView);
 }

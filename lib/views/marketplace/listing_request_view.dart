@@ -1,26 +1,20 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:mca_leads_management_mobile/models/entities/api/backend_resp.dart';
-import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
-import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
+import 'package:mca_leads_management_mobile/models/entities/marketplace/inventory.dart';
+import 'package:mca_leads_management_mobile/models/entities/marketplace/listing.dart';
+import 'package:mca_leads_management_mobile/models/entities/marketplace/marketplace.dart';
+import 'package:mca_leads_management_mobile/models/entities/marketplace/vehicle.dart';
+import 'package:mca_leads_management_mobile/models/interfaces/marketplace_interface.dart';
 import 'package:mca_leads_management_mobile/utils/spacing.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
-import 'package:mca_leads_management_mobile/views/lead/lead_view_arg.dart';
 import 'package:mca_leads_management_mobile/widgets/checkbox/checkbox_input.dart';
-import 'package:mca_leads_management_mobile/widgets/common/notifications.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 import 'package:mca_leads_management_mobile/widgets/textfield/date_text.dart';
-import 'package:mca_leads_management_mobile/widgets/textfield/select_text.dart';
-import 'package:mca_leads_management_mobile/widgets/textfield/time_text.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:us_states/us_states.dart';
 
 class ListingRequestView extends StatefulWidget {
-  final Session args;
+  final InventoryVehicle args;
   static String routeName = '/home/listing-new';
 
   const ListingRequestView({Key? key, required this.args}) : super(key: key);
@@ -32,15 +26,17 @@ class ListingRequestView extends StatefulWidget {
 class _ListingRequestViewState extends State<ListingRequestView> {
   late CustomTheme customTheme;
   late ThemeData theme;
-  late List<String>? marketPlaces;
-  late Future<List<String>> marketPlacesFuture;
-  late Session session;
+  late List<Marketplace>? marketPlaces;
+  late Future<List<Marketplace>> marketPlacesFuture;
+  late InventoryVehicle inventoryVehicle;
+  late Vehicle vehicle;
+  late InventoryItem inventoryItem;
   late DateTime expirationDate;
   late int listingPrice;
   List<String> selectedMarketPlaces = [];
 
   Future<void> _getMarketPlaces(String sessionId) async {
-    marketPlacesFuture = BackendInterface().getMarketPlaces(sessionId);
+    marketPlacesFuture = MarketplaceInterface().getMarketPlaces();
     marketPlacesFuture.whenComplete(() => setState(() {}));
   }
 
@@ -49,17 +45,20 @@ class _ListingRequestViewState extends State<ListingRequestView> {
     super.initState();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
-    session = widget.args;
-    _getMarketPlaces(session.id);
-    listingPrice = ((session.purchasedPrice ?? 0) - (session.deductionsAmount ?? 0)).toInt();
-    expirationDate = DateTime.now().add(const Duration(days:2));
+    inventoryVehicle = widget.args;
+    vehicle = inventoryVehicle.vehicle;
+    inventoryItem = inventoryVehicle.inventoryItem;
+    _getMarketPlaces(vehicle.id);
+    listingPrice =
+        (inventoryItem.purchasedPrice - inventoryItem.deductionsAmount).toInt();
+    expirationDate = DateTime.now().add(const Duration(days: 2));
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: marketPlacesFuture,
-        builder: (context, AsyncSnapshot<List<String>> snapshot) {
+        builder: (context, AsyncSnapshot<List<Marketplace>> snapshot) {
           if (!snapshot.hasData) {
             return Container(
               color: Colors.white,
@@ -88,7 +87,7 @@ class _ListingRequestViewState extends State<ListingRequestView> {
                 ),
               ),
               title: FxText.sh1(
-                session.title,
+                vehicle.ymmt,
                 fontWeight: 600,
                 color: theme.backgroundColor,
               ),
@@ -97,7 +96,8 @@ class _ListingRequestViewState extends State<ListingRequestView> {
                 onPressed: () {
                   Navigator.pop(context);
                   Navigator.pop(context);
-                  BackendInterface().createNewListing(session.id, listingPrice, expirationDate, selectedMarketPlaces);
+                  MarketplaceInterface().createNewListing(
+                      vehicle.id, inventoryItem.id, ListingNewReq(listingPrice, expirationDate, selectedMarketPlaces));
                 },
                 child: Icon(
                   Icons.check,
@@ -144,13 +144,15 @@ class _ListingRequestViewState extends State<ListingRequestView> {
                       child: FxText.sh1(
                         "Market Places", fontWeight: 600, fontSize: 16,),
                     ),
-                    CheckboxWidget(values: marketPlaces!,
+                    CheckboxWidget(
+                        values: marketPlaces!.map((e) => e.name).toList(),
                         onValueChanged: (marketPlacesStatus) {
                           selectedMarketPlaces.clear();
+
                           /// ToDo improve coding.
                           for (int i = 0; i < marketPlaces!.length; i++) {
                             if (marketPlacesStatus[i]) {
-                              selectedMarketPlaces.add(marketPlaces![i]);
+                              selectedMarketPlaces.add(marketPlaces![i].id);
                             }
                           }
                         }),

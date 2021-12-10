@@ -8,19 +8,23 @@ part of 'lead_summary.dart';
 
 LeadSummary _$LeadSummaryFromJson(Map<String, dynamic> json) => LeadSummary(
       json['id'] as String,
+      json['vehicleId'] as String,
       json['title'] as String,
       json['vin'] as String,
       $enumDecode(_$LeadViewTagEnumMap, json['viewTag']),
-      DateTime.parse(json['updateDate'] as String),
+      json['updateDate'] == null
+          ? null
+          : DateTime.parse(json['updateDate'] as String),
     );
 
 Map<String, dynamic> _$LeadSummaryToJson(LeadSummary instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'vehicleId': instance.vehicleId,
       'title': instance.title,
       'vin': instance.vin,
       'viewTag': _$LeadViewTagEnumMap[instance.viewTag],
-      'updateDate': instance.updateDate.toIso8601String(),
+      'updateDate': instance.updateDate?.toIso8601String(),
     };
 
 const _$LeadViewTagEnumMap = {
@@ -39,4 +43,7 @@ const _$LeadViewTagEnumMap = {
   LeadViewTag.rejected: 'rejected',
   LeadViewTag.complete: 'complete',
   LeadViewTag.inventory: 'inventory',
+  LeadViewTag.listing: 'listing',
+  LeadViewTag.transferIn: 'transferIn',
+  LeadViewTag.transferOut: 'transferOut',
 };

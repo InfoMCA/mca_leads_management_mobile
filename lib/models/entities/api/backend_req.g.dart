@@ -42,6 +42,7 @@ const _$CommandObjectEnumMap = {
   CommandObject.session: 'session',
   CommandObject.inventory: 'inventory',
   CommandObject.listing: 'listing',
+  CommandObject.offer: 'offer',
 };
 
 const _$CommandIntentEnumMap = {

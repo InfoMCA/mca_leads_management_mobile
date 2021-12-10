@@ -29,22 +29,27 @@ enum VehicleState {
 class Vehicle {
   String id;
   String vin;
-  String plate;
-  String plateState;
-  int year;
-  String make;
-  String model;
-  String trim;
+  String? plate;
+  String? plateState;
+  String ymmt;
+  int? year;
+  String? make;
+  String? model;
+  String? trim;
   int mileage;
   String color;
-  String engineType;
-  String drivetrain;
-  String transmission;
+  String? engineType;
+  String? drivetrain;
+  String? transmission;
 
   String dealerId;
   VehicleState state;
   DateTime createdTime;
   DateTime lastModifiedTime;
+
+  double estimatedCr;
+  int mmr;
+  int askingPrice;
 
   // Used for indexing
   String dealerIdState;
@@ -54,6 +59,7 @@ class Vehicle {
       this.vin,
       this.plate,
       this.plateState,
+      this.ymmt,
       this.year,
       this.make,
       this.model,
@@ -67,12 +73,23 @@ class Vehicle {
       this.state,
       this.createdTime,
       this.lastModifiedTime,
-      this.dealerIdState);
+      this.dealerIdState,
+      this.estimatedCr,
+      this.askingPrice,
+      this.mmr);
 
   factory Vehicle.fromJson(Map<String, dynamic> json) =>
       _$VehicleFromJson(json);
 
   Map<String, dynamic> toJson() => _$VehicleToJson(this);
+
+  String getYMM() {
+    return "$year $make $model";
+  }
+
+  String title() {
+    return "$year $make $model $trim";
+  }
 
 }
 
