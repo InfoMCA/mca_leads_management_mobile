@@ -23,6 +23,7 @@ class BackendInterface {
 
   String getEndPoint(BackendReq backendReq) {
     switch (backendReq.object) {
+
       case CommandObject.user:
         return userEndpoint;
       case CommandObject.region:
@@ -37,7 +38,6 @@ class BackendInterface {
         return marketplaceEndpoint;
     }
   }
-
   Dio dio = Dio();
 
   Future<BackendResp> sendPostReq(BackendReq backendReq) async {
@@ -64,8 +64,7 @@ class BackendInterface {
           intent: CommandIntent.action,
           action: CommandAction.userLogin,
           params: {"username": username, "password": password});
-      Response response = await dio.post(
-          getEndPoint(appReq), data: json.encode(appReq));
+      Response response = await dio.post(getEndPoint(appReq), data: json.encode(appReq));
       if (response.statusCode != HttpStatus.ok) {
         return "Username or Password incorrect";
       }
@@ -168,6 +167,7 @@ class BackendInterface {
   }
 
 
+
   Future<BackendResp> getRegion(String zipcode) async {
     return sendPostReq(
         BackendReq(
@@ -190,7 +190,8 @@ class BackendInterface {
         ));
   }
 
-  Future<BackendResp> dispatchLead(Lead lead,
+  Future<BackendResp> dispatchLead(
+      Lead lead,
       String inspector,
       int inspectionTime,
       DateTime scheduleDate) {
