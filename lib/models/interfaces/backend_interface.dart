@@ -6,11 +6,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mca_leads_management_mobile/models/entities/api/backend_req.dart';
 import 'package:mca_leads_management_mobile/models/entities/api/backend_resp.dart';
 import 'package:mca_leads_management_mobile/models/entities/api/logical_view.dart';
+import 'package:mca_leads_management_mobile/models/entities/auth_user.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead/lead_summary.dart';
-import 'package:mca_leads_management_mobile/models/entities/marketplace/listing.dart';
-import 'package:mca_leads_management_mobile/models/entities/marketplace/offer.dart';
 import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
 
 class BackendInterface {
@@ -56,22 +55,18 @@ class BackendInterface {
     }
   }
 
-  Future<String> checkLoginCredentials(String username, String password) async {
+  Future<AuthUserModel> checkLoginCredentials(String username, String password) async {
     try {
-      BackendReq appReq = BackendReq(
-          username: username,
-          object: CommandObject.user,
-          intent: CommandIntent.action,
-          action: CommandAction.userLogin,
-          params: {"username": username, "password": password});
-      Response response = await dio.post(getEndPoint(appReq), data: json.encode(appReq));
+      Response response = await dio.get(userEndpoint
+          + "user?userName=$username&password=$password&role=manager");
       if (response.statusCode != HttpStatus.ok) {
-        return "Username or Password incorrect";
+        throw ("Incorrect username or password!");
       }
-      return "";
+      dev.log(response.data.toString());
+      return AuthUserModel.fromJson(response.data);
     } catch (e) {
       dev.log(e.toString());
-      return e.toString();
+      rethrow;
     }
   }
 

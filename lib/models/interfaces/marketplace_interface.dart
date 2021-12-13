@@ -175,7 +175,7 @@ class MarketplaceInterface {
 
   void sendSessionToInventory(String sessionId) async {
     sendPostReq(
-        "vehicles/from-session?sessionId=$sessionId&dealerId=$currentDealer",
+        "vehicles/from-session?sessionId=$sessionId&dealerId=${currentUser!.dealerId}",
         '').whenComplete(() {
       InventoryItem inventoryItem = InventoryItem(
           sessionId,

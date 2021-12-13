@@ -30,13 +30,6 @@ AuthUserModel? get currentUser {
   return _user;
 }
 
-String get currentDealer {
-  if (currentUser!.username == 'manager1') {
-    return 'dealer1';
-  }
-  return 'dealer2';
-}
-
 set currentUser(AuthUserModel? newUser) {
   _user = newUser;
 }
