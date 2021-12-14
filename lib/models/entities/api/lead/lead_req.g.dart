@@ -46,6 +46,24 @@ Map<String, dynamic> _$LeadLostRequestToJson(LeadLostRequest instance) =>
       'lostReason': instance.lostReason,
     };
 
+LeadUpdateRequest _$LeadUpdateRequestFromJson(Map<String, dynamic> json) =>
+    LeadUpdateRequest(
+      json['customerName'] as String,
+      json['offerPrice'] as int,
+      json['requestedPrice'] as int,
+      json['payoffStatus'] as String,
+      json['comment'] as String,
+    );
+
+Map<String, dynamic> _$LeadUpdateRequestToJson(LeadUpdateRequest instance) =>
+    <String, dynamic>{
+      'customerName': instance.customerName,
+      'offerPrice': instance.offerPrice,
+      'requestedPrice': instance.requestedPrice,
+      'payoffStatus': instance.payoffStatus,
+      'comment': instance.comment,
+    };
+
 GetInspectorsResp _$GetInspectorsRespFromJson(Map<String, dynamic> json) =>
     GetInspectorsResp(
       json['region'] as String,

@@ -35,24 +35,30 @@ class LeadInterface extends RestAPIInterface {
 
   Future<Response> putLeadAsFollowUp(String leadId,
       LeadFollowUpInfo followUpInfo) async {
-    return sendPatchReqWithData(
-        "/leads/$leadId/manager-followup", json.encode(followUpInfo));
+    return sendPatchReqWithData("/leads/$leadId/manager-followup",
+        json.encode(followUpInfo));
   }
 
-  Future<Response> putLeadAsUnAnswered(String leadId, LeadUnAnsweredInfo unAnsweredInfo) async {
-    return sendPatchReqWithData(
-        "/leads/$leadId/manager-unanswered", json.encode(unAnsweredInfo));
+  Future<Response> putLeadAsUnAnswered(String leadId,
+      LeadUnAnsweredInfo unAnsweredInfo) async {
+    return sendPatchReqWithData("/leads/$leadId/manager-unanswered",
+        json.encode(unAnsweredInfo));
   }
 
-
-  Future<Response> dispatchLead(String leadId, LeadDispatchRequest leadDispatchRequest) {
-    return sendPatchReqWithData(
-        "/leads/$leadId/dispatch", json.encode(leadDispatchRequest));
+  Future<Response> dispatchLead(String leadId,
+      LeadDispatchRequest leadDispatchRequest) async {
+    return sendPatchReqWithData("/leads/$leadId/dispatch",
+        json.encode(leadDispatchRequest));
   }
 
   Future<Response> putLeadAsLost(String leadId, String lostReason) async {
     return sendPatchReqWithData("/leads/$leadId/manager-lost",
         json.encode(LeadLostRequest(currentUser!.username, lostReason)));
+  }
+
+  Future<Response>  updateLead(String leadId, LeadUpdateRequest leadUpdateRequest) {
+    return sendPatchReqWithData("/leads/$leadId/update",
+        json.encode(leadUpdateRequest));
   }
 
 

@@ -44,6 +44,24 @@ class LeadLostRequest {
 }
 
 @JsonSerializable()
+class LeadUpdateRequest {
+  String customerName;
+  int offerPrice;
+  int requestedPrice;
+  String payoffStatus;
+  String comment;
+
+  LeadUpdateRequest(this.customerName, this.offerPrice, this.requestedPrice,
+      this.payoffStatus, this.comment);
+
+  factory LeadUpdateRequest.fromJson(Map<String, dynamic> json) =>
+      _$LeadUpdateRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$LeadUpdateRequestToJson(this);
+
+}
+
+@JsonSerializable()
 class GetInspectorsResp {
   String region;
   String timeZone;
