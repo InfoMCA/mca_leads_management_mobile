@@ -89,6 +89,29 @@ extension LogicalViewExt on LogicalView {
     return toString().substring(toString().lastIndexOf('.') + 1);
   }
 
+  String getRestParam() {
+    switch (this) {
+
+      case LogicalView.approval:
+      case LogicalView.appraisal:
+      case LogicalView.dispatched:
+      case LogicalView.active:
+      case LogicalView.completed:
+      case LogicalView.inventory:
+        return getString().toUpperCase();
+      case LogicalView.followUpManager:
+        return "FOLLOW_UP_MANAGER";
+      case LogicalView.receivedOffer:
+      case LogicalView.sentOffer:
+      case LogicalView.marketplace:
+      case LogicalView.transferRequest:
+      case LogicalView.transferPlaced:
+      case LogicalView.transferActive:
+      case LogicalView.transferCompleted:
+        return "";
+    }
+  }
+
   bool isLeadView() {
     return [
       LogicalView.approval,

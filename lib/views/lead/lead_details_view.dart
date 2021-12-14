@@ -8,13 +8,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
+import 'package:mca_leads_management_mobile/models/interfaces/lead_interface.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_lost_dialog.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_schedule_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
-import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_view_arg.dart';
@@ -59,7 +59,7 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
   }
 
   Future<void> _getLead(String leadId) async {
-    leadFuture = BackendInterface().getLead(leadId);
+    leadFuture = LeadInterface().getLead(leadId);
     leadFuture.whenComplete(() => setState(() {}));
   }
 
@@ -144,7 +144,7 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                           builder: (BuildContext context) =>
                               LeadFollowUpDialog(
                                   onSubmit: (followUpInfo) {
-                                    BackendInterface().putLeadAsFollowUp(
+                                    LeadInterface().putLeadAsFollowUp(
                                         lead!.id, followUpInfo);
                                   }
                               ));
@@ -155,7 +155,7 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                           builder: (BuildContext context) =>
                               LeadUnAnsweredDialog(
                                   onSubmit: (unansweredInfo) {
-                                    BackendInterface().putLeadAsUnAnswered(
+                                    LeadInterface().putLeadAsUnAnswered(
                                         lead!.id, unansweredInfo);
                                   }
                               ));
@@ -166,7 +166,7 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                           builder: (BuildContext context) =>
                               LeadLostDialog(
                                   onSubmit: (lostReason) {
-                                    BackendInterface().putLeadAsLost(
+                                    LeadInterface().putLeadAsLost(
                                         lead!.id, lostReason);
                                   }
                               ));

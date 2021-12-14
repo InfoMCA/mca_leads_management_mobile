@@ -3,10 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:mca_leads_management_mobile/models/entities/api/backend_resp.dart';
+import 'package:mca_leads_management_mobile/models/entities/api/lead/lead_req.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
-import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
+import 'package:mca_leads_management_mobile/models/interfaces/common_interface.dart';
+import 'package:mca_leads_management_mobile/models/interfaces/lead_interface.dart';
 import 'package:mca_leads_management_mobile/utils/spacing.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
@@ -34,9 +35,9 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
   final FocusNode _focus = FocusNode();
   final _formKey = GlobalKey<FormState>();
   final _panelsExpansionStatus = [true, false];
+  late LeadDispatchRequest leadDispatchRequest;
 
   late List<String> inspectors = [];
-  late String inspector;
   late int inspectionTime;
   late DateTime scheduleDate;
   late TimeOfDay scheduleTime;
@@ -47,15 +48,17 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
     try {
       inspectors.clear();
       regionController.text = '';
-      inspector = '';
-      BackendResp backendResp = await BackendInterface().getInspectors(
+      GetInspectorsResp getInspectorsResp = await CommonInterface().getInspectors(
           widget.lead.zipCode!);
       setState(() {
-        inspectors.addAll(backendResp.inspectors!
+        inspectors.addAll(getInspectorsResp.inspectors
             .where((element) => element.isNotEmpty).toList());
-        regionController.text = backendResp.region!;
+        regionController.text = getInspectorsResp.region;
+        leadDispatchRequest.userPhone = getInspectorsResp.userPhone;
+        leadDispatchRequest.region = getInspectorsResp.region;
+        leadDispatchRequest.timeZone = getInspectorsResp.timeZone;
       });
-    } catch (e, s) {
+    } catch (e) {
       showSnackBar(context: context,
           text: 'There is no inspector working in the selected area');
     }
@@ -95,6 +98,20 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
     } else {
       state = 'CA';
     }
+    leadDispatchRequest =  LeadDispatchRequest(
+        currentUser!.username,
+        "",
+        widget.lead.customerName ?? "",
+        widget.lead.address1,
+        widget.lead.address2,
+        widget.lead.city,
+        state,
+        widget.lead.zipCode ?? "",
+        regionController.text,
+        "",
+        "",
+        30,
+        DateTime.now().toUtc());
     _getInspector();
   }
 
@@ -144,9 +161,8 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                 } else {
                   scheduleDate = DateTime(
                       scheduleDate.year, scheduleDate.month, scheduleDate.day,
-                      scheduleTime.hour, scheduleTime.minute);
-                  BackendInterface().dispatchLead(
-                      widget.lead, inspector, inspectionTime, scheduleDate);
+                      scheduleTime.hour, scheduleTime.minute).toUtc();
+                  LeadInterface().dispatchLead(widget.lead.id, leadDispatchRequest);
                   Navigator.popUntil(context, ModalRoute.withName('/home'));
                 }
               },
@@ -184,7 +200,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                           headerBuilder:
                               (BuildContext context, bool isExpanded) {
                             return ListTile(
-                              title: FxText.b1("Insepction Address",
+                              title: FxText.b1("Inspection Address",
                                   color: isExpanded
                                       ? lightColor.primary
                                       : theme.colorScheme.onBackground,
@@ -200,7 +216,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                                         top: 8, left: 8, right: 8),
                                     child: TextFormField(
                                       initialValue: widget.lead.customerName,
-                                      onChanged: (text) => widget.lead.customerName = text,
+                                      onChanged: (text) => leadDispatchRequest.customerName = text,
                                       validator: (value) => _validate(value),
                                       decoration: InputDecoration(
                                         labelText: "Customer Name",
@@ -217,7 +233,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                                         top: 8, left: 8, right: 8),
                                     child: TextFormField(
                                       initialValue: widget.lead.address1 ?? "",
-                                      onChanged: (text) => widget.lead.address1 = text,
+                                      onChanged: (text) => leadDispatchRequest.address1 = text,
                                       validator: (value) => _validate(value),
                                       decoration: InputDecoration(
                                         labelText: "Address1",
@@ -234,7 +250,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                                         top: 8, left: 8, right: 8),
                                     child: TextFormField(
                                       initialValue: widget.lead.address2 ?? "",
-                                      onChanged: (text) => widget.lead.address2 = text,
+                                      onChanged: (text) => leadDispatchRequest.address2 = text,
                                       decoration: InputDecoration(
                                         labelText: "Address2",
                                         border: theme.inputDecorationTheme.border,
@@ -250,7 +266,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                                         top: 8, left: 8, right: 8),
                                     child: TextFormField(
                                       initialValue: widget.lead.city,
-                                      onChanged: (text) => widget.lead.city = text,
+                                      onChanged: (text) => leadDispatchRequest.city = text,
                                       validator: (value) => _validate(value),
                                       decoration: InputDecoration(
                                         labelText: "City",
@@ -269,7 +285,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                                           initialValue: state,
                                           values: USStates.getAllAbbreviations(),
                                           onListChanged: (newState) {
-                                            widget.lead.state = newState;
+                                            leadDispatchRequest.state = newState;
                                           },
                                           validator: (value) => _validate(value))
                                   ),
@@ -279,7 +295,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                                     child: TextFormField(
                                       focusNode: _focus,
                                       initialValue: widget.lead.zipCode,
-                                      onChanged: (text) => widget.lead.zipCode = text,
+                                      onChanged: (text) => leadDispatchRequest.zipCode = text,
                                       validator: (value) => _validate(value),
                                       decoration: InputDecoration(
                                         labelText: "Zipcode",
@@ -297,7 +313,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                                     child: TextFormField(
                                       readOnly: true,
                                       controller: regionController,
-                                      onChanged: (text) => widget.lead.region = text,
+                                      onChanged: (text) => leadDispatchRequest.region = text,
                                       validator: (value) => _validate(value),
                                       decoration: InputDecoration(
                                         labelText: "Region",
@@ -334,10 +350,10 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                                       margin: const EdgeInsets.only(
                                           top: 8, left: 8, right: 8),
                                       child: FxListText(label: 'Inspector',
-                                          initialValue: inspector,
+                                          initialValue: '',
                                           values: inspectors,
                                           onListChanged: (newState) {
-                                            inspector = newState;
+                                            leadDispatchRequest.inspector = newState;
                                           },
                                           validator: (value) => _validate(value))
                                   ),
@@ -347,7 +363,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                                     child: TextFormField(
                                       keyboardType: TextInputType.number,
                                       initialValue: '30',
-                                      onChanged: (value) => inspectionTime = int.parse(value),
+                                      onChanged: (value) => leadDispatchRequest.inspectionTime = int.parse(value),
                                       validator: (value) => _validate(value),
                                       decoration: InputDecoration(
                                         labelText: "Duration (min)",

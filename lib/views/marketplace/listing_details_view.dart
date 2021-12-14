@@ -40,27 +40,6 @@ class _ListingDetailViewState extends State<ListingDetailView> {
   late DateTime scheduleDate;
   late TimeOfDay scheduleTime;
 
-  Future<void> _getInspector() async {
-    try {
-      inspectors.clear();
-      regionController.text = '';
-      inspector = '';
-
-      BackendResp backendResp =
-          await BackendInterface().getInspectors(session!.zipCode);
-      setState(() {
-        inspectors.addAll(backendResp.inspectors!
-            .where((element) => element.isNotEmpty)
-            .toList());
-        regionController.text = backendResp.region!;
-      });
-    } catch (e, s) {
-      showSnackBar(
-          context: context,
-          text: 'There is no inspector working in the selected area');
-    }
-  }
-
   _validate(
     value,
   ) {

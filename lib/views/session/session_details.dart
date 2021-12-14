@@ -3,10 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:mca_leads_management_mobile/models/entities/api/backend_resp.dart';
+import 'package:mca_leads_management_mobile/models/entities/api/lead/lead_req.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
+import 'package:mca_leads_management_mobile/models/interfaces/common_interface.dart';
 import 'package:mca_leads_management_mobile/utils/spacing.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
@@ -46,7 +47,7 @@ class _SessionDetailsState extends State<SessionDetails> {
 
   var _currentIndex = 0;
 
-  var _panelsExpansionStatus = [false, false, false, false];
+  final _panelsExpansionStatus = [false, false, false, false];
 
   Future<void> _getInspector() async {
     try {
@@ -54,13 +55,13 @@ class _SessionDetailsState extends State<SessionDetails> {
       regionController.text = '';
       inspector = '';
 
-      BackendResp backendResp =
-          await BackendInterface().getInspectors(session!.zipCode);
+      GetInspectorsResp getInspectorsResp =
+          await CommonInterface().getInspectors(session!.zipCode);
       setState(() {
-        inspectors.addAll(backendResp.inspectors!
+        inspectors.addAll(getInspectorsResp.inspectors
             .where((element) => element.isNotEmpty)
             .toList());
-        regionController.text = backendResp.region!;
+        regionController.text = getInspectorsResp.region;
       });
     } catch (e, s) {
       showSnackBar(

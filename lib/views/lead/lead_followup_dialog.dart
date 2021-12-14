@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
+import 'package:mca_leads_management_mobile/models/entities/api/lead/lead_req.dart';
+import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/text_style.dart';
 import 'package:mca_leads_management_mobile/widgets/button/button.dart';
@@ -20,7 +21,7 @@ class _LeadFollowUpDialogState extends State<LeadFollowUpDialog> {
 
   late CustomTheme customTheme;
   late ThemeData theme;
-  LeadFollowUpInfo followUpInfo = LeadFollowUpInfo("", DateTime.now());
+  LeadFollowUpInfo followUpInfo = LeadFollowUpInfo(currentUser!.username, "", DateTime.now().toUtc());
 
   @override
   void initState() {
@@ -70,7 +71,7 @@ class _LeadFollowUpDialogState extends State<LeadFollowUpDialog> {
             Container(
               margin: const EdgeInsets.only(top: 8),
               child: TextFormField(
-                onChanged: (text) => followUpInfo.comment = text,
+                onChanged: (text) => followUpInfo.followUpComment = text,
                 decoration: InputDecoration(
                   labelText: "Comment",
                   border: theme.inputDecorationTheme.border,
@@ -87,7 +88,7 @@ class _LeadFollowUpDialogState extends State<LeadFollowUpDialog> {
               child: FxDateText(label: 'Followup Date',
                 initValue: DateTime.now(),
                 onDateChanged: (date) {
-                  followUpInfo.date = date;
+                  followUpInfo.followUpDate = date.toUtc();
                 },),
             ),
             Container(
@@ -108,7 +109,7 @@ class _LeadFollowUpDialogState extends State<LeadFollowUpDialog> {
                         elevation: 2,
                         borderRadiusAll: 4,
                         onPressed: () {
-                          if (followUpInfo.comment.isEmpty) {
+                          if (followUpInfo.followUpComment.isEmpty) {
                             showSnackBar(
                                 context: context, text: "Comment is Empty!");
                           } else {

@@ -9,6 +9,7 @@ import 'package:mca_leads_management_mobile/models/entities/lead/lead_summary.da
 import 'package:mca_leads_management_mobile/models/entities/marketplace/listing.dart';
 import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
+import 'package:mca_leads_management_mobile/models/interfaces/lead_interface.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/marketplace_interface.dart';
 
 import 'api/logical_view.dart';
@@ -37,7 +38,7 @@ set currentUser(AuthUserModel? newUser) {
 Future<List<LeadSummary>?> getLeads(LogicalView logicalView) async {
   List<LeadSummary>? newLeads;
   if (logicalView.isLeadView()) {
-    newLeads = await BackendInterface().getLeads(logicalView);
+    newLeads = await LeadInterface().getLeads(logicalView);
   } else if (logicalView.isSessionView()) {
     newLeads = await BackendInterface().getSessions(logicalView);
   } else if (logicalView.isInventory()) {
