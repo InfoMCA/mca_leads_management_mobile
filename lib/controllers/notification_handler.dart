@@ -17,6 +17,7 @@ class NotificationHandler {
       _isFirebaseServiceStarted = true;
       await Firebase.initializeApp();
       FirebaseMessaging messaging = FirebaseMessaging.instance;
+      print("fcm token");
       print(await messaging.getToken());
       // await AdminInterface() //TODO: Send FCM to server
       //     .registerUserFCM(currentStaff.username, await messaging.getToken());
