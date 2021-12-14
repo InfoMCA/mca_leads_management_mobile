@@ -68,8 +68,8 @@ extension LogicalViewExt on LogicalView {
       case LogicalView.active:
         return SessionDetailsComplete.routeName;
       case LogicalView.completed:
-        return SessionDetailsComplete.routeName;
-        //return SessionDetailsCompleteReport.routeName;
+        // return SessionDetailsComplete.routeName;
+        return SessionDetailsCompleteReport.routeName;
       case LogicalView.inventory:
         return InventoryDetailView.routeName;
       case LogicalView.marketplace:
