@@ -8,6 +8,8 @@ import 'dart:developer' as dev;
 
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:mca_leads_management_mobile/controllers/notification_handler.dart';
+import 'package:mca_leads_management_mobile/models/entities/api/backend_resp.dart';
 import 'package:mca_leads_management_mobile/models/entities/api/logical_view.dart';
 import 'package:mca_leads_management_mobile/models/entities/drawer_item.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
@@ -58,6 +60,7 @@ class _DashBoardState extends State<DashBoard> {
   @override
   void initState() {
     super.initState();
+    NotificationHandler.start();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
     logicalView = LogicalView.approval;
