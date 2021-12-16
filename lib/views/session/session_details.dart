@@ -3,14 +3,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:mca_leads_management_mobile/models/entities/api/backend_resp.dart';
+import 'package:mca_leads_management_mobile/models/entities/api/lead/lead_req.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
+import 'package:mca_leads_management_mobile/models/interfaces/common_interface.dart';
+import 'package:mca_leads_management_mobile/models/interfaces/session_interface.dart';
 import 'package:mca_leads_management_mobile/utils/spacing.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_view_arg.dart';
+import 'package:mca_leads_management_mobile/views/session/session_schedule_view.dart';
 import 'package:mca_leads_management_mobile/widgets/common/notifications.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 import 'package:mca_leads_management_mobile/widgets/textfield/date_text.dart';
@@ -35,8 +38,6 @@ class _SessionDetailsState extends State<SessionDetails> {
   late Session? session;
   late Future<Session?> sessionFuture;
   final regionController = TextEditingController();
-  final FocusNode _focus = FocusNode();
-  final _formKey = GlobalKey<FormState>();
 
   late List<String> inspectors = [];
   late String inspector;
@@ -46,28 +47,7 @@ class _SessionDetailsState extends State<SessionDetails> {
 
   var _currentIndex = 0;
 
-  var _panelsExpansionStatus = [false, false, false, false];
-
-  Future<void> _getInspector() async {
-    try {
-      inspectors.clear();
-      regionController.text = '';
-      inspector = '';
-
-      BackendResp backendResp =
-          await BackendInterface().getInspectors(session!.zipCode);
-      setState(() {
-        inspectors.addAll(backendResp.inspectors!
-            .where((element) => element.isNotEmpty)
-            .toList());
-        regionController.text = backendResp.region!;
-      });
-    } catch (e, s) {
-      showSnackBar(
-          context: context,
-          text: 'There is no inspector working in the selected area');
-    }
-  }
+  final _panelsExpansionStatus = [false, false, false, false];
 
   _validate(
     value,
@@ -86,14 +66,8 @@ class _SessionDetailsState extends State<SessionDetails> {
     await launch(launchUri.toString());
   }
 
-  void _onFocusChange() async {
-    if (!_focus.hasFocus) {
-      _getInspector();
-    }
-  }
-
   Future<void> _getSession(String sessionId) async {
-    sessionFuture = BackendInterface().getSession(sessionId);
+    sessionFuture = SessionInterface().get(sessionId);
     sessionFuture.whenComplete(() => setState(() {}));
   }
 
@@ -165,14 +139,12 @@ class _SessionDetailsState extends State<SessionDetails> {
                 dev.log(value.toString());
                 switch (value) {
                   case 0:
-                    Navigator.popUntil(
-                        context, ModalRoute.withName('/home'));
+                    Navigator.pushNamed(
+                        context, SessionScheduleView.routeName,
+                        arguments: session);
                     break;
                   case 1:
-                    Navigator.popUntil(
-                        context, ModalRoute.withName('/home'));
-                    break;
-                  case 2:
+                    SessionInterface().delete(session!.id);
                     Navigator.popUntil(
                         context, ModalRoute.withName('/home'));
                     break;
@@ -189,10 +161,6 @@ class _SessionDetailsState extends State<SessionDetails> {
                 BottomNavigationBarItem(
                   label: 'Delete',
                   icon: Icon(Icons.delete),
-                ),
-                BottomNavigationBarItem(
-                  label: 'Save',
-                  icon: Icon(Icons.save),
                 ),
               ],
             ),

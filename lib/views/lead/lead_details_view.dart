@@ -7,14 +7,15 @@ import 'dart:developer' as dev;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mca_leads_management_mobile/models/entities/api/lead/lead_req.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
+import 'package:mca_leads_management_mobile/models/interfaces/lead_interface.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_lost_dialog.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_schedule_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
-import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_view_arg.dart';
@@ -43,6 +44,7 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
   final followupDateController = TextEditingController();
   late ScrollController _controller;
   int _currentIndex = 0;
+  late LeadUpdateRequest leadUpdateRequest;
 
   final _panelsExpansionStatus = [false, false, false];
 
@@ -59,7 +61,7 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
   }
 
   Future<void> _getLead(String leadId) async {
-    leadFuture = BackendInterface().getLead(leadId);
+    leadFuture = LeadInterface().getLead(leadId);
     leadFuture.whenComplete(() => setState(() {}));
   }
 
@@ -94,6 +96,9 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
             );
           }
           lead = snapshot.data;
+          leadUpdateRequest = LeadUpdateRequest(
+              lead!.customerName ?? "", lead!.offeredPrice ?? 0,
+              lead!.requestedPrice ?? 0, lead!.payoffStatus ?? '', '');
           return Scaffold(
               appBar: AppBar(
                 backgroundColor: lightColor.primary,
@@ -144,7 +149,7 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                           builder: (BuildContext context) =>
                               LeadFollowUpDialog(
                                   onSubmit: (followUpInfo) {
-                                    BackendInterface().putLeadAsFollowUp(
+                                    LeadInterface().setForFollowUp(
                                         lead!.id, followUpInfo);
                                   }
                               ));
@@ -155,7 +160,7 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                           builder: (BuildContext context) =>
                               LeadUnAnsweredDialog(
                                   onSubmit: (unansweredInfo) {
-                                    BackendInterface().putLeadAsUnAnswered(
+                                    LeadInterface().setAsUnAnswered(
                                         lead!.id, unansweredInfo);
                                   }
                               ));
@@ -166,10 +171,14 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                           builder: (BuildContext context) =>
                               LeadLostDialog(
                                   onSubmit: (lostReason) {
-                                    BackendInterface().putLeadAsLost(
+                                    LeadInterface().setAsLost(
                                         lead!.id, lostReason);
                                   }
                               ));
+                      break;
+                    case 4:
+                      LeadInterface().update(lead!.id, leadUpdateRequest);
+                      Navigator.pop(context);
                       break;
                   }
 
@@ -420,6 +429,7 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                                               initialValue:
                                               (lead!.offeredPrice ?? 0)
                                                   .toString(),
+                                              onChanged: (text) => leadUpdateRequest.offerPrice = int.parse(text),
                                               decoration: InputDecoration(
                                                 labelText: "Offered Price",
                                                 border: theme
@@ -445,6 +455,7 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                                               initialValue:
                                               (lead!.requestedPrice ?? 0)
                                                   .toString(),
+                                              onChanged: (text) => leadUpdateRequest.requestedPrice = int.parse(text),
                                               decoration: InputDecoration(
                                                 labelText: "Requested Price",
                                                 border: theme
@@ -490,6 +501,7 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                                             child: TextFormField(
                                               initialValue: lead!
                                                   .customerName ?? "",
+                                              onChanged: (text) => leadUpdateRequest.customerName = text,
                                               decoration: InputDecoration(
                                                 labelText: "Customer Name",
                                                 border: theme
@@ -514,6 +526,7 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                                             child: TextFormField(
                                               initialValue: lead!
                                                   .payoffStatus ?? "",
+                                              onChanged: (text) => leadUpdateRequest.payoffStatus = text,
                                               decoration: InputDecoration(
                                                 labelText: "Payoff Status",
                                                 border: theme
@@ -536,6 +549,7 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                                             margin: const EdgeInsets.only(
                                                 top: 8, left: 8, right: 8),
                                             child: TextFormField(
+                                              onChanged: (text) => leadUpdateRequest.comment = text,
                                               decoration: InputDecoration(
                                                 labelText: "Comment",
                                                 border: theme

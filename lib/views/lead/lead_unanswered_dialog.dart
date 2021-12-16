@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
+import 'package:mca_leads_management_mobile/models/entities/api/lead/lead_req.dart';
+import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/text_style.dart';
 import 'package:mca_leads_management_mobile/widgets/button/button.dart';
-import 'package:mca_leads_management_mobile/widgets/common/notifications.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
-import 'package:mca_leads_management_mobile/widgets/textfield/date_text.dart';
 
 class LeadUnAnsweredDialog extends StatefulWidget {
   final ValueChanged<LeadUnAnsweredInfo> onSubmit;
@@ -20,7 +18,7 @@ class _LeadUnAnsweredDialogState extends State<LeadUnAnsweredDialog> {
 
   late CustomTheme customTheme;
   late ThemeData theme;
-  LeadUnAnsweredInfo unAnsweredInfo = LeadUnAnsweredInfo(false, false);
+  LeadUnAnsweredInfo unAnsweredInfo = LeadUnAnsweredInfo(currentUser!.username, false, false);
 
   @override
   void initState() {

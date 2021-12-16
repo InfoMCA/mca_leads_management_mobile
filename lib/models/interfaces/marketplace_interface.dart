@@ -2,7 +2,7 @@ import 'dart:developer' as dev;
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:mca_leads_management_mobile/models/entities/api/backend_req.dart';
 import 'package:mca_leads_management_mobile/models/entities/api/marketplace/marketplace_req.dart';
 import 'package:mca_leads_management_mobile/models/entities/api/marketplace/marketplace_resp.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
@@ -11,55 +11,11 @@ import 'package:mca_leads_management_mobile/models/entities/marketplace/inventor
 import 'package:mca_leads_management_mobile/models/entities/marketplace/listing.dart';
 import 'package:mca_leads_management_mobile/models/entities/marketplace/marketplace.dart';
 import 'package:mca_leads_management_mobile/models/entities/marketplace/offer.dart';
+import 'package:mca_leads_management_mobile/models/interfaces/rest_api_interface.dart';
 
-class MarketplaceInterface {
-  final String marketplaceEndpoint = dotenv
-      .env['API_MARKETPLACE_APP_REQUEST'] ?? "";
+class MarketplaceInterface extends RestAPIInterface {
 
-  Dio dio = Dio();
-
-  Future<Response> sendGetReq(String path) async {
-    try {
-      dev.log("Get Req:" + path);
-      Response response = await dio.get(marketplaceEndpoint + path);
-      if (response.statusCode == HttpStatus.ok) {
-        return response;
-      }
-      throw ("Error code: ${response.statusCode}");
-    } catch (e, s) {
-      dev.log('Get Leads Error:' + e.toString(), stackTrace: s);
-      throw (e.toString());
-    }
-  }
-
-  Future<Response> sendPatchReq(String path) async {
-    try {
-      Response response = await dio.patch(marketplaceEndpoint + path);
-      if (response.statusCode == HttpStatus.ok) {
-        return response;
-      }
-      throw ("Error code: ${response.statusCode}");
-    } catch (e, s) {
-      dev.log('Get Leads Error:' + e.toString(), stackTrace: s);
-      throw (e.toString());
-    }
-  }
-
-  Future<Response> sendPostReq(String path, String data) async {
-    try {
-      dev.log("Path: $path");
-      dev.log(data);
-      Response response = await dio.post(
-          marketplaceEndpoint + path, data: data);
-      if (response.statusCode == HttpStatus.ok) {
-        return response;
-      }
-      throw ("Error code: ${response.statusCode}");
-    } catch (e, s) {
-      dev.log('Get Leads Error:' + e.toString(), stackTrace: s);
-      throw (e.toString());
-    }
-  }
+  MarketplaceInterface() : super(CommandObject.inventory);
 
   Future<GetInventoryResponse> getInventories() async {
     Response response = await sendGetReq(
@@ -175,7 +131,7 @@ class MarketplaceInterface {
 
   void sendSessionToInventory(String sessionId) async {
     sendPostReq(
-        "vehicles/from-session?sessionId=$sessionId&dealerId=$currentDealer",
+        "vehicles/from-session?sessionId=$sessionId&dealerId=${currentUser!.dealerId}",
         '').whenComplete(() {
       InventoryItem inventoryItem = InventoryItem(
           sessionId,

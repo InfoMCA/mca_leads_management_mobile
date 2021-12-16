@@ -1,27 +1,8 @@
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:mca_leads_management_mobile/views/lead/lead_details_view.dart';
-import 'package:mca_leads_management_mobile/views/marketplace/inventory_details_view.dart';
-import 'package:mca_leads_management_mobile/views/marketplace/listing_details_view.dart';
-import 'package:mca_leads_management_mobile/views/session/session_details.dart';
-import 'package:mca_leads_management_mobile/views/session/session_details_complete.dart';
 
 part 'lead.g.dart';
 
-@JsonSerializable()
-class LeadFollowUpInfo {
-  String comment;
-  DateTime date;
-
-  LeadFollowUpInfo(this.comment, this.date);
-}
-
-class LeadUnAnsweredInfo {
-  bool sendSms;
-  bool leftMessage;
-
-  LeadUnAnsweredInfo(this.sendSms, this.leftMessage);
-}
 
 
 @JsonSerializable()

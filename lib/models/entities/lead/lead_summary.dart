@@ -5,6 +5,10 @@ import 'package:json_annotation/json_annotation.dart';
 part 'lead_summary.g.dart';
 
 enum LeadViewTag {
+  callerReady,
+  callerFollowUp,
+  callerDenied,
+  callerLost,
   approvalBuyNow,
   approvalAuction,
   approvalDealMade,
@@ -28,16 +32,28 @@ enum LeadViewTag {
 extension LeadViewTagExt on LeadViewTag {
   String getAbbrv() {
     switch (this) {
+      case LeadViewTag.callerReady:
+        return "CR";
+      case LeadViewTag.callerFollowUp:
+        return "CF";
+      case LeadViewTag.callerDenied:
+        return "CD";
+      case LeadViewTag.callerLost:
+        return "L";
       case LeadViewTag.approvalBuyNow:
+        return "B";
       case LeadViewTag.followUpBuyNow:
         return "B";
       case LeadViewTag.approvalAuction:
+        return "A";
       case LeadViewTag.followUpAuction:
+        return "A";
       case LeadViewTag.appraisal:
         return "A";
       case LeadViewTag.approvalDealMade:
         return "D";
       case LeadViewTag.approvalPotentialDeal:
+        return "P";
       case LeadViewTag.followUpAppraisal:
         return "P";
       case LeadViewTag.ready:
@@ -45,6 +61,7 @@ extension LeadViewTagExt on LeadViewTag {
       case LeadViewTag.activeProgress:
         return "P";
       case LeadViewTag.activePendingApproval:
+        return "A";
       case LeadViewTag.complete:
         return "C";
       case LeadViewTag.approved:
@@ -65,6 +82,8 @@ extension LeadViewTagExt on LeadViewTag {
 
   Color getBackgroundColor() {
     switch (this) {
+      case LeadViewTag.callerLost:
+      case LeadViewTag.callerDenied:
       case LeadViewTag.approvalBuyNow:
       case LeadViewTag.approvalAuction:
       case LeadViewTag.followUpBuyNow:
@@ -73,6 +92,7 @@ extension LeadViewTagExt on LeadViewTag {
       case LeadViewTag.rejected:
       case LeadViewTag.inventory:
         return const Color.fromARGB(255, 255, 236, 235);
+      case LeadViewTag.callerFollowUp:
       case LeadViewTag.approvalDealMade:
       case LeadViewTag.followUpAppraisal:
       case LeadViewTag.appraisal:
@@ -82,6 +102,7 @@ extension LeadViewTagExt on LeadViewTag {
       case LeadViewTag.listing:
       case LeadViewTag.transferIn:
         return const Color.fromARGB(255, 234, 241, 254);
+      case LeadViewTag.callerReady:
       case LeadViewTag.approvalPotentialDeal:
       case LeadViewTag.complete:
       case LeadViewTag.transferOut:
@@ -91,6 +112,8 @@ extension LeadViewTagExt on LeadViewTag {
 
   Color getForegroundColor() {
     switch (this) {
+      case LeadViewTag.callerLost:
+      case LeadViewTag.callerDenied:
       case LeadViewTag.approvalBuyNow:
       case LeadViewTag.approvalAuction:
       case LeadViewTag.followUpBuyNow:
@@ -99,6 +122,7 @@ extension LeadViewTagExt on LeadViewTag {
       case LeadViewTag.rejected:
       case LeadViewTag.inventory:
         return const Color.fromARGB(255, 245, 45, 59);
+      case LeadViewTag.callerFollowUp:
       case LeadViewTag.approvalDealMade:
       case LeadViewTag.followUpAppraisal:
       case LeadViewTag.appraisal:
@@ -108,6 +132,7 @@ extension LeadViewTagExt on LeadViewTag {
       case LeadViewTag.listing:
       case LeadViewTag.transferIn:
         return const Color.fromARGB(255, 44, 121, 244);
+      case LeadViewTag.callerReady:
       case LeadViewTag.approvalPotentialDeal:
       case LeadViewTag.complete:
       case LeadViewTag.transferOut:

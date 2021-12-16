@@ -6,18 +6,6 @@ part of 'lead.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-LeadFollowUpInfo _$LeadFollowUpInfoFromJson(Map<String, dynamic> json) =>
-    LeadFollowUpInfo(
-      json['comment'] as String,
-      DateTime.parse(json['date'] as String),
-    );
-
-Map<String, dynamic> _$LeadFollowUpInfoToJson(LeadFollowUpInfo instance) =>
-    <String, dynamic>{
-      'comment': instance.comment,
-      'date': instance.date.toIso8601String(),
-    };
-
 Lead _$LeadFromJson(Map<String, dynamic> json) => Lead(
       id: json['id'] as String,
       name: json['name'] as String,

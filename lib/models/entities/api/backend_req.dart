@@ -4,7 +4,7 @@ import 'package:mca_leads_management_mobile/models/entities/session/session.dart
 
 part 'backend_req.g.dart';
 
-enum CommandObject { user, region, lead, session, inventory, listing, offer }
+enum CommandObject { user, region, lead, session, inventory, listing, offer, transport }
 
 enum CommandIntent {
   create,

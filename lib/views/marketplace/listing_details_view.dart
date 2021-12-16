@@ -5,6 +5,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:mca_leads_management_mobile/models/entities/api/backend_resp.dart';
 import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
+import 'package:mca_leads_management_mobile/models/interfaces/session_interface.dart';
 import 'package:mca_leads_management_mobile/utils/spacing.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
@@ -40,27 +41,6 @@ class _ListingDetailViewState extends State<ListingDetailView> {
   late DateTime scheduleDate;
   late TimeOfDay scheduleTime;
 
-  Future<void> _getInspector() async {
-    try {
-      inspectors.clear();
-      regionController.text = '';
-      inspector = '';
-
-      BackendResp backendResp =
-          await BackendInterface().getInspectors(session!.zipCode);
-      setState(() {
-        inspectors.addAll(backendResp.inspectors!
-            .where((element) => element.isNotEmpty)
-            .toList());
-        regionController.text = backendResp.region!;
-      });
-    } catch (e, s) {
-      showSnackBar(
-          context: context,
-          text: 'There is no inspector working in the selected area');
-    }
-  }
-
   _validate(
     value,
   ) {
@@ -79,7 +59,7 @@ class _ListingDetailViewState extends State<ListingDetailView> {
   }
 
   Future<void> _getSession(String sessionId) async {
-    sessionFuture = BackendInterface().getSession(sessionId);
+    sessionFuture = SessionInterface().get(sessionId);
     sessionFuture.whenComplete(() => setState(() {}));
   }
 

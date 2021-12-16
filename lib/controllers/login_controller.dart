@@ -7,19 +7,16 @@ import 'package:mca_leads_management_mobile/utils/local_storage.dart';
 
 class LoginController {
   Future<String> loginWithUsernameAndPassword(String email, String password) async {
-    String response ;
+    AuthUserModel response ;
     try {
       response = await BackendInterface().checkLoginCredentials(email, password);
-      if (response.isEmpty) {
-        currentUser = AuthUserModel(
-          username: email,
-        );
-        LocalStorage.saveObject(type: ObjectType.driver, object: currentUser);
-        Modular.to.popAndPushNamed('/home');
-      } else {
-        currentUser = null;
-      }
-      return response;
+      currentUser = AuthUserModel(
+        username: email,
+        dealerId: response.dealerId
+      );
+      LocalStorage.saveObject(type: ObjectType.driver, object: currentUser);
+      Modular.to.popAndPushNamed('/home');
+      return "";
     } catch (e) {
       log(e.toString());
       return e.toString();
