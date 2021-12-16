@@ -2,7 +2,7 @@
     package="com.mca.mca_leads_management_mobile">
    <application
         android:label="mca_leads_management_mobile"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
