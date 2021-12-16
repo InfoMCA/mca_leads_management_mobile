@@ -5,9 +5,9 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mca_leads_management_mobile/models/entities/api/lead/lead_req.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
-import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
+import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/common_interface.dart';
-import 'package:mca_leads_management_mobile/models/interfaces/lead_interface.dart';
+import 'package:mca_leads_management_mobile/models/interfaces/session_interface.dart';
 import 'package:mca_leads_management_mobile/utils/spacing.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
@@ -19,16 +19,16 @@ import 'package:mca_leads_management_mobile/widgets/textfield/time_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:us_states/us_states.dart';
 
-class LeadScheduleView extends StatefulWidget {
-  final Lead lead;
-  static String routeName = '/home/lead-schedule';
-  const LeadScheduleView({Key? key, required this.lead}) : super(key: key);
+class SessionScheduleView extends StatefulWidget {
+  final Session session;
+  static String routeName = '/home/session-schedule';
+  const SessionScheduleView({Key? key, required this.session}) : super(key: key);
 
   @override
-  _LeadScheduleViewState createState() => _LeadScheduleViewState();
+  _SessionScheduleViewState createState() => _SessionScheduleViewState();
 }
 
-class _LeadScheduleViewState extends State<LeadScheduleView> {
+class _SessionScheduleViewState extends State<SessionScheduleView> {
   late CustomTheme customTheme;
   late ThemeData theme;
   final regionController = TextEditingController();
@@ -41,7 +41,6 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
   late int inspectionTime;
   late DateTime scheduleDate;
   late TimeOfDay scheduleTime;
-  late String state;
 
 
   Future<void> _getInspector() async {
@@ -49,7 +48,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
       inspectors.clear();
       regionController.text = '';
       GetInspectorsResp getInspectorsResp = await CommonInterface().getInspectors(
-          widget.lead.zipCode!);
+          widget.session.zipCode);
       setState(() {
         inspectors.addAll(getInspectorsResp.inspectors
             .where((element) => element.isNotEmpty).toList());
@@ -92,21 +91,16 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
     _focus.addListener(_onFocusChange);
     scheduleTime = TimeOfDay.now();
     scheduleDate = DateTime.now();
-    regionController.text = widget.lead.region!;
-    if (widget.lead.state != null) {
-      state = widget.lead.state!;
-    } else {
-      state = 'CA';
-    }
+    regionController.text = widget.session.region!;
     leadDispatchRequest =  LeadDispatchRequest(
         currentUser!.username,
         "",
-        widget.lead.customerName ?? "",
-        widget.lead.address1,
-        widget.lead.address2,
-        widget.lead.city,
-        state,
-        widget.lead.zipCode ?? "",
+        widget.session.customerName ?? "",
+        widget.session.address1,
+        widget.session.address2,
+        widget.session.city,
+        widget.session.state,
+        widget.session.zipCode,
         regionController.text,
         "",
         "",
@@ -141,7 +135,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
               Padding(
                 padding: const EdgeInsets.only(right: 16),
                 child: InkWell(
-                  onTap: () => _makePhoneCall(widget.lead.mobileNumber),
+                  onTap: () => _makePhoneCall(widget.session.phone),
                   child: Icon(
                     Icons.phone,
                     color: theme.backgroundColor,
@@ -150,7 +144,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
               ),
             ],
             title:
-            FxText.sh1(widget.lead.name, fontWeight: 600,
+            FxText.sh1("Schedule Session", fontWeight: 600,
                 color: theme.backgroundColor),
           ),
           floatingActionButton: FloatingActionButton(
@@ -162,7 +156,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                   scheduleDate = DateTime(
                       scheduleDate.year, scheduleDate.month, scheduleDate.day,
                       scheduleTime.hour, scheduleTime.minute).toUtc();
-                  LeadInterface().dispatch(widget.lead.id, leadDispatchRequest);
+                  SessionInterface().dispatch(widget.session.id, leadDispatchRequest);
                   Navigator.popUntil(context, ModalRoute.withName('/home'));
                 }
               },
@@ -182,7 +176,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                   Container(
                       margin: const EdgeInsets.only(
                           top: 16, left: 16, right: 16, bottom: 16),
-                      child: FxText.sh1(widget.lead.name, fontWeight: 700)
+                      child: FxText.sh1(widget.session.title, fontWeight: 700)
                   ),
                   ExpansionPanelList(
                     expandedHeaderPadding: const EdgeInsets.all(0),
@@ -215,7 +209,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                                     margin: const EdgeInsets.only(
                                         top: 8, left: 8, right: 8),
                                     child: TextFormField(
-                                      initialValue: widget.lead.customerName,
+                                      initialValue: widget.session.customerName,
                                       onChanged: (text) => leadDispatchRequest.customerName = text,
                                       validator: (value) => _validate(value),
                                       decoration: InputDecoration(
@@ -232,7 +226,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                                     margin: const EdgeInsets.only(
                                         top: 8, left: 8, right: 8),
                                     child: TextFormField(
-                                      initialValue: widget.lead.address1 ?? "",
+                                      initialValue: widget.session.address1,
                                       onChanged: (text) => leadDispatchRequest.address1 = text,
                                       validator: (value) => _validate(value),
                                       decoration: InputDecoration(
@@ -249,7 +243,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                                     margin: const EdgeInsets.only(
                                         top: 8, left: 8, right: 8),
                                     child: TextFormField(
-                                      initialValue: widget.lead.address2 ?? "",
+                                      initialValue: widget.session.address2 ?? "",
                                       onChanged: (text) => leadDispatchRequest.address2 = text,
                                       decoration: InputDecoration(
                                         labelText: "Address2",
@@ -265,7 +259,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                                     margin: const EdgeInsets.only(
                                         top: 8, left: 8, right: 8),
                                     child: TextFormField(
-                                      initialValue: widget.lead.city,
+                                      initialValue: widget.session.city,
                                       onChanged: (text) => leadDispatchRequest.city = text,
                                       validator: (value) => _validate(value),
                                       decoration: InputDecoration(
@@ -282,7 +276,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                                       margin: const EdgeInsets.only(
                                           top: 8, left: 8, right: 8),
                                       child: FxListText(label: 'State',
-                                          initialValue: state,
+                                          initialValue: widget.session.state,
                                           values: USStates.getAllAbbreviations(),
                                           onListChanged: (newState) {
                                             leadDispatchRequest.state = newState;
@@ -294,7 +288,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                                         top: 8, left: 8, right: 8),
                                     child: TextFormField(
                                       focusNode: _focus,
-                                      initialValue: widget.lead.zipCode,
+                                      initialValue: widget.session.zipCode,
                                       onChanged: (text) => leadDispatchRequest.zipCode = text,
                                       validator: (value) => _validate(value),
                                       decoration: InputDecoration(
@@ -350,7 +344,7 @@ class _LeadScheduleViewState extends State<LeadScheduleView> {
                                       margin: const EdgeInsets.only(
                                           top: 8, left: 8, right: 8),
                                       child: FxListText(label: 'Inspector',
-                                          initialValue: '',
+                                          initialValue: widget.session.staff,
                                           values: inspectors,
                                           onListChanged: (newState) {
                                             leadDispatchRequest.inspector = newState;

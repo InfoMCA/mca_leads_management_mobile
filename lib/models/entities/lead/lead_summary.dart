@@ -29,15 +29,19 @@ extension LeadViewTagExt on LeadViewTag {
   String getAbbrv() {
     switch (this) {
       case LeadViewTag.approvalBuyNow:
+        return "B";
       case LeadViewTag.followUpBuyNow:
         return "B";
       case LeadViewTag.approvalAuction:
+        return "A";
       case LeadViewTag.followUpAuction:
+        return "A";
       case LeadViewTag.appraisal:
         return "A";
       case LeadViewTag.approvalDealMade:
         return "D";
       case LeadViewTag.approvalPotentialDeal:
+        return "P";
       case LeadViewTag.followUpAppraisal:
         return "P";
       case LeadViewTag.ready:
@@ -45,6 +49,7 @@ extension LeadViewTagExt on LeadViewTag {
       case LeadViewTag.activeProgress:
         return "P";
       case LeadViewTag.activePendingApproval:
+        return "A";
       case LeadViewTag.complete:
         return "C";
       case LeadViewTag.approved:

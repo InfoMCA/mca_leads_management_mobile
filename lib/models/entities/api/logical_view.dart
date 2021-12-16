@@ -2,9 +2,9 @@ import 'package:mca_leads_management_mobile/views/lead/lead_details_view.dart';
 import 'package:mca_leads_management_mobile/views/marketplace/inventory_details_view.dart';
 import 'package:mca_leads_management_mobile/views/marketplace/marketplace_listing_details_view.dart';
 import 'package:mca_leads_management_mobile/views/marketplace/offer_details_view.dart';
-import 'package:mca_leads_management_mobile/views/session/session_complete_report.dart';
+import 'package:mca_leads_management_mobile/views/session/session_active_details.dart';
+import 'package:mca_leads_management_mobile/views/session/session_complete_details.dart';
 import 'package:mca_leads_management_mobile/views/session/session_details.dart';
-import 'package:mca_leads_management_mobile/views/session/session_details_complete.dart';
 
 enum LogicalView {
   approval,
@@ -66,7 +66,7 @@ extension LogicalViewExt on LogicalView {
       case LogicalView.dispatched:
         return SessionDetails.routeName;
       case LogicalView.active:
-        return SessionDetailsComplete.routeName;
+        return SessionActiveDetailsView.routeName;
       case LogicalView.completed:
         //return SessionDetailsComplete.routeName;
         return SessionDetailsCompleteReport.routeName;

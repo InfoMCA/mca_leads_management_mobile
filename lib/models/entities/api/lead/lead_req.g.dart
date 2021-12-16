@@ -114,3 +114,13 @@ Map<String, dynamic> _$LeadDispatchRequestToJson(
       'inspectionTime': instance.inspectionTime,
       'scheduleDate': instance.scheduleDate.toIso8601String(),
     };
+
+LeadSearchRequest _$LeadSearchRequestFromJson(Map<String, dynamic> json) =>
+    LeadSearchRequest(
+      json['keyword'] as String,
+    );
+
+Map<String, dynamic> _$LeadSearchRequestToJson(LeadSearchRequest instance) =>
+    <String, dynamic>{
+      'keyword': instance.keyword,
+    };

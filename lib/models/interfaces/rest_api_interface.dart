@@ -7,11 +7,11 @@ import 'package:mca_leads_management_mobile/models/entities/api/backend_req.dart
 
 class RestAPIInterface {
   final String leadEndpoint = dotenv.env['LEAD_SERVER'] ?? "";
-  final String sessionEndpoint = dotenv.env['API_SESSION_APP_REQUEST'] ?? "";
-  final String regionEndpoint = dotenv.env['API_REGION_APP_REQUEST'] ?? "";
-  final String userEndpoint = dotenv.env['USER_SERVER'] ?? "";
-  final String marketplaceEndpoint = dotenv
-      .env['API_MARKETPLACE_APP_REQUEST'] ?? "";
+  final String sessionEndpoint = dotenv.env['SESSION_SERVER'] ?? "";
+  final String transportEndpoint = dotenv.env['TRANSPORT_SERVER'] ?? "";
+  final String regionEndpoint = dotenv.env['USER_REGION_SERVER'] ?? "";
+  final String userEndpoint = dotenv.env['USER_REGION_SERVER'] ?? "";
+  final String marketplaceEndpoint = dotenv.env['MARKETPLACE_SERVER'] ?? "";
   late String endpoint;
   Dio dio = Dio();
 
@@ -29,6 +29,8 @@ class RestAPIInterface {
       case CommandObject.listing:
       case CommandObject.offer:
         return marketplaceEndpoint;
+      case CommandObject.transport:
+        return transportEndpoint;
     }
   }
 
@@ -50,6 +52,21 @@ class RestAPIInterface {
     }
   }
 
+  Future<Response> sendPutReq(String path, String data) async {
+    try {
+      dev.log("Put Req: $endpoint$path");
+      dev.log("Put Req: $data");
+      Response response = await dio.put(endpoint + path, data: data);
+      if (response.statusCode == HttpStatus.ok) {
+        dev.log(response.data.toString());
+        return response;
+      }
+      throw ("Error code: ${response.statusCode}");
+    } catch (e, s) {
+      dev.log('Get Leads Error:' + e.toString(), stackTrace: s);
+      throw (e.toString());
+    }
+  }
   Future<Response> sendPatchReq(String path) async {
     try {
       dev.log("Patch Req: $path");
@@ -85,6 +102,7 @@ class RestAPIInterface {
       dev.log("Post Req: $data");
       Response response = await dio.post(endpoint + path, data: data);
       if (response.statusCode == HttpStatus.ok) {
+        dev.log(response.data.toString());
         return response;
       }
       throw ("Error code: ${response.statusCode}");

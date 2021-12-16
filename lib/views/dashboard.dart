@@ -8,16 +8,19 @@ import 'dart:developer' as dev;
 
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:mca_leads_management_mobile/models/entities/api/backend_resp.dart';
 import 'package:mca_leads_management_mobile/models/entities/api/logical_view.dart';
 import 'package:mca_leads_management_mobile/models/entities/drawer_item.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
+import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead/lead_summary.dart';
-import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
+import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
+import 'package:mca_leads_management_mobile/models/interfaces/lead_interface.dart';
+import 'package:mca_leads_management_mobile/models/interfaces/session_interface.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_details_view.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_view_arg.dart';
+import 'package:mca_leads_management_mobile/views/session/session_details.dart';
 import 'package:mca_leads_management_mobile/widgets/common/notifications.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 
@@ -46,6 +49,10 @@ class _DashBoardState extends State<DashBoard> {
     newLeads?.forEach((lead) => _leadList.add(lead));
     dev.log("Leads size ($logicalView): ${_leadList.length.toString()}");
     setState(() {});
+  }
+
+  bool hasDetail(LeadViewTag leadViewTag) {
+    return leadViewTag != LeadViewTag.activeProgress;
   }
 
   @override
@@ -282,74 +289,78 @@ class _DashBoardState extends State<DashBoard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        elevation: 0,
-        title: FxText.sh1(logicalView.getName(), fontWeight: 600, color: theme.backgroundColor,),
-        iconTheme: IconThemeData(color: theme.backgroundColor),
-      ),
-      drawer: _buildDrawer(),
-      body: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.only(
-                left: 12, top: 8, right: 12, bottom: 8),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    color: Colors.grey[100],
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: "VIN or Last Six",
-                        border: theme.inputDecorationTheme.border,
-                        enabledBorder: theme.inputDecorationTheme
-                            .border,
-                        focusedBorder: theme.inputDecorationTheme
-                            .focusedBorder,
-                        prefixIcon:
-                        const Icon(MdiIcons.numeric, size: 24),
-                    )),
+        key: _scaffoldKey,
+        appBar: AppBar(
+          elevation: 0,
+          title: FxText.sh1(logicalView.getName(), fontWeight: 600,
+            color: theme.backgroundColor,),
+          iconTheme: IconThemeData(color: theme.backgroundColor),
+        ),
+        drawer: _buildDrawer(),
+        body: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.only(
+                  left: 12, top: 8, right: 12, bottom: 8),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      color: Colors.grey[100],
+                      child: TextField(
+                          onSubmitted: (text) {
+                            _searchLeadSession(context, text);
+                          },
+                          decoration: InputDecoration(
+                            hintText: "VIN or Last Six",
+                            border: theme.inputDecorationTheme.border,
+                            enabledBorder: theme.inputDecorationTheme
+                                .border,
+                            focusedBorder: theme.inputDecorationTheme
+                                .focusedBorder,
+                            prefixIcon:
+                            const Icon(MdiIcons.numeric, size: 24),
+                          )),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            child:
-            NotificationListener<ScrollNotification>(
-              onNotification: (ScrollNotification scrollInfo) {
-                if (scrollInfo.metrics.pixels ==
-                    scrollInfo.metrics.maxScrollExtent) {
-                  setState(() {});
-                }
-                return true;
-              },
-              child: _buildItemList(),
+            Expanded(
+              child:
+              NotificationListener<ScrollNotification>(
+                onNotification: (ScrollNotification scrollInfo) {
+                  if (scrollInfo.metrics.pixels ==
+                      scrollInfo.metrics.maxScrollExtent) {
+                    setState(() {});
+                  }
+                  return true;
+                },
+                child: _buildItemList(),
+              ),
             ),
-          ),
-        ],
-      )
+          ],
+        )
     );
   }
 
-  void _searchLead(context, keyword) async {
+  void _searchLeadSession(context, keyword) async {
     try {
-      BackendResp resp = await BackendInterface().searchLead(keyword);
-      Navigator.pushNamed(
-        context,
-        LeadDetailsView.routeName,
-        arguments: LeadViewArguments(
-            resp.lead!.id,
-            resp.lead!.id,
-            resp.lead!.vin,
-            resp.lead!.name,
-            LogicalView.approval
-        ),
-      );
-    } catch (e, s) {
-      showSnackBar(context: context, text: 'Lead was not found');
+      LeadSummary sessionSummary = await SessionInterface().search(keyword);
+      _leadList.clear();
+      _leadList.add(sessionSummary);
+      setState(() {});
+      return;
+    } catch (e) {
+      try {
+        LeadSummary leadSummary = await LeadInterface().search(keyword);
+        _leadList.clear();
+        _leadList.add(leadSummary);
+        setState(() {});
+      } catch (e) {
+        showSnackBar(context: context, text: 'Lead was not found');
+      }
     }
   }
 
@@ -383,5 +394,6 @@ class _DashBoardState extends State<DashBoard> {
       }
     );
   }
+
 
 }

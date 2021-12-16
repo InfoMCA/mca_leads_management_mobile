@@ -60,30 +60,30 @@ class Session {
   String id;
   String title;
   String vin;
-  String color;
-  int mileage;
+  String? color;
+  int? mileage;
   double estimatedCr;
-  int askingPrice;
+  int? askingPrice;
   int? offeredPrice;
   int? requestedPrice;
-  int mmr;
+  int? mmr;
   double? purchasedPrice;
   double? deductionsAmount;
   double? lenderAmount;
   double? customerAmount;
   double? withholdingAmount;
   DateTime? purchasedDate;
-  String address1;
+  String? address1;
   String? address2;
   String city;
   String state;
   String zipCode;
   String staff;
-  String region;
+  String? region;
   String service;
   String _scheduledDateTime;
   String phone;
-  String customerName;
+  String? customerName;
 
   DateTime? get scheduledDateTime => DateTime.tryParse(_scheduledDateTime);
 
@@ -123,7 +123,7 @@ class Session {
   Map<String, dynamic> toJson() => _$SessionToJson(this);
 
   String getAddress() {
-    String address = address1 + ", ";
+    String address = address1 ?? "" ", ";
     if (address2!.isNotEmpty) {
       address += address2! + ", ";
     }

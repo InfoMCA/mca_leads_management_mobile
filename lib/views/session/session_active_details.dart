@@ -3,37 +3,42 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:mca_leads_management_mobile/models/entities/api/session/session_req.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/marketplace_interface.dart';
+import 'package:mca_leads_management_mobile/models/interfaces/session_interface.dart';
 import 'package:mca_leads_management_mobile/utils/spacing.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_view_arg.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 
-class SessionDetailsComplete extends StatefulWidget {
+class SessionActiveDetailsView extends StatefulWidget {
   final LeadViewArguments args;
-  static String routeName = '/home/sessionComplete';
-  const SessionDetailsComplete({Key? key, required this.args}) : super(key: key);
+  static String routeName = '/home/session-active';
+  const SessionActiveDetailsView({Key? key, required this.args}) : super(key: key);
 
   @override
-  _SessionDetailsCompleteState createState() => _SessionDetailsCompleteState();
+  _SessionActiveDetailsViewState createState() => _SessionActiveDetailsViewState();
 }
 
-class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
+class _SessionActiveDetailsViewState extends State<SessionActiveDetailsView> {
   late CustomTheme customTheme;
   late ThemeData theme;
   late Session? session;
   late Future<Session?> sessionFuture;
+  late SessionApproveRequest sessionApproveRequest;
 
-  final _panelsExpansionStatus = [false, false, false];
+  final _panelsExpansionStatus = [false, true, true];
 
   var _currentIndex = 2;
 
+  final _controller = TextEditingController();
+
   Future<void> _getSession(String sessionId) async {
-    sessionFuture = BackendInterface().getSession(sessionId);
+    sessionFuture = SessionInterface().get(sessionId);
     sessionFuture.whenComplete(() => setState(() {}));
   }
 
@@ -48,7 +53,6 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
 
   @override
   Widget build(BuildContext context) {
-
     return FutureBuilder(
         future: sessionFuture,
         builder: (context, AsyncSnapshot<Session?> snapshot) {
@@ -68,6 +72,15 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
             );
           }
           session = snapshot.data;
+          sessionApproveRequest = SessionApproveRequest(
+              currentUser!.username,
+              session!.customerName ?? "",
+              (session!.offeredPrice ?? 0).toDouble(),
+              0.0,
+              0.0,
+              0.0,
+              0.0);
+          updatePrices();
           return Scaffold(
             appBar: AppBar(
               elevation: 0,
@@ -89,7 +102,7 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                 ),
               ],
               title: FxText.sh1(
-                "Session Details",
+                "Active Session Details",
                 fontWeight: 600,
                 color: theme.backgroundColor,
               ),
@@ -104,11 +117,12 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                 dev.log(value.toString());
                 switch (value) {
                   case 0:
-                    MarketplaceInterface().sendSessionToInventory(session!.id);
+                    SessionInterface().approve(session!.id, sessionApproveRequest);
                     Navigator.popUntil(
                         context, ModalRoute.withName('/home'));
                     break;
                   case 1:
+                    SessionInterface().reject(session!.id);
                     Navigator.popUntil(
                         context, ModalRoute.withName('/home'));
                     break;
@@ -123,12 +137,12 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
               },
               items: const [
                 BottomNavigationBarItem(
-                  label: 'Inventory',
-                  icon: Icon(Icons.store_mall_directory),
+                  label: 'Approve',
+                  icon: Icon(Icons.thumb_up_alt_rounded),
                 ),
                 BottomNavigationBarItem(
-                  label: 'Transfer',
-                  icon: Icon(Icons.emoji_transportation),
+                  label: 'Reject',
+                  icon: Icon(Icons.thumb_down_alt_rounded),
                 ),
                 BottomNavigationBarItem(
                   label: 'Close',
@@ -226,7 +240,8 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                                           top: 8, left: 8, right: 8),
                                       child: TextFormField(
                                         readOnly: true,
-                                        initialValue: session!.mileage.toString(),
+                                        initialValue: session!.mileage
+                                            .toString(),
                                         decoration: InputDecoration(
                                           labelText: "Mileage",
                                           border: theme
@@ -250,7 +265,8 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                                           top: 8, left: 8, right: 8),
                                       child: TextFormField(
                                         readOnly: true,
-                                        initialValue: session!.estimatedCr.toString(),
+                                        initialValue: session!.estimatedCr
+                                            .toString(),
                                         decoration: InputDecoration(
                                           labelText: "Estimated CR",
                                           border: theme
@@ -296,7 +312,8 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                                           top: 8, left: 8, right: 8),
                                       child: TextFormField(
                                         readOnly: true,
-                                        initialValue: session!.askingPrice.toString(),
+                                        initialValue: session!.askingPrice
+                                            .toString(),
                                         decoration: InputDecoration(
                                           labelText: "Listing Price",
                                           border: theme
@@ -344,7 +361,8 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                                           top: 8, left: 8, right: 8),
                                       child: TextFormField(
                                         readOnly: true,
-                                        initialValue: (session!.offeredPrice ?? 0).toString(),
+                                        initialValue: (session!.offeredPrice ??
+                                            0).toString(),
                                         decoration: InputDecoration(
                                           labelText: "Offered Price",
                                           border: theme
@@ -368,7 +386,8 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                                           top: 8, left: 8, right: 8),
                                       child: TextFormField(
                                         readOnly: true,
-                                        initialValue: (session!.requestedPrice ?? 0).toString(),
+                                        initialValue: (session!
+                                            .requestedPrice ?? 0).toString(),
                                         decoration: InputDecoration(
                                           labelText: "Requested Price",
                                           border: theme
@@ -412,8 +431,11 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                                       margin: const EdgeInsets.only(
                                           top: 8, left: 8, right: 8),
                                       child: TextFormField(
-                                        initialValue: session!.customerName,
-                                        readOnly: true,
+                                        initialValue: sessionApproveRequest
+                                            .customerName,
+                                        onChanged: (text) =>
+                                        sessionApproveRequest.customerName =
+                                            text,
                                         decoration: InputDecoration(
                                           labelText: "Customer Name",
                                           border: theme
@@ -436,13 +458,27 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                                       margin: const EdgeInsets.only(
                                           top: 8, left: 8, right: 8),
                                       child: TextFormField(
-                                        readOnly: true,
-                                        initialValue: ((session!.purchasedPrice ?? 0) - (session!.deductionsAmount ?? 0)).toString(),
+                                        readOnly: false,
+                                        initialValue: sessionApproveRequest
+                                            .purchasedPrice.toString(),
+                                        onChanged: (text) {
+                                          if (text.isNotEmpty) {
+                                            sessionApproveRequest
+                                                .purchasedPrice =
+                                                double.parse(text);
+                                            updatePrices();
+                                          }
+                                        },
+                                        keyboardType: TextInputType.number,
                                         decoration: InputDecoration(
                                           labelText: "Purchased Price",
-                                          border: theme.inputDecorationTheme.border,
-                                          enabledBorder: theme.inputDecorationTheme.border,
-                                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                                          border: theme.inputDecorationTheme
+                                              .border,
+                                          enabledBorder: theme
+                                              .inputDecorationTheme.border,
+                                          focusedBorder: theme
+                                              .inputDecorationTheme
+                                              .focusedBorder,
                                           prefixIcon: const Icon(
                                             Icons.price_change,
                                             size: 24,
@@ -454,13 +490,58 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                                       margin: const EdgeInsets.only(
                                           top: 8, left: 8, right: 8),
                                       child: TextFormField(
-                                        readOnly: true,
-                                        initialValue: (session!.lenderAmount ?? 0).toString(),
+                                        readOnly: false,
+                                        initialValue: sessionApproveRequest
+                                            .deductionsAmount.toString(),
+                                        onChanged: (text) {
+                                          if (text.isNotEmpty) {
+                                            sessionApproveRequest
+                                                .deductionsAmount =
+                                                double.parse(text);
+                                            updatePrices();
+                                          }
+                                        },
+                                        keyboardType: TextInputType.number,
+                                        decoration: InputDecoration(
+                                          labelText: "Deductions",
+                                          border: theme.inputDecorationTheme
+                                              .border,
+                                          enabledBorder: theme
+                                              .inputDecorationTheme.border,
+                                          focusedBorder: theme
+                                              .inputDecorationTheme
+                                              .focusedBorder,
+                                          prefixIcon: const Icon(
+                                            Icons.price_change,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8, left: 8, right: 8),
+                                      child: TextFormField(
+                                        readOnly: false,
+                                        initialValue: sessionApproveRequest
+                                            .lenderAmount.toString(),
+                                        onChanged: (text) {
+                                          if (text.isNotEmpty) {
+                                            sessionApproveRequest.lenderAmount =
+                                                double.parse(text);
+                                            updatePrices();
+                                          }
+                                        },
+                                        keyboardType: TextInputType.number,
                                         decoration: InputDecoration(
                                           labelText: "Lender",
-                                          border: theme.inputDecorationTheme.border,
-                                          enabledBorder: theme.inputDecorationTheme.border,
-                                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                                          border: theme.inputDecorationTheme
+                                              .border,
+                                          enabledBorder: theme
+                                              .inputDecorationTheme.border,
+                                          focusedBorder: theme
+                                              .inputDecorationTheme
+                                              .focusedBorder,
                                           prefixIcon: const Icon(
                                             Icons.price_change,
                                             size: 24,
@@ -472,13 +553,27 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                                       margin: const EdgeInsets.only(
                                           top: 8, left: 8, right: 8),
                                       child: TextFormField(
-                                        readOnly: true,
-                                        initialValue: (session!.withholdingAmount ?? 0).toString(),
+                                        readOnly: false,
+                                        initialValue: sessionApproveRequest
+                                            .withholdingAmount.toString(),
+                                        onChanged: (text) {
+                                          if (text.isNotEmpty) {
+                                            sessionApproveRequest
+                                                .withholdingAmount =
+                                                double.parse(text);
+                                            updatePrices();
+                                          }
+                                        },
+                                        keyboardType: TextInputType.number,
                                         decoration: InputDecoration(
                                           labelText: "Withholding",
-                                          border: theme.inputDecorationTheme.border,
-                                          enabledBorder: theme.inputDecorationTheme.border,
-                                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                                          border: theme.inputDecorationTheme
+                                              .border,
+                                          enabledBorder: theme
+                                              .inputDecorationTheme.border,
+                                          focusedBorder: theme
+                                              .inputDecorationTheme
+                                              .focusedBorder,
                                           prefixIcon: const Icon(
                                             Icons.price_change,
                                             size: 24,
@@ -491,12 +586,16 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                                           top: 8, left: 8, right: 8),
                                       child: TextFormField(
                                         readOnly: true,
-                                        initialValue: (session!.customerAmount ?? 0).toString(),
+                                        controller: _controller,
                                         decoration: InputDecoration(
                                           labelText: "Customer Check",
-                                          border: theme.inputDecorationTheme.border,
-                                          enabledBorder: theme.inputDecorationTheme.border,
-                                          focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                                          border: theme.inputDecorationTheme
+                                              .border,
+                                          enabledBorder: theme
+                                              .inputDecorationTheme.border,
+                                          focusedBorder: theme
+                                              .inputDecorationTheme
+                                              .focusedBorder,
                                           prefixIcon: const Icon(
                                             Icons.price_change,
                                             size: 24,
@@ -514,8 +613,17 @@ class _SessionDetailsCompleteState extends State<SessionDetailsComplete> {
                 ),
               ),
             ),
-        );
-      }
+          );
+        }
     );
+  }
+
+  void updatePrices() {
+    sessionApproveRequest.customerAmount =
+        sessionApproveRequest.purchasedPrice -
+            sessionApproveRequest.deductionsAmount -
+            sessionApproveRequest.lenderAmount -
+            sessionApproveRequest.withholdingAmount;
+    _controller.text = sessionApproveRequest.customerAmount.toString();
   }
 }
