@@ -1,4 +1,7 @@
 import 'package:enum_to_string/enum_to_string.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'report.g.dart';
 
 class ReportItem {
   String name;
@@ -52,6 +55,49 @@ class ReportItem {
   }
 }
 
+@JsonSerializable()
+class ReportItemV1 {
+  String name;
+  String? value;
+  String? comments;
+  String format;
+  String type;
+
+  ReportItemV1(this.name, this.value, this.comments, this.format, this.type);
+
+  factory ReportItemV1.fromJson(Map<String, dynamic> json) =>
+      _$ReportItemV1FromJson(json);
+
+  Map<String, dynamic> toJson() => _$ReportItemV1ToJson(this);
+}
+
+@JsonSerializable()
+class ReportV1 {
+  List<String> categories;
+  List<ReportItemV1> reportItems;
+
+  ReportV1(this.categories, this.reportItems);
+
+  factory ReportV1.fromJson(Map<String, dynamic> json) =>
+      _$ReportV1FromJson(json);
+
+  Map<String, dynamic> toJson() => _$ReportV1ToJson(this);
+
+}
+
+@JsonSerializable()
+class GetReportResponse {
+  String indexContents;
+  ReportV1 report;
+
+  GetReportResponse(this.indexContents, this.report);
+
+  factory GetReportResponse.fromJson(Map<String, dynamic> json) =>
+      _$GetReportResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$GetReportResponseToJson(this);
+}
+
 class Report {
   List<ReportItem> reportItems;
   String sessionId;
@@ -84,7 +130,11 @@ enum QuestionFormat {
 
 enum ResponseFormat { Text, Image, Pdf }
 
-extension on ResponseFormat {
+extension ResponseFormatExt on ResponseFormat {
+  String prettyString () {
+    return toString().substring(toString().lastIndexOf(".") + 1);
+  }
+
   String getMIMEName() {
     switch (this) {
       case ResponseFormat.Text:

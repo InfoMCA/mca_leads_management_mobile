@@ -4,23 +4,23 @@
 * Version : 1.0.0
 * */
 
-import 'dart:convert';
-import 'dart:developer';
+import 'dart:developer' as dev;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:mca_leads_management_mobile/models/entities/api/backend_resp.dart';
-import 'package:mca_leads_management_mobile/models/entities/report/report.dart';
+import 'package:mca_leads_management_mobile/models/entities/globals.dart';
+import 'package:mca_leads_management_mobile/models/entities/session/report.dart';
 import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
-import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/marketplace_interface.dart';
+import 'package:mca_leads_management_mobile/models/interfaces/session_interface.dart';
 import 'package:mca_leads_management_mobile/utils/spacing.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_colors.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_view_arg.dart';
+import 'package:mca_leads_management_mobile/views/session/session_transport_view.dart';
 import 'package:mca_leads_management_mobile/widgets/image/image_zoom_viewer.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 
@@ -42,12 +42,13 @@ class _SessionDetailsCompleteReportState extends State<SessionDetailsCompleteRep
   late Future<Session?> sessionFuture;
   final List<bool> _isExpanded = [false, false, false, false, false, false];
 
-  Report? reportQA;
-  List<String>? reportImages;
-  List<String>? reportPdfs;
+  ReportV1? reportQA;
+  List<String?>? reportImages;
+
+  var _currentIndex = 1;
 
   Future<void> _getSession(String sessionId) async {
-    sessionFuture = BackendInterface().getSession(sessionId);
+    sessionFuture = SessionInterface().get(sessionId);
     sessionFuture.whenComplete(() => setState(() {}));
   }
 
@@ -61,29 +62,19 @@ class _SessionDetailsCompleteReportState extends State<SessionDetailsCompleteRep
 
   void fetchInspectionQA() async {
     try {
-      await BackendInterface().getSessionObject(widget.args.id, ["index"]).then(
-              (BackendResp backendResp) async {
-            reportQA = Report.fromJson(json.decode(backendResp.indexContents));
-            reportImages = await _fetchInspectionObjects(reportQA!.reportItems
-                .where((element) => element.responseFormat == ResponseFormat.Image)
+      await SessionInterface().getSessionObject(widget.args.id).then(
+              (GetReportResponse reportQA) async {
+                this.reportQA = reportQA.report;
+            reportImages = reportQA.report.reportItems
+                .where((element) => element.value != 'NA')
+                .where((element) => element.type == ResponseFormat.Image.prettyString())
                 .map((e) => e.name)
-                .toList());
-            reportPdfs = await _fetchInspectionObjects(reportQA!.reportItems
-                .where((element) => element.responseFormat == ResponseFormat.Pdf)
-                .map((e) => e.name)
-                .toList());
+                .toList();
             setState(() {});
           });
     } catch (e, s) {
-      log("Error getting report items: " + e.toString(), stackTrace: s);
+      dev.log("Error getting report items: " + e.toString(), stackTrace: s);
     }
-  }
-
-  Future<List<String>?> _fetchInspectionObjects(List<String> imageList) async {
-    BackendResp backendResp =
-    await BackendInterface().getSessionObject(widget.args.id, imageList);
-    return backendResp.reportItemLinks
-      ?..removeWhere((element) => element.isEmpty);
   }
 
   @override
@@ -133,96 +124,128 @@ class _SessionDetailsCompleteReportState extends State<SessionDetailsCompleteRep
                 color: theme.backgroundColor,
               ),
             ),
-            floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  _showBottomSheet(context);
-                },
-                child: Icon(
-                  MdiIcons.menu,
-                  size: 26,
-                  color: theme.colorScheme.onPrimary,
+            bottomNavigationBar: BottomNavigationBar(
+              currentIndex: _currentIndex,
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: lightColor.primary,
+              selectedItemColor: Colors.white.withOpacity(.80),
+              unselectedItemColor: Colors.white.withOpacity(.80),
+              onTap: (value) {
+                dev.log(value.toString());
+                switch (value) {
+                  case 0:
+                    Navigator.pushNamed(
+                        context, SessionTransportView.routeName,
+                        arguments: session);
+                    break;
+                  case 1:
+                    Navigator.popUntil(
+                        context, ModalRoute.withName('/home'));
+                    break;
+                }
+
+                setState(() =>
+                _currentIndex = value); // Respond to item press.
+              },
+              items: const [
+                BottomNavigationBarItem(
+                  label: 'Transport',
+                  icon: Icon(Icons.emoji_transportation),
                 ),
-                elevation: 2,
-                backgroundColor:
-                theme.floatingActionButtonTheme.backgroundColor),
+                BottomNavigationBarItem(
+                  label: 'Close',
+                  icon: Icon(Icons.close),
+                ),
+              ],
+            ),
             body: SingleChildScrollView(
               child: Container(
                 padding: FxSpacing.all(20),
-                child: ExpansionPanelList(
-                  expansionCallback: (int index, bool isExpanded) {
-                    setState(() {
-                      _isExpanded[index] = !isExpanded;
-                    });
-                  },
+                child: Column(
                   children: [
-                    buildExpansionPanel(
-                        header:
-                        FxText.sh1("Vehicle Information", fontWeight: 600),
-                        child: Column(
-                          children: _buildVehicleInfo(),
-                        ),
-                        isExpanded: _isExpanded[0]),
-                    buildExpansionPanel(
-                        header: FxText.sh1("Price", fontWeight: 600),
-                        child: Column(
-                          children: _buildPriceInfo(),
-                        ),
-                        isExpanded: _isExpanded[1]),
-                    buildExpansionPanel(
-                        header: FxText.sh1("Inspection QA", fontWeight: 600),
-                        child: _getInspectionQA(),
-                        isExpanded: _isExpanded[2]),
-                    buildExpansionPanel(
-                        header:
-                        FxText.sh1("Inspection images", fontWeight: 600),
-                        child: _getInspectionGallery(),
-                        isExpanded: _isExpanded[3]),
-                    // buildExpansionPanel(
-                    //     header: FxText.sh1("Purchase report", fontWeight: 600),
-                    //     child: _getInspectionPdfs(),
-                    //     isExpanded: _isExpanded[4]),
-                    buildExpansionPanel(
-                        header:
-                        FxText.sh1("Customer Information", fontWeight: 600),
-                        child: Column(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(top: 8),
-                              child: TextFormField(
-                                initialValue: session.customerName,
-                                decoration: InputDecoration(
-                                  labelText: "Customer Name",
-                                  border: theme.inputDecorationTheme.border,
-                                  enabledBorder:
-                                  theme.inputDecorationTheme.border,
-                                  focusedBorder:
-                                  theme.inputDecorationTheme.focusedBorder,
-                                  prefixIcon: const Icon(
-                                      MdiIcons.accountChildOutline,
-                                      size: 24),
-                                ),
-                              ),
+                    Container(
+                        margin: const EdgeInsets.only(
+                            top: 16, left: 16, right: 16, bottom: 16),
+                        child: FxText.sh1(session.title, fontWeight: 700)
+                    ),
+                    ExpansionPanelList(
+                      expansionCallback: (int index, bool isExpanded) {
+                        setState(() {
+                          _isExpanded[index] = !isExpanded;
+                        });
+                      },
+                      children: [
+                        buildExpansionPanel(
+                            header:
+                            FxText.sh1("Vehicle Information", fontWeight: 600),
+                            child: Column(
+                              children: _buildVehicleInfo(),
                             ),
-                            Container(
-                              margin: const EdgeInsets.only(top: 8),
-                              child: TextFormField(
-                                initialValue: session.phone,
-                                decoration: InputDecoration(
-                                  labelText: "Customer Contact",
-                                  border: theme.inputDecorationTheme.border,
-                                  enabledBorder:
-                                  theme.inputDecorationTheme.border,
-                                  focusedBorder:
-                                  theme.inputDecorationTheme.focusedBorder,
-                                  prefixIcon: const Icon(
-                                      MdiIcons.gamepadCircleOutline,
-                                      size: 24),
-                                ),
-                              ),
+                            isExpanded: _isExpanded[0]),
+                        buildExpansionPanel(
+                            header: FxText.sh1("Price", fontWeight: 600),
+                            child: Column(
+                              children: _buildPriceInfo(),
                             ),
-                          ],
-                        ),
-                        isExpanded: _isExpanded[4])
+                            isExpanded: _isExpanded[1]),
+                        buildExpansionPanel(
+                            header: FxText.sh1("Inspection QA", fontWeight: 600),
+                            child: _getInspectionQA(),
+                            isExpanded: _isExpanded[2]),
+                        /*
+                        buildExpansionPanel(
+                            header:
+                            FxText.sh1("Inspection images", fontWeight: 600),
+                            child: _getInspectionGallery(),
+                            isExpanded: _isExpanded[3]),
+                         buildExpansionPanel(
+                             header: FxText.sh1("Purchase report", fontWeight: 600),
+                             child: _getInspectionPdfs(),
+                             isExpanded: _isExpanded[4]),*/
+                        buildExpansionPanel(
+                            header:
+                            FxText.sh1("Customer Information", fontWeight: 600),
+                            child: Column(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(top: 8),
+                                  child: TextFormField(
+                                    initialValue: session.customerName,
+                                    decoration: InputDecoration(
+                                      labelText: "Customer Name",
+                                      border: theme.inputDecorationTheme.border,
+                                      enabledBorder:
+                                      theme.inputDecorationTheme.border,
+                                      focusedBorder:
+                                      theme.inputDecorationTheme.focusedBorder,
+                                      prefixIcon: const Icon(
+                                          MdiIcons.accountChildOutline,
+                                          size: 24),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(top: 8),
+                                  child: TextFormField(
+                                    initialValue: session.phone,
+                                    decoration: InputDecoration(
+                                      labelText: "Customer Contact",
+                                      border: theme.inputDecorationTheme.border,
+                                      enabledBorder:
+                                      theme.inputDecorationTheme.border,
+                                      focusedBorder:
+                                      theme.inputDecorationTheme.focusedBorder,
+                                      prefixIcon: const Icon(
+                                          MdiIcons.gamepadCircleOutline,
+                                          size: 24),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            isExpanded: _isExpanded[4])
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -473,7 +496,7 @@ class _SessionDetailsCompleteReportState extends State<SessionDetailsCompleteRep
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: reportQA!.reportItems.map((e) {
-        if (e.responseFormat != ResponseFormat.Text || e.value.isEmpty) {
+        if (e.type != ResponseFormat.Text.prettyString() || e.value!.isEmpty) {
           return Container();
         }
         return Padding(
@@ -487,7 +510,7 @@ class _SessionDetailsCompleteReportState extends State<SessionDetailsCompleteRep
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
-                e.value,
+                e.value ?? "",
                 style: const TextStyle(color: AppColors.alizarinCrimson),
               )
             ],
@@ -512,49 +535,22 @@ class _SessionDetailsCompleteReportState extends State<SessionDetailsCompleteRep
           ),
         ),
       );
-    } else if (reportImages?.isEmpty ?? true) {
+    } else if (reportImages!.isEmpty) {
       return const Text("No objects to show");
     }
     return SizedBox(
       height: 200,
       child: ListView(
         scrollDirection: Axis.horizontal,
-        children: reportImages
-            ?.map((e) {
+        children: reportImages!.map((e) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: ImageZoomViewer(e, context: context),
+            child: ImageZoomViewer(e!, context: context),
           );
         })
             .toList()
-            .cast<Widget>() ??
-            [Container()],
+            .cast<Widget>(),
       ),
-    );
-  }
-
-  Widget _getInspectionPdfs() {
-    if (reportPdfs == null) {
-      return Container(
-        color: Colors.white,
-        child: SizedBox(
-          width: double.maxFinite,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              CircularProgressIndicator(),
-            ],
-          ),
-        ),
-      );
-    } else if (reportPdfs?.isEmpty ?? true) {
-      return const Text("No objects to show");
-    }
-    print(reportPdfs);
-    return Column(
-      children: reportPdfs?.map((e) => Text("pdf: " + e)).toList() ??
-          [const Text("Nothing to show")],
     );
   }
 }

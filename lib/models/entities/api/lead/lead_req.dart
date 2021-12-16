@@ -111,6 +111,17 @@ class LeadDispatchRequest {
       _$LeadDispatchRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$LeadDispatchRequestToJson(this);
+}
 
+@JsonSerializable()
+class LeadSearchRequest {
+  String keyword;
+
+  LeadSearchRequest(this.keyword);
+
+  factory LeadSearchRequest.fromJson(Map<String, dynamic> json) =>
+      _$LeadSearchRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$LeadSearchRequestToJson(this);
 }
 

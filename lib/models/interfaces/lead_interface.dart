@@ -33,43 +33,38 @@ class LeadInterface extends RestAPIInterface {
     return Lead.fromJson(response.data);
   }
 
-  Future<Response> putLeadAsFollowUp(String leadId,
+  Future<Response> setForFollowUp(String leadId,
       LeadFollowUpInfo followUpInfo) async {
     return sendPatchReqWithData("/leads/$leadId/manager-followup",
         json.encode(followUpInfo));
   }
 
-  Future<Response> putLeadAsUnAnswered(String leadId,
+  Future<Response> setAsUnAnswered(String leadId,
       LeadUnAnsweredInfo unAnsweredInfo) async {
     return sendPatchReqWithData("/leads/$leadId/manager-unanswered",
         json.encode(unAnsweredInfo));
   }
 
-  Future<Response> dispatchLead(String leadId,
+  Future<Response> dispatch(String leadId,
       LeadDispatchRequest leadDispatchRequest) async {
     return sendPatchReqWithData("/leads/$leadId/dispatch",
         json.encode(leadDispatchRequest));
   }
 
-  Future<Response> putLeadAsLost(String leadId, String lostReason) async {
+  Future<Response> setAsLost(String leadId, String lostReason) async {
     return sendPatchReqWithData("/leads/$leadId/manager-lost",
         json.encode(LeadLostRequest(currentUser!.username, lostReason)));
   }
 
-  Future<Response>  updateLead(String leadId, LeadUpdateRequest leadUpdateRequest) {
+  Future<Response> update(String leadId, LeadUpdateRequest leadUpdateRequest) {
     return sendPatchReqWithData("/leads/$leadId/update",
         json.encode(leadUpdateRequest));
   }
 
-
-/*
-  Future<BackendResp> searchLead(String keyword) async {
-    return sendPostReq(
-        BackendReq(
-            username: currentUser!.username,
-            object: CommandObject.lead,
-            intent: CommandIntent.search,
-            params: {"keyword": keyword}));
+  Future<LeadSummary> search(String keyword) async {
+    Response response = await sendPostReq("/leads/search",
+        json.encode(LeadSearchRequest(keyword)));
+    return LeadSummary.fromJson(response.data);
   }
-   */
+
 }

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "73618915473",
+    "project_id": "mca-management-marketplace",
+    "storage_bucket": "mca-management-marketplace.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:73618915473:android:8b9a867cf214de8a687f30",
+        "android_client_info": {
+          "package_name": "com.mca.mca_leads_management_mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "73618915473-n6l94tia77pep7k2n7445evqgksf6bv1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDF1wY7C7odXwRGy3KqRmNDZ_TgZE73dU8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "73618915473-n6l94tia77pep7k2n7445evqgksf6bv1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

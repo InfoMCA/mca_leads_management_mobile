@@ -5,19 +5,15 @@ import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mca_leads_management_mobile/models/entities/api/backend_req.dart';
 import 'package:mca_leads_management_mobile/models/entities/api/backend_resp.dart';
-import 'package:mca_leads_management_mobile/models/entities/api/logical_view.dart';
 import 'package:mca_leads_management_mobile/models/entities/auth_user.dart';
-import 'package:mca_leads_management_mobile/models/entities/globals.dart';
-import 'package:mca_leads_management_mobile/models/entities/lead/lead_summary.dart';
-import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
 
 class BackendInterface {
   final String leadEndpoint = dotenv.env['LEAD_SERVER'] ?? "";
-  final String sessionEndpoint = dotenv.env['API_SESSION_APP_REQUEST'] ?? "";
-  final String regionEndpoint = dotenv.env['API_REGION_APP_REQUEST'] ?? "";
-  final String userEndpoint = dotenv.env['USER_SERVER'] ?? "";
-  final String marketplaceEndpoint = dotenv
-      .env['API_MARKETPLACE_APP_REQUEST'] ?? "";
+  final String sessionEndpoint = dotenv.env['SESSION_SERVER'] ?? "";
+  final String transportEndpoint = dotenv.env['TRANSPORT_SERVER'] ?? "";
+  final String regionEndpoint = dotenv.env['USER_REGION_SERVER'] ?? "";
+  final String userEndpoint = dotenv.env['USER_REGION_SERVER'] ?? "";
+  final String marketplaceEndpoint = dotenv.env['MARKETPLACE_SERVER'] ?? "";
 
 
   String getEndPoint(BackendReq backendReq) {
@@ -35,6 +31,8 @@ class BackendInterface {
       case CommandObject.listing:
       case CommandObject.offer:
         return marketplaceEndpoint;
+      case CommandObject.transport:
+        return transportEndpoint;
     }
   }
   Dio dio = Dio();
@@ -69,57 +67,5 @@ class BackendInterface {
       dev.log(e.toString());
       rethrow;
     }
-  }
-
-  Future<List<LeadSummary>?> getSessions(LogicalView logicalView) async {
-    try {
-      BackendResp appResp = await sendPostReq(
-          BackendReq(
-              username: currentUser!.username,
-              object: CommandObject.session,
-              intent: CommandIntent.getAll,
-              params: {
-                'viewType': logicalView.getString()
-              }));
-      return appResp.leadSummaries;
-    } catch (e) {
-      return [];
-    }
-  }
-
-
-  Future<BackendResp> searchLead(String keyword) async {
-    return sendPostReq(
-        BackendReq(
-            username: currentUser!.username,
-            object: CommandObject.lead,
-            intent: CommandIntent.search,
-            params: {"keyword": keyword}));
-  }
-
-
-  Future<Session?> getSession(String sessionId) async {
-    BackendResp backendResp = await sendPostReq(
-        BackendReq(
-            username: currentUser!.username,
-            object: CommandObject.session,
-            intent: CommandIntent.getById,
-            objectId: sessionId));
-    return backendResp.session;
-  }
-
-  Future<BackendResp> getSessionObject(String sessionId, List<String> reportItems) async {
-    BackendReq backendReq = BackendReq(
-        username: currentUser!.username,
-        object: CommandObject.session,
-        intent: CommandIntent.action,
-        action: CommandAction.sessionReport,
-        objectId: sessionId,
-        params: {
-          "reportItems": reportItems.join(","),
-          "viewType": "active"
-        });
-    BackendResp resp = await sendPostReq(backendReq);
-    return resp;
   }
 }

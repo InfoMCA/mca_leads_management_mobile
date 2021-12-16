@@ -149,7 +149,7 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                           builder: (BuildContext context) =>
                               LeadFollowUpDialog(
                                   onSubmit: (followUpInfo) {
-                                    LeadInterface().putLeadAsFollowUp(
+                                    LeadInterface().setForFollowUp(
                                         lead!.id, followUpInfo);
                                   }
                               ));
@@ -160,7 +160,7 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                           builder: (BuildContext context) =>
                               LeadUnAnsweredDialog(
                                   onSubmit: (unansweredInfo) {
-                                    LeadInterface().putLeadAsUnAnswered(
+                                    LeadInterface().setAsUnAnswered(
                                         lead!.id, unansweredInfo);
                                   }
                               ));
@@ -171,13 +171,13 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                           builder: (BuildContext context) =>
                               LeadLostDialog(
                                   onSubmit: (lostReason) {
-                                    LeadInterface().putLeadAsLost(
+                                    LeadInterface().setAsLost(
                                         lead!.id, lostReason);
                                   }
                               ));
                       break;
                     case 4:
-                      LeadInterface().updateLead(lead!.id, leadUpdateRequest);
+                      LeadInterface().update(lead!.id, leadUpdateRequest);
                       Navigator.pop(context);
                       break;
                   }
