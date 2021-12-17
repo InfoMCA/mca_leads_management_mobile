@@ -43,6 +43,7 @@ const _$CommandObjectEnumMap = {
   CommandObject.inventory: 'inventory',
   CommandObject.listing: 'listing',
   CommandObject.offer: 'offer',
+  CommandObject.transport: 'transport',
 };
 
 const _$CommandIntentEnumMap = {

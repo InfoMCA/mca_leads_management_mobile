@@ -69,6 +69,8 @@ class _ListingDetailViewState extends State<ListingDetailView> {
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
     _getSession(widget.args.id);
+    scheduleDate = session!.scheduledTime!;
+    scheduleTime = TimeOfDay.fromDateTime(session!.scheduledTime!);
   }
 
   @override
@@ -445,18 +447,17 @@ class _ListingDetailViewState extends State<ListingDetailView> {
                         child: FxDateText(
                             label: 'Schedule Date',
                             initValue:
-                                session?.scheduledDateTime ?? DateTime.now(),
+                                scheduleDate,
                             onDateChanged: (newDate) =>
-                                session?.scheduledDate = newDate,
+                                scheduleDate = newDate,
                             validator: (value) => _validate(value))),
                     Container(
                         margin: const EdgeInsets.only(top: 8),
                         child: FxTimeText(
                             label: 'Schedule Time',
-                            initValue: TimeOfDay.fromDateTime(
-                                session?.scheduledDateTime ?? DateTime.now()),
+                            initValue: scheduleTime,
                             onTimeChanged: (newTime) =>
-                                session?.scheduledTime = newTime,
+                                scheduleTime = newTime,
                             validator: (value) => _validate(value))),
                   ],
                 ),

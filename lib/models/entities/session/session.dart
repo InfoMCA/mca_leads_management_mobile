@@ -72,6 +72,7 @@ class Session {
   double? lenderAmount;
   double? customerAmount;
   double? withholdingAmount;
+  DateTime? scheduledTime;
   DateTime? purchasedDate;
   String? address1;
   String? address2;
@@ -81,17 +82,8 @@ class Session {
   String staff;
   String? region;
   String service;
-  String _scheduledDateTime;
   String phone;
   String? customerName;
-
-  DateTime? get scheduledDateTime => DateTime.tryParse(_scheduledDateTime);
-
-  set scheduledDate(DateTime date) =>
-      (scheduledDateTime ?? DateTime.now()).setDate(date);
-
-  set scheduledTime(TimeOfDay timeOfDay) =>
-      (scheduledDateTime ?? DateTime.now()).setTime(timeOfDay);
 
   Session(
       {required this.id,
@@ -113,9 +105,7 @@ class Session {
       required this.zipCode,
       required this.region,
       required this.service,
-      required this.staff,
-      required String scheduledDateTime})
-      : _scheduledDateTime = scheduledDateTime;
+      required this.staff});
 
   factory Session.fromJson(Map<String, dynamic> json) =>
       _$SessionFromJson(json);

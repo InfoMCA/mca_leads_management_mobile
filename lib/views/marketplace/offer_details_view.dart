@@ -39,7 +39,7 @@ class _OfferDetailViewState extends State<OfferDetailView> {
   }
 
   Future<Null> _onRefresh() async {
-    await Future.delayed(Duration(milliseconds: 2000));
+    await Future.delayed(const Duration(milliseconds: 2000));
     _getOffers(widget.args.id, widget.args.logicalView);
     setState(() {});
   }
