@@ -11,6 +11,7 @@ import 'package:mca_leads_management_mobile/models/entities/api/lead/lead_req.da
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/lead_interface.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_lost_dialog.dart';
+import 'package:mca_leads_management_mobile/views/lead/lead_question_view.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_schedule_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -180,6 +181,11 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                       LeadInterface().update(lead!.id, leadUpdateRequest);
                       Navigator.pop(context);
                       break;
+                    case 5:
+                      Navigator.pushNamed(
+                          context, LeadQuestionView.routeName,
+                          arguments: lead);
+                      break;
                   }
 
                   setState(() =>
@@ -205,6 +211,10 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                   BottomNavigationBarItem(
                     label: 'Save',
                     icon: Icon(Icons.save),
+                  ),
+                  BottomNavigationBarItem(
+                    label: 'Questions',
+                    icon: Icon(Icons.question_answer),
                   ),
                 ],
               ),

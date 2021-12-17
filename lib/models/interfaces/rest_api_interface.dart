@@ -98,7 +98,7 @@ class RestAPIInterface {
 
   Future<Response> sendPostReq(String path, String data) async {
     try {
-      dev.log("Post Req: $path");
+      dev.log("Post Req: $endpoint$path");
       dev.log("Post Req: $data");
       Response response = await dio.post(endpoint + path, data: data);
       if (response.statusCode == HttpStatus.ok) {

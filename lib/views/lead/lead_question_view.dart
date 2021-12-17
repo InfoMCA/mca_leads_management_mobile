@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'dart:developer' as dev;
+import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
-import 'package:mca_leads_management_mobile/utils/spacing.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
@@ -95,18 +96,23 @@ class _LeadQuestionViewState extends State<LeadQuestionView> {
                       child: Ink(
                         color: theme.backgroundColor,
                         child: ListTile(
-                          subtitle: Row(
+                          leading: CircleAvatar(
+                            backgroundColor: lightColor.secondaryVariant,
+                            child: FxText.b1((questionList?[index] ?? "Q")[0].toUpperCase(),
+                                fontWeight: 600,
+                                color: Colors.white),
+                          ),
+                          title: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
+                              FxText.b1(StringUtils.camelCaseToUpperUnderscore(questionList?[index] ?? "").replaceAll("_", " "),
+                                  fontWeight: 700,
+                                  color: theme.colorScheme.onBackground),
                               FxText.b2(answerList?[index] ?? "",
-                                  fontSize: 13,
-                                  fontWeight: 500,
+                                  fontWeight: 600,
                                   color: theme.colorScheme.onBackground),
                             ],
                           ),
-                          title: FxText.b1(questionList?[index] ?? "",
-                              fontWeight: 700,
-                              color: theme.colorScheme.onBackground),
                         ),
                       ),
                     );

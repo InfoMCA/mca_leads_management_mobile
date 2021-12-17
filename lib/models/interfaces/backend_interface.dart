@@ -57,7 +57,7 @@ class BackendInterface {
   Future<AuthUserModel> checkLoginCredentials(String username, String password) async {
     try {
       Response response = await dio.get(userEndpoint
-          + "user?userName=$username&password=$password&role=manager");
+          + "/users?userName=$username&password=$password&role=manager");
       if (response.statusCode != HttpStatus.ok) {
         throw ("Incorrect username or password!");
       }

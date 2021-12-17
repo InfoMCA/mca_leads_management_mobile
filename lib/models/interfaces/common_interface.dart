@@ -18,4 +18,9 @@ class CommonInterface extends RestAPIInterface {
     dev.log(getLeadsResponse.toJson().toString());
     return getLeadsResponse;
   }
+
+  Future<void> updateToken(String fcmToken) async {
+    sendPatchReq(
+        "/users/updateToken?userName=${currentUser!.username}&fcmToken=$fcmToken");
+  }
 }

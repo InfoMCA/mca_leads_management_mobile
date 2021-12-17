@@ -118,6 +118,7 @@ class _SessionActiveDetailsViewState extends State<SessionActiveDetailsView> {
                 switch (value) {
                   case 0:
                     SessionInterface().approve(session!.id, sessionApproveRequest);
+                    MarketplaceInterface().sendSessionToInventory(session!.id);
                     Navigator.popUntil(
                         context, ModalRoute.withName('/home'));
                     break;

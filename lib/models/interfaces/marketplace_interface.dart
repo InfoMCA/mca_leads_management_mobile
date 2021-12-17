@@ -19,13 +19,13 @@ class MarketplaceInterface extends RestAPIInterface {
 
   Future<GetInventoryResponse> getInventories() async {
     Response response = await sendGetReq(
-        "inventory?dealerId=" + currentUser!.username);
+        "/inventory?dealerId=" + currentUser!.username);
     return GetInventoryResponse.fromJson(response.data);
   }
 
   Future<List<LeadSummary>> getInventoriesSummary() async {
     Response response = await sendGetReq(
-        "inventory/summary?userId=" + currentUser!.username);
+        "/inventory/summary?userId=" + currentUser!.username);
     GetInventorySummaryResponse inventorySummaryResponse = GetInventorySummaryResponse.fromJson(
         response.data);
     dev.log(inventorySummaryResponse.toJson().toString());
@@ -36,19 +36,19 @@ class MarketplaceInterface extends RestAPIInterface {
   }
 
   Future<InventoryVehicle> getInventoryVehicle(String inventoryId) async {
-    Response response = await sendGetReq("inventory/item?id=$inventoryId");
+    Response response = await sendGetReq("/inventory/item?id=$inventoryId");
     return InventoryVehicle.fromJson(response.data);
   }
 
   Future<List<Marketplace>> getMarketPlaces() async {
     Response response = await sendGetReq(
-        "marketplaces?userId=" + currentUser!.username);
+        "/marketplaces?userId=" + currentUser!.username);
     return GetMarketplacesResponse.fromJson(response.data).marketplaces;
   }
 
   Future<GetListingsResponse> getListings() async {
     Response response = await sendGetReq(
-        "listing/user?id=" + currentUser!.username);
+        "/listing/user?id=" + currentUser!.username);
     return GetListingsResponse.fromJson(response.data);
   }
 
@@ -56,7 +56,7 @@ class MarketplaceInterface extends RestAPIInterface {
     /*Response response = await sendGetReq(
         "listing/summary?id=" + currentUser!.username);*/
     Response response = await sendGetReq(
-        "listing/user?userId=" + currentUser!.username + "&states=" + ListingState.ACTIVE.getName());
+        "/listing/user?userId=" + currentUser!.username + "&states=" + ListingState.ACTIVE.getName());
 
     List<LeadSummary> leadSummaries = GetListingsResponse
         .fromJson(response.data)
@@ -72,7 +72,7 @@ class MarketplaceInterface extends RestAPIInterface {
     /*Response response = await sendGetReq(
         "listing/summary?id=" + currentUser!.username);*/
     Response response = await sendGetReq(
-        "listing/seller?userId=" + currentUser!.username + "&states=" + ListingState.ACTIVE.getName());
+        "/listing/seller?userId=" + currentUser!.username + "&states=" + ListingState.ACTIVE.getName());
 
     List<LeadSummary> leadSummaries = GetListingsResponse
         .fromJson(response.data)
@@ -94,7 +94,7 @@ class MarketplaceInterface extends RestAPIInterface {
       OfferState.SELLER_OFFER
     ].map((e) => e.getName()).join(",");
     Response response = await sendGetReq(
-        "listing/buyer?userId=" + currentUser!.username + "&states=" + states);
+        "/listing/buyer?userId=" + currentUser!.username + "&states=" + states);
 
     List<LeadSummary> leadSummaries = GetListingsResponse
         .fromJson(response.data)
@@ -109,29 +109,29 @@ class MarketplaceInterface extends RestAPIInterface {
   }
 
   Future<List<Offer>> getOffers(String listingId) async {
-    Response response = await sendGetReq("offers/listing?listingId=" + listingId);
+    Response response = await sendGetReq("/offers/listing?listingId=" + listingId);
     return GetOffersResponse.fromJson(response.data).offers;
   }
 
   Future<List<LeadSummary>> getOffersSummary() async {
     Response response = await sendGetReq(
-        "offers/summary?listingId=" + currentUser!.username);
+        "/offers/summary?listingId=" + currentUser!.username);
     return [];
   }
 
   Future<GetInventoryVehicleResponse> getInventory(String inventoryId) async {
-    Response response = await sendGetReq("inventory/item?id=" + inventoryId);
+    Response response = await sendGetReq("/inventory/item?id=" + inventoryId);
     return GetInventoryVehicleResponse.fromJson(response.data);
   }
 
   Future<GetListingResponse> getListing(String listingId) async {
-    Response response = await sendGetReq("listing?id=" + listingId);
+    Response response = await sendGetReq("/listing?id=" + listingId);
     return GetListingResponse.fromJson(response.data);
   }
 
   void sendSessionToInventory(String sessionId) async {
     sendPostReq(
-        "vehicles/from-session?sessionId=$sessionId&dealerId=${currentUser!.dealerId}",
+        "/inventory/from-session?sessionId=$sessionId&dealerId=${currentUser!.dealerId}",
         '').whenComplete(() {
       InventoryItem inventoryItem = InventoryItem(
           sessionId,
@@ -148,7 +148,7 @@ class MarketplaceInterface extends RestAPIInterface {
           DateTime.now().toUtc(),
           "",
           0);
-      sendPostReq('inventory/item?userId=' + currentUser!.username,
+      sendPostReq('/inventory/item?userId=' + currentUser!.username,
           json.encode(inventoryItem));
     });
   }
@@ -168,7 +168,7 @@ class MarketplaceInterface extends RestAPIInterface {
           DateTime.now().toUtc(),
           DateTime.now().toUtc(),
           listingNewReq.expirationDate.toUtc());
-      sendPostReq('listing?userId=' + currentUser!.username, json.encode(listing));
+      sendPostReq('/listing?userId=' + currentUser!.username, json.encode(listing));
     }
   }
 

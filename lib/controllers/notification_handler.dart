@@ -1,9 +1,11 @@
+import 'dart:developer' as dev;
 import 'dart:async';
 import 'dart:io';
 
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:mca_leads_management_mobile/models/interfaces/common_interface.dart';
 
 class NotificationHandler {
   static bool _isFirebaseServiceStarted = false;
@@ -17,8 +19,9 @@ class NotificationHandler {
       _isFirebaseServiceStarted = true;
       await Firebase.initializeApp();
       FirebaseMessaging messaging = FirebaseMessaging.instance;
-      print("fcm token");
-      print(await messaging.getToken());
+      String? fcmToken = await messaging.getToken();
+      dev.log("fcm token: $fcmToken");
+      CommonInterface().updateToken(fcmToken ?? "");
       // await AdminInterface() //TODO: Send FCM to server
       //     .registerUserFCM(currentStaff.username, await messaging.getToken());
       if (Platform.isIOS) {
@@ -33,15 +36,10 @@ class NotificationHandler {
         // if (event == null || event.data == null) {
         //   return;
         // }
-        NotificationData data = NotificationData.fromJson(event.data);
         String title =
             event.notification?.title ?? "Unknown notification title";
         String body = event.notification?.body ?? "Unknown notification body";
-        switch (data.eventType) {
-          //TODO: Check what to do on any other notification type
-          default:
-            return;
-        }
+        dev.log("notofcation title:" + title);
       }, onError: (error) {}, cancelOnError: false);
     } catch (e) {
       _isFirebaseServiceStarted = false;
