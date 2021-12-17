@@ -243,7 +243,7 @@ class _SessionDetailsCompleteReportState
                                 ),
                               ],
                             ),
-                            isExpanded: _isExpanded[4])
+                            isExpanded: _isExpanded[3])
                       ],
                     ),
                   ],
