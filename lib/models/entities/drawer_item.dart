@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 
 import 'api/logical_view.dart';
 
-enum DrawerPanel { leads, inspections, marketPlace, transport }
+enum DrawerPanel { leads, inspections }
 
 extension DrawPanelExt on DrawerPanel {
   String getName() {
@@ -11,10 +11,6 @@ extension DrawPanelExt on DrawerPanel {
         return "Leads";
       case DrawerPanel.inspections:
         return "Inspections";
-      case DrawerPanel.marketPlace:
-        return "MarketPlace";
-      case DrawerPanel.transport:
-        return "Transport";
     }
   }
 }

@@ -98,46 +98,6 @@ class _DashBoardState extends State<DashBoard> {
           logicalView: LogicalView.completed,
           icon: Icons.done_outline,
           position: 6),
-      DrawerItem(
-          panel: DrawerPanel.marketPlace,
-          logicalView: LogicalView.inventory,
-          icon: Icons.inventory,
-          position: 7),
-      DrawerItem(
-          panel: DrawerPanel.marketPlace,
-          logicalView: LogicalView.receivedOffer,
-          icon: MdiIcons.storeOutline,
-          position: 8),
-      DrawerItem(
-          panel: DrawerPanel.marketPlace,
-          logicalView: LogicalView.sentOffer,
-          icon: MdiIcons.storeOutline,
-          position: 9),
-      DrawerItem(
-          panel: DrawerPanel.marketPlace,
-          logicalView: LogicalView.marketplace,
-          icon: Icons.shopping_bag,
-          position: 10),
-      DrawerItem(
-          panel: DrawerPanel.transport,
-          logicalView: LogicalView.transferPlaced,
-          icon: Icons.emoji_transportation,
-          position: 11),
-      DrawerItem(
-          panel: DrawerPanel.transport,
-          logicalView: LogicalView.transferRequest,
-          icon: Icons.ev_station,
-          position: 12),
-      DrawerItem(
-          panel: DrawerPanel.transport,
-          logicalView: LogicalView.transferActive,
-          icon: Icons.car_rental,
-          position: 13),
-      DrawerItem(
-          panel: DrawerPanel.transport,
-          logicalView: LogicalView.transferCompleted,
-          icon: Icons.car_repair,
-          position: 14),
     ];
   }
 
