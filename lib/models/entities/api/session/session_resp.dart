@@ -5,8 +5,6 @@ import 'package:mca_leads_management_mobile/models/entities/session/session.dart
 
 part 'session_resp.g.dart';
 
-
-
 @JsonSerializable()
 class GetSessionsResponse {
   final List<Session> sessions;
@@ -17,5 +15,4 @@ class GetSessionsResponse {
       _$GetSessionsResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$GetSessionsResponseToJson(this);
-
 }

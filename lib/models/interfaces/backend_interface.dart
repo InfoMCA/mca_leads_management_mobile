@@ -15,10 +15,8 @@ class BackendInterface {
   final String userEndpoint = dotenv.env['USER_REGION_SERVER'] ?? "";
   final String marketplaceEndpoint = dotenv.env['MARKETPLACE_SERVER'] ?? "";
 
-
   String getEndPoint(BackendReq backendReq) {
     switch (backendReq.object) {
-
       case CommandObject.user:
         return userEndpoint;
       case CommandObject.region:
@@ -35,12 +33,13 @@ class BackendInterface {
         return transportEndpoint;
     }
   }
+
   Dio dio = Dio();
 
   Future<BackendResp> sendPostReq(BackendReq backendReq) async {
     try {
-      Response response =
-      await dio.post(getEndPoint(backendReq), data: json.encode(backendReq));
+      Response response = await dio.post(getEndPoint(backendReq),
+          data: json.encode(backendReq));
       BackendResp appResp = BackendResp.fromJson(response.data);
       dev.log(appResp.message.toString());
       if (response.statusCode == HttpStatus.ok) {
@@ -53,11 +52,11 @@ class BackendInterface {
     }
   }
 
-
-  Future<AuthUserModel> checkLoginCredentials(String username, String password) async {
+  Future<AuthUserModel> checkLoginCredentials(
+      String username, String password) async {
     try {
-      Response response = await dio.get(userEndpoint
-          + "/users?userName=$username&password=$password&role=manager");
+      Response response = await dio.get(userEndpoint +
+          "/users?userName=$username&password=$password&role=manager");
       if (response.statusCode != HttpStatus.ok) {
         throw ("Incorrect username or password!");
       }

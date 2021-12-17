@@ -36,8 +36,8 @@ class _LeadQuestionViewState extends State<LeadQuestionView> {
     theme = AppTheme.theme;
 
     conditionQuestion = json.decode(widget.lead.conditionQuestions ?? "");
-    conditionQuestion?.forEach((k, v) => questionList?.add('${k}'));
-    conditionQuestion?.forEach((k, v) => answerList?.add('${v}'));
+    conditionQuestion?.forEach((k, v) => questionList?.add(k));
+    conditionQuestion?.forEach((k, v) => answerList?.add(v));
   }
 
   Future<void> _makePhoneCall(String phoneNumber) async {
@@ -52,6 +52,7 @@ class _LeadQuestionViewState extends State<LeadQuestionView> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        backgroundColor: darkColor.primaryVariant,
         leading: InkWell(
           onTap: () => Navigator.of(context).pop(),
           child: Icon(
@@ -98,14 +99,18 @@ class _LeadQuestionViewState extends State<LeadQuestionView> {
                         child: ListTile(
                           leading: CircleAvatar(
                             backgroundColor: lightColor.secondaryVariant,
-                            child: FxText.b1((questionList?[index] ?? "Q")[0].toUpperCase(),
+                            child: FxText.b1(
+                                (questionList?[index] ?? "Q")[0].toUpperCase(),
                                 fontWeight: 600,
                                 color: Colors.white),
                           ),
                           title: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              FxText.b1(StringUtils.camelCaseToUpperUnderscore(questionList?[index] ?? "").replaceAll("_", " "),
+                              FxText.b1(
+                                  StringUtils.camelCaseToUpperUnderscore(
+                                          questionList?[index] ?? "")
+                                      .replaceAll("_", " "),
                                   fontWeight: 700,
                                   color: theme.colorScheme.onBackground),
                               FxText.b2(answerList?[index] ?? "",

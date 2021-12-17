@@ -90,6 +90,4 @@ class Vehicle {
   String title() {
     return "$year $make $model $trim";
   }
-
 }
-

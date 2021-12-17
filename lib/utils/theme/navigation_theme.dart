@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:mca_leads_management_mobile/utils/theme/theme_type.dart';
 
@@ -13,7 +12,6 @@ class NavigationTheme {
       unselectedItemIconColor,
       unselectedItemTextColor,
       unselectedItemColor;
-
 
   static NavigationTheme getNavigationTheme([ThemeType? themeType]) {
     NavigationTheme navigationBarTheme = NavigationTheme();

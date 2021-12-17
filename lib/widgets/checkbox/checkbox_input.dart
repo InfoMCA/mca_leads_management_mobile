@@ -13,7 +13,9 @@ class CheckboxWidget extends StatefulWidget {
   final List<String> values;
   final ValueChanged<List<bool>> onValueChanged;
 
-  const CheckboxWidget({Key? key, required this.values, required this.onValueChanged}) : super(key: key);
+  const CheckboxWidget(
+      {Key? key, required this.values, required this.onValueChanged})
+      : super(key: key);
   @override
   _CheckboxWidgetState createState() => _CheckboxWidgetState();
 }
@@ -37,26 +39,25 @@ class _CheckboxWidgetState extends State<CheckboxWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding:
-      const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       child: Column(
-          children: widget.values.mapIndexed((index, element) =>
-              Row(
-                children: <Widget>[
-                  Checkbox(
-                    activeColor: theme.colorScheme.primary,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        _checks[index] = value!;
-                        widget.onValueChanged(_checks);
-                      });
-                    },
-                    value: _checks[index],
-                  ),
-                  FxText.sh2(element, fontWeight: 600)
-                ],
-              )).toList()
-      ),
+          children: widget.values
+              .mapIndexed((index, element) => Row(
+                    children: <Widget>[
+                      Checkbox(
+                        activeColor: theme.colorScheme.primary,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            _checks[index] = value!;
+                            widget.onValueChanged(_checks);
+                          });
+                        },
+                        value: _checks[index],
+                      ),
+                      FxText.sh2(element, fontWeight: 600)
+                    ],
+                  ))
+              .toList()),
     );
   }
 }

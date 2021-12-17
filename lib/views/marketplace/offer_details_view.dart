@@ -41,9 +41,7 @@ class _OfferDetailViewState extends State<OfferDetailView> {
   Future<Null> _onRefresh() async {
     await Future.delayed(Duration(milliseconds: 2000));
     _getOffers(widget.args.id, widget.args.logicalView);
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   @override
@@ -85,8 +83,7 @@ class _OfferDetailViewState extends State<OfferDetailView> {
                   Container(height: 16),
                   FxCard(
                     margin: FxSpacing.fromLTRB(8, 0, 8, 0),
-                    color: offers![index].state
-                        .getBackgroundColor(logicalView),
+                    color: offers![index].state.getBackgroundColor(logicalView),
                     borderRadius: const BorderRadius.only(
                         topRight: Radius.circular(12),
                         bottomRight: Radius.circular(12),
@@ -214,8 +211,8 @@ class _OfferDetailViewState extends State<OfferDetailView> {
                               ),
                             ),
                             FxText.b2(
-                              DateFormat.yMMMd().format(
-                                  offers![index].lastModifiedTime),
+                              DateFormat.yMMMd()
+                                  .format(offers![index].lastModifiedTime),
                               fontWeight: 800,
                               color: Colors.black,
                               xMuted: true,
@@ -235,15 +232,17 @@ class _OfferDetailViewState extends State<OfferDetailView> {
                               ),
                             ),
                             FxText.b2(
-                              DateFormat.yMMMd().format(
-                                  offers![index].expirationTime),
+                              DateFormat.yMMMd()
+                                  .format(offers![index].expirationTime),
                               fontWeight: 800,
                               color: Colors.black,
                               xMuted: true,
                             ),
                           ],
                         ),
-                        const Divider(height: 16,),
+                        const Divider(
+                          height: 16,
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -256,15 +255,25 @@ class _OfferDetailViewState extends State<OfferDetailView> {
                                       offers![index].listingId);
                                 }
                               },
-                              child: Icon(Icons.check, color: isOfferAcceptable(offers![index].state) ? Colors.green : Colors.grey),
-                              backgroundColor: theme.backgroundColor,),
+                              child: Icon(Icons.check,
+                                  color: isOfferAcceptable(offers![index].state)
+                                      ? Colors.green
+                                      : Colors.grey),
+                              backgroundColor: theme.backgroundColor,
+                            ),
                             FxButton.rounded(
                               onPressed: () {
                                 Navigator.pop(context);
-                                MarketplaceInterface().rejectOffer(offers![index].id, offers![index].listingId);
+                                MarketplaceInterface().rejectOffer(
+                                    offers![index].id,
+                                    offers![index].listingId);
                               },
-                              child: const Icon(Icons.clear, color: Colors.red,),
-                              backgroundColor: theme.backgroundColor,),
+                              child: const Icon(
+                                Icons.clear,
+                                color: Colors.red,
+                              ),
+                              backgroundColor: theme.backgroundColor,
+                            ),
                             FxButton.rounded(
                                 onPressed: () {
                                   showDialog(
@@ -272,21 +281,29 @@ class _OfferDetailViewState extends State<OfferDetailView> {
                                       builder: (BuildContext context) =>
                                           OfferPriceDialog(
                                             onSubmit: (text) {
-                                              MarketplaceInterface().counterOffer(
-                                                  offers![index].id, offers![index].listingId, int.parse(text));
-                                              _getOffers(offers![index].listingId, logicalView);
-                                              setState(() {
-
-                                              });
-
-                                            },));
+                                              MarketplaceInterface()
+                                                  .counterOffer(
+                                                      offers![index].id,
+                                                      offers![index].listingId,
+                                                      int.parse(text));
+                                              _getOffers(
+                                                  offers![index].listingId,
+                                                  logicalView);
+                                              setState(() {});
+                                            },
+                                          ));
                                 },
-                                child: Icon(Icons.sell, color: theme
-                                    .primaryColor,),
+                                child: Icon(
+                                  Icons.sell,
+                                  color: theme.primaryColor,
+                                ),
                                 backgroundColor: theme.backgroundColor),
-                            FxButton.rounded(onPressed: () {},
-                                child: Icon(Icons.history, color: theme
-                                    .primaryColor,),
+                            FxButton.rounded(
+                                onPressed: () {},
+                                child: Icon(
+                                  Icons.history,
+                                  color: theme.primaryColor,
+                                ),
                                 backgroundColor: theme.backgroundColor),
                           ],
                         )
@@ -297,8 +314,7 @@ class _OfferDetailViewState extends State<OfferDetailView> {
               ),
             );
           },
-          separatorBuilder: (_, __) =>
-              Divider(
+          separatorBuilder: (_, __) => Divider(
                 height: 0.5,
                 color: theme.dividerColor,
               )),
@@ -358,8 +374,7 @@ class _OfferDetailViewState extends State<OfferDetailView> {
                     child: _buildItemList(),
                   ),
                 ],
-              )
-          );
+              ));
         });
   }
 }

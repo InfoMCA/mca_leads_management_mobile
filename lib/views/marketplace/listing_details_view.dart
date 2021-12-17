@@ -446,7 +446,8 @@ class _ListingDetailViewState extends State<ListingDetailView> {
                             label: 'Schedule Date',
                             initValue:
                                 session?.scheduledDateTime ?? DateTime.now(),
-                            onDateChanged: (newDate) => session?.scheduledDate = newDate,
+                            onDateChanged: (newDate) =>
+                                session?.scheduledDate = newDate,
                             validator: (value) => _validate(value))),
                     Container(
                         margin: const EdgeInsets.only(top: 8),

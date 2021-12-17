@@ -6,14 +6,13 @@ import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.
 import 'package:mca_leads_management_mobile/utils/local_storage.dart';
 
 class LoginController {
-  Future<String> loginWithUsernameAndPassword(String email, String password) async {
-    AuthUserModel response ;
+  Future<String> loginWithUsernameAndPassword(
+      String email, String password) async {
+    AuthUserModel response;
     try {
-      response = await BackendInterface().checkLoginCredentials(email, password);
-      currentUser = AuthUserModel(
-        username: email,
-        dealerId: response.dealerId
-      );
+      response =
+          await BackendInterface().checkLoginCredentials(email, password);
+      currentUser = AuthUserModel(username: email, dealerId: response.dealerId);
       LocalStorage.saveObject(type: ObjectType.driver, object: currentUser);
       Modular.to.popAndPushNamed('/home');
       return "";
@@ -28,9 +27,8 @@ class LoginController {
       currentUser = null;
       await LocalStorage.deleteAll();
       log("User logged out successfully");
-    } catch(e) {
+    } catch (e) {
       log(e.toString());
     }
   }
 }
-

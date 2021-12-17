@@ -90,7 +90,6 @@ extension LogicalViewExt on LogicalView {
 
   String getRestParam() {
     switch (this) {
-
       case LogicalView.approval:
       case LogicalView.appraisal:
       case LogicalView.dispatched:

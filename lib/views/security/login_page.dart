@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_colors.dart';
 import 'package:mca_leads_management_mobile/widgets/common/notifications.dart';
 
@@ -212,24 +213,24 @@ class _LoginPageState extends State<LoginPage> {
         Container(
           height: 360.0,
           decoration: const BoxDecoration(
-          //     image: DecorationImage(
-          //   // image: AssetImage(AppImages.carBackground),
-          //   fit: BoxFit.cover,
-          // )
-          ),
+              //     image: DecorationImage(
+              //   // image: AssetImage(AppImages.carBackground),
+              //   fit: BoxFit.cover,
+              // )
+              ),
         ),
         Container(
           color: Colors.black.withOpacity(1.0),
         ),
         Container(
-        //     child: Center(
-        //         child: Image.asset(
-        //   AppImages.logo,
-        //   height: 360.0,
-        //   width: 140.0,
-        //   color: Colors.white,
-        // ))
-        ),
+            //     child: Center(
+            //         child: Image.asset(
+            //   AppImages.logo,
+            //   height: 360.0,
+            //   width: 140.0,
+            //   color: Colors.white,
+            // ))
+            ),
       ],
     );
   }
@@ -239,11 +240,17 @@ class _LoginPageState extends State<LoginPage> {
     var password = passwordController.text;
 
     if (username.isEmpty) {
-      showSnackBar(text: "username can not be empty", context: context);
+      showSnackBar(
+          text: "username can not be empty",
+          context: context,
+          backgroundColor: lightColor.defaultError.primaryVariant);
       return;
     }
     if (password.isEmpty) {
-      showSnackBar(text: "password can not be empty", context: context);
+      showSnackBar(
+          text: "password can not be empty",
+          context: context,
+          backgroundColor: lightColor.defaultError.primaryVariant);
       return;
     }
     String response = await LoginController()

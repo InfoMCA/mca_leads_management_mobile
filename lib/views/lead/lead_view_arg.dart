@@ -11,5 +11,6 @@ class LeadViewArguments {
   final String vin;
   final LogicalView logicalView;
 
-  LeadViewArguments(this.id, this.vehicleId, this.vin, this.title, this.logicalView);
+  LeadViewArguments(
+      this.id, this.vehicleId, this.vin, this.title, this.logicalView);
 }

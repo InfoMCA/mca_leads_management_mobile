@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AppColors{
-
+class AppColors {
   // color names are taken from
   // https://chir.ag/projects/name-that-color/
 
@@ -31,12 +30,10 @@ class AppColors{
   static const Color gray = Color(0xff838383);
   static const Color aquaSpring = Color(0xffa1dad7);
 
-
   // session wise card color background
   static const Color ongoingSession = Color(0xffedfff0);
   static const Color upcomingSession = Color(0xfff3f7ff);
   static const Color stillUploadingSession = Color(0xfffff8ef);
   static const Color pendingApprovalSession = Color(0xfff3f3f3);
   static const Color approvedSession = Color(0xffE9FFF0);
-
 }

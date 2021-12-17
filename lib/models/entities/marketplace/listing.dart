@@ -4,12 +4,7 @@ import 'package:mca_leads_management_mobile/models/entities/session/session.dart
 
 part 'listing.g.dart';
 
-enum ListingState {
-  ACTIVE,
-  SOLD,
-  REMOVED,
-  EXPIRED
-}
+enum ListingState { ACTIVE, SOLD, REMOVED, EXPIRED }
 
 extension ListingStateExt on ListingState {
   getName() {

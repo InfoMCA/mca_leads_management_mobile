@@ -14,5 +14,4 @@ class GetLeadsResponse {
       _$GetLeadsResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$GetLeadsResponseToJson(this);
-
 }

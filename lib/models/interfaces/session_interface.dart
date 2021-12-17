@@ -17,15 +17,14 @@ import 'package:mca_leads_management_mobile/models/entities/session/session_summ
 import 'package:mca_leads_management_mobile/models/interfaces/rest_api_interface.dart';
 
 class SessionInterface extends RestAPIInterface {
-
   SessionInterface() : super(CommandObject.session);
 
   Future<List<LeadSummary>?> getSessions(LogicalView logicalView) async {
-    Response response = await sendGetReq(
-        "/sessions?username=${currentUser!.username}"
+    Response response =
+        await sendGetReq("/sessions?username=${currentUser!.username}"
             "&leadView=${logicalView.getRestParam()}");
-    GetSessionsResponse getLeadsResponse = GetSessionsResponse.fromJson(
-        response.data);
+    GetSessionsResponse getLeadsResponse =
+        GetSessionsResponse.fromJson(response.data);
     return getLeadsResponse.sessionSummaries;
   }
 
@@ -35,24 +34,25 @@ class SessionInterface extends RestAPIInterface {
   }
 
   Future<LeadSummary> search(String keyword) async {
-    Response response = await sendPostReq("/sessions/search",
-        json.encode(LeadSearchRequest(keyword)));
+    Response response = await sendPostReq(
+        "/sessions/search", json.encode(LeadSearchRequest(keyword)));
     return LeadSummary.fromJson(response.data);
   }
 
-  Future<Response> dispatch(String sessionId,
-      LeadDispatchRequest leadDispatchRequest) async {
-    return sendPatchReqWithData("/sessions/$sessionId/update",
-        json.encode(leadDispatchRequest));
+  Future<Response> dispatch(
+      String sessionId, LeadDispatchRequest leadDispatchRequest) async {
+    return sendPatchReqWithData(
+        "/sessions/$sessionId/update", json.encode(leadDispatchRequest));
   }
 
   Future<Response> delete(String sessionId) async {
     return sendPatchReq("/sessions/$sessionId/delete");
   }
 
-  Future<Response> approve(String sessionId, SessionApproveRequest sessionApproveRequest) {
-    return sendPatchReqWithData("/sessions/$sessionId/approve",
-        json.encode(sessionApproveRequest));
+  Future<Response> approve(
+      String sessionId, SessionApproveRequest sessionApproveRequest) {
+    return sendPatchReqWithData(
+        "/sessions/$sessionId/approve", json.encode(sessionApproveRequest));
   }
 
   Future<Response> reject(String sessionId) {

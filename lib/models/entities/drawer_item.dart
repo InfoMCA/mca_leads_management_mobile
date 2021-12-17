@@ -2,12 +2,7 @@ import 'package:flutter/cupertino.dart';
 
 import 'api/logical_view.dart';
 
-enum DrawerPanel {
-  leads,
-  inspections,
-  marketPlace,
-  transport
-}
+enum DrawerPanel { leads, inspections, marketPlace, transport }
 
 extension DrawPanelExt on DrawerPanel {
   String getName() {
@@ -30,10 +25,9 @@ class DrawerItem {
   IconData icon;
   int position;
 
-  DrawerItem({
-    required this.panel,
-    required this.logicalView,
-    required this.icon,
-    required this.position
-  });
+  DrawerItem(
+      {required this.panel,
+      required this.logicalView,
+      required this.icon,
+      required this.position});
 }

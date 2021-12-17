@@ -18,7 +18,6 @@ class LeadLostDialog extends StatefulWidget {
 }
 
 class _LeadLostDialogState extends State<LeadLostDialog> {
-
   late CustomTheme customTheme;
   late ThemeData theme;
   String lostReason = "Asking price too high";
@@ -68,7 +67,7 @@ class _LeadLostDialogState extends State<LeadLostDialog> {
                   child: RichText(
                     text: TextSpan(
                         style:
-                        FxTextStyle.b1(fontWeight: 500, letterSpacing: 0.2),
+                            FxTextStyle.b1(fontWeight: 500, letterSpacing: 0.2),
                         children: const <TextSpan>[
                           TextSpan(text: "Please update call status"),
                         ]),
@@ -78,25 +77,21 @@ class _LeadLostDialogState extends State<LeadLostDialog> {
             ),
             Column(
                 children: lostReasons
-                    .mapIndexed((index, element) =>
-                    ListTile(
-                      title: FxText.sh2(element,
-                          fontWeight: 600),
-                      contentPadding:
-                      const EdgeInsets.all(0),
-                      dense: true,
-                      leading: Radio(
-                        value: index,
-                        activeColor:
-                        theme.colorScheme.primary,
-                        groupValue: _selectedIndex,
-                        onChanged: (int? value) {
-                          setState(() {
-                            _selectedIndex = value!;
-                          });
-                        },
-                      ),
-                    ))
+                    .mapIndexed((index, element) => ListTile(
+                          title: FxText.sh2(element, fontWeight: 600),
+                          contentPadding: const EdgeInsets.all(0),
+                          dense: true,
+                          leading: Radio(
+                            value: index,
+                            activeColor: theme.colorScheme.primary,
+                            groupValue: _selectedIndex,
+                            onChanged: (int? value) {
+                              setState(() {
+                                _selectedIndex = value!;
+                              });
+                            },
+                          ),
+                        ))
                     .toList()),
             Container(
                 margin: const EdgeInsets.only(top: 8),
@@ -116,9 +111,9 @@ class _LeadLostDialogState extends State<LeadLostDialog> {
                         elevation: 2,
                         borderRadiusAll: 4,
                         onPressed: () {
-                            Navigator.popUntil(
-                                context, ModalRoute.withName('/home'));
-                            widget.onSubmit(lostReasons[_selectedIndex]);
+                          Navigator.popUntil(
+                              context, ModalRoute.withName('/home'));
+                          widget.onSubmit(lostReasons[_selectedIndex]);
                         },
                         child: FxText.b2("Submit",
                             fontWeight: 600,

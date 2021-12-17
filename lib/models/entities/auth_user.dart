@@ -7,17 +7,12 @@ class AuthUserModel {
 
   factory AuthUserModel.fromJson(dynamic json) {
     return AuthUserModel(
-      username: json['username'],
-      email: json['email'],
-      dealerId: json['dealerId']
-    );
+        username: json['username'],
+        email: json['email'],
+        dealerId: json['dealerId']);
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'username': username,
-      'email': email,
-      'dealerId': dealerId
-    };
+    return {'username': username, 'email': email, 'dealerId': dealerId};
   }
 }

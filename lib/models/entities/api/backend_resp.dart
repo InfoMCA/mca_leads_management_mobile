@@ -18,15 +18,16 @@ class BackendResp {
   List<String>? reportItemLinks;
   dynamic indexContents;
 
-  BackendResp({this.message,
-    this.status,
-    this.leadSummaries,
-    this.lead,
-    this.session,
-    this.inspectors,
-    this.region,
-    this.reportItemLinks,
-    this.indexContents});
+  BackendResp(
+      {this.message,
+      this.status,
+      this.leadSummaries,
+      this.lead,
+      this.session,
+      this.inspectors,
+      this.region,
+      this.reportItemLinks,
+      this.indexContents});
 
   factory BackendResp.fromJson(Map<String, dynamic> json) =>
       _$BackendRespFromJson(json);

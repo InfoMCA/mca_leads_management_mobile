@@ -8,7 +8,6 @@
 /// [FxCard.rounded] - provides rounded shape to the card for the given height and width of the card.
 ///
 
-
 import 'package:flutter/material.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/styles/shadow.dart';
@@ -26,88 +25,96 @@ class FxCard extends StatelessWidget {
   final Clip? clipBehavior;
   final BoxShape? boxShape;
   final FxShadow? shadow;
-  final double? width,height;
+  final double? width, height;
   final Color? splashColor;
   const FxCard(
       {Key? key,
-        required this.child,
-        this.borderRadius,
-        this.padding,
-        this.borderRadiusAll,
-        this.color,
-        this.paddingAll,
-        this.onTap,
-        this.border,
-        this.bordered = false,
-        this.clipBehavior,
-        this.boxShape,
-        this.shadow,
-        this.marginAll,
-        this.margin,
-        this.splashColor, this.width, this.height})
+      required this.child,
+      this.borderRadius,
+      this.padding,
+      this.borderRadiusAll,
+      this.color,
+      this.paddingAll,
+      this.onTap,
+      this.border,
+      this.bordered = false,
+      this.clipBehavior,
+      this.boxShape,
+      this.shadow,
+      this.marginAll,
+      this.margin,
+      this.splashColor,
+      this.width,
+      this.height})
       : super(key: key);
   const FxCard.bordered(
       {Key? key,
-        required this.child,
-        this.borderRadius,
-        this.padding,
-        this.borderRadiusAll,
-        this.color,
-        this.paddingAll,
-        this.onTap,
-        this.border,
-        this.bordered = true,
-        this.clipBehavior,
-        this.boxShape,
-        this.shadow,
-        this.marginAll,
-        this.margin,
-        this.splashColor, this.width, this.height})
+      required this.child,
+      this.borderRadius,
+      this.padding,
+      this.borderRadiusAll,
+      this.color,
+      this.paddingAll,
+      this.onTap,
+      this.border,
+      this.bordered = true,
+      this.clipBehavior,
+      this.boxShape,
+      this.shadow,
+      this.marginAll,
+      this.margin,
+      this.splashColor,
+      this.width,
+      this.height})
       : super(key: key);
   const FxCard.rounded(
       {Key? key,
-        required this.child,
-        this.borderRadius,
-        this.padding,
-        this.borderRadiusAll,
-        this.color,
-        this.paddingAll,
-        this.onTap,
-        this.border,
-        this.bordered = false,
-        this.clipBehavior = Clip.antiAliasWithSaveLayer,
-        this.boxShape = BoxShape.circle,
-        this.shadow,
-        this.marginAll,
-        this.margin,
-        this.splashColor, this.width, this.height})
+      required this.child,
+      this.borderRadius,
+      this.padding,
+      this.borderRadiusAll,
+      this.color,
+      this.paddingAll,
+      this.onTap,
+      this.border,
+      this.bordered = false,
+      this.clipBehavior = Clip.antiAliasWithSaveLayer,
+      this.boxShape = BoxShape.circle,
+      this.shadow,
+      this.marginAll,
+      this.margin,
+      this.splashColor,
+      this.width,
+      this.height})
       : super(key: key);
 
   const FxCard.none(
       {Key? key,
-        required this.child,
-        this.borderRadius,
-        this.padding,
-        this.borderRadiusAll=0,
-        this.color,
-        this.paddingAll=0,
-        this.onTap,
-        this.border,
-        this.bordered = false,
-        this.clipBehavior = Clip.antiAliasWithSaveLayer,
-        this.boxShape = BoxShape.rectangle,
-        this.shadow,
-        this.marginAll,
-        this.margin,
-        this.splashColor, this.width, this.height})
+      required this.child,
+      this.borderRadius,
+      this.padding,
+      this.borderRadiusAll = 0,
+      this.color,
+      this.paddingAll = 0,
+      this.onTap,
+      this.border,
+      this.bordered = false,
+      this.clipBehavior = Clip.antiAliasWithSaveLayer,
+      this.boxShape = BoxShape.rectangle,
+      this.shadow,
+      this.marginAll,
+      this.margin,
+      this.splashColor,
+      this.width,
+      this.height})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     FxShadow myShadow = shadow ?? FxShadow();
     return InkWell(
-      borderRadius:  boxShape != BoxShape.circle
+      borderRadius: boxShape != BoxShape.circle
           ? borderRadius ??
-          BorderRadius.all(Radius.circular(borderRadiusAll ?? 8))
+              BorderRadius.all(Radius.circular(borderRadiusAll ?? 8))
           : null,
       splashColor: splashColor ?? Colors.transparent,
       highlightColor: splashColor ?? Colors.transparent,
@@ -120,11 +127,11 @@ class FxCard extends StatelessWidget {
             color: color ?? FxAppTheme.theme.cardTheme.color,
             borderRadius: boxShape != BoxShape.circle
                 ? borderRadius ??
-                BorderRadius.all(Radius.circular(borderRadiusAll ?? 8))
+                    BorderRadius.all(Radius.circular(borderRadiusAll ?? 8))
                 : null,
             border: bordered
                 ? border ??
-                Border.all(color: FxAppTheme.theme.dividerColor, width: 1)
+                    Border.all(color: FxAppTheme.theme.dividerColor, width: 1)
                 : null,
             shape: boxShape ?? BoxShape.rectangle,
             boxShadow: [

@@ -12,16 +12,17 @@ import 'package:mca_leads_management_mobile/widgets/textfield/date_text.dart';
 class LeadFollowUpDialog extends StatefulWidget {
   final ValueChanged<LeadFollowUpInfo> onSubmit;
 
-  const LeadFollowUpDialog({Key? key, required this.onSubmit}) : super(key: key);
+  const LeadFollowUpDialog({Key? key, required this.onSubmit})
+      : super(key: key);
   @override
   _LeadFollowUpDialogState createState() => _LeadFollowUpDialogState();
 }
 
 class _LeadFollowUpDialogState extends State<LeadFollowUpDialog> {
-
   late CustomTheme customTheme;
   late ThemeData theme;
-  LeadFollowUpInfo followUpInfo = LeadFollowUpInfo(currentUser!.username, "", DateTime.now().toUtc());
+  LeadFollowUpInfo followUpInfo =
+      LeadFollowUpInfo(currentUser!.username, "", DateTime.now().toUtc());
 
   @override
   void initState() {
@@ -60,7 +61,7 @@ class _LeadFollowUpDialogState extends State<LeadFollowUpDialog> {
                   child: RichText(
                     text: TextSpan(
                         style:
-                        FxTextStyle.b1(fontWeight: 500, letterSpacing: 0.2),
+                            FxTextStyle.b1(fontWeight: 500, letterSpacing: 0.2),
                         children: const <TextSpan>[
                           TextSpan(text: "Please update lead information"),
                         ]),
@@ -76,20 +77,21 @@ class _LeadFollowUpDialogState extends State<LeadFollowUpDialog> {
                   labelText: "Comment",
                   border: theme.inputDecorationTheme.border,
                   enabledBorder: theme.inputDecorationTheme.border,
-                  focusedBorder:
-                  theme.inputDecorationTheme.focusedBorder,
-                  prefixIcon: const Icon(MdiIcons.gamepadCircleOutline,
-                      size: 24),
+                  focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                  prefixIcon:
+                      const Icon(MdiIcons.gamepadCircleOutline, size: 24),
                 ),
               ),
             ),
             Container(
               margin: const EdgeInsets.only(top: 8),
-              child: FxDateText(label: 'Followup Date',
+              child: FxDateText(
+                label: 'Followup Date',
                 initValue: DateTime.now(),
                 onDateChanged: (date) {
                   followUpInfo.followUpDate = date.toUtc();
-                },),
+                },
+              ),
             ),
             Container(
                 margin: const EdgeInsets.only(top: 8),
@@ -111,7 +113,10 @@ class _LeadFollowUpDialogState extends State<LeadFollowUpDialog> {
                         onPressed: () {
                           if (followUpInfo.followUpComment.isEmpty) {
                             showSnackBar(
-                                context: context, text: "Comment is Empty!");
+                                context: context,
+                                text: "Comment is Empty!",
+                                backgroundColor:
+                                    lightColor.defaultError.primaryVariant);
                           } else {
                             Navigator.popUntil(
                                 context, ModalRoute.withName('/home'));

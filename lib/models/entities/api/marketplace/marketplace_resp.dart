@@ -1,5 +1,3 @@
-
-
 import 'package:json_annotation/json_annotation.dart';
 import 'package:mca_leads_management_mobile/models/entities/marketplace/inventory.dart';
 import 'package:mca_leads_management_mobile/models/entities/marketplace/listing.dart';
@@ -20,19 +18,18 @@ class GetInventoryVehicleResponse {
       _$GetInventoryVehicleResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$GetInventoryVehicleResponseToJson(this);
-
 }
 
 @JsonSerializable()
 class GetInventoryResponse {
-   List<GetInventoryVehicleResponse> inventory;
+  List<GetInventoryVehicleResponse> inventory;
 
-   GetInventoryResponse(this.inventory);
+  GetInventoryResponse(this.inventory);
 
-   factory GetInventoryResponse.fromJson(Map<String, dynamic> json) =>
-       _$GetInventoryResponseFromJson(json);
+  factory GetInventoryResponse.fromJson(Map<String, dynamic> json) =>
+      _$GetInventoryResponseFromJson(json);
 
-   Map<String, dynamic> toJson() => _$GetInventoryResponseToJson(this);
+  Map<String, dynamic> toJson() => _$GetInventoryResponseToJson(this);
 }
 
 @JsonSerializable()
@@ -47,7 +44,6 @@ class GetListingResponse {
       _$GetListingResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$GetListingResponseToJson(this);
-
 }
 
 @JsonSerializable()
@@ -102,16 +98,16 @@ class GetInventoryVehicleSummaryResponse {
   InventoryItemSummary inventoryItemSummary;
   VehicleSummary vehicleSummary;
 
-  GetInventoryVehicleSummaryResponse(this.inventoryItemSummary,
-      this.vehicleSummary);
+  GetInventoryVehicleSummaryResponse(
+      this.inventoryItemSummary, this.vehicleSummary);
 
-  factory GetInventoryVehicleSummaryResponse.fromJson(Map<String, dynamic> json) =>
+  factory GetInventoryVehicleSummaryResponse.fromJson(
+          Map<String, dynamic> json) =>
       _$GetInventoryVehicleSummaryResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => _$GetInventoryVehicleSummaryResponseToJson(this);
-
+  Map<String, dynamic> toJson() =>
+      _$GetInventoryVehicleSummaryResponseToJson(this);
 }
-
 
 @JsonSerializable()
 class InventoryItemSummary {
@@ -128,7 +124,6 @@ class InventoryItemSummary {
       _$InventoryItemSummaryFromJson(json);
 
   Map<String, dynamic> toJson() => _$InventoryItemSummaryToJson(this);
-
 }
 
 @JsonSerializable()

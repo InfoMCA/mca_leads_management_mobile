@@ -12,8 +12,14 @@ class SessionApproveRequest {
   double customerAmount;
   double withholdingAmount;
 
-  SessionApproveRequest(this.username, this.customerName, this.purchasedPrice, this.deductionsAmount,
-      this.lenderAmount, this.customerAmount, this.withholdingAmount);
+  SessionApproveRequest(
+      this.username,
+      this.customerName,
+      this.purchasedPrice,
+      this.deductionsAmount,
+      this.lenderAmount,
+      this.customerAmount,
+      this.withholdingAmount);
 
   factory SessionApproveRequest.fromJson(Map<String, dynamic> json) =>
       _$SessionApproveRequestFromJson(json);
@@ -34,8 +40,7 @@ class SessionRejectRequest {
 }
 
 @JsonSerializable()
- class TransportInfo {
-
+class TransportInfo {
   String firstName;
   String lastName;
   String address1;
@@ -53,12 +58,10 @@ class SessionRejectRequest {
       _$TransportInfoFromJson(json);
 
   Map<String, dynamic> toJson() => _$TransportInfoToJson(this);
-
 }
 
 @JsonSerializable()
 class PutNewOrderRequest {
-
   String customer;
   String broker;
   String vin;
@@ -75,5 +78,4 @@ class PutNewOrderRequest {
       _$PutNewOrderRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$PutNewOrderRequestToJson(this);
-
 }

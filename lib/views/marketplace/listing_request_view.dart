@@ -97,7 +97,10 @@ class _ListingRequestViewState extends State<ListingRequestView> {
                   Navigator.pop(context);
                   Navigator.pop(context);
                   MarketplaceInterface().createNewListing(
-                      vehicle.id, inventoryItem.id, ListingNewReq(listingPrice, expirationDate, selectedMarketPlaces));
+                      vehicle.id,
+                      inventoryItem.id,
+                      ListingNewReq(
+                          listingPrice, expirationDate, selectedMarketPlaces));
                 },
                 child: Icon(
                   Icons.check,
@@ -106,7 +109,7 @@ class _ListingRequestViewState extends State<ListingRequestView> {
                 ),
                 elevation: 2,
                 backgroundColor:
-                theme.floatingActionButtonTheme.backgroundColor),
+                    theme.floatingActionButtonTheme.backgroundColor),
             body: SingleChildScrollView(
               child: Container(
                 padding: FxSpacing.all(20),
@@ -132,9 +135,9 @@ class _ListingRequestViewState extends State<ListingRequestView> {
                             size: 24),
                       ),
                     ),
-                    FxDateText(label: 'Expiration Date',
-                        initValue:
-                        DateTime.now().add(const Duration(days: 2)),
+                    FxDateText(
+                        label: 'Expiration Date',
+                        initValue: DateTime.now().add(const Duration(days: 2)),
                         onDateChanged: (expirationDate) {
                           this.expirationDate = expirationDate;
                         }),
@@ -142,7 +145,10 @@ class _ListingRequestViewState extends State<ListingRequestView> {
                       padding: const EdgeInsets.only(
                           left: 8, right: 20, top: 20, bottom: 12),
                       child: FxText.sh1(
-                        "Market Places", fontWeight: 600, fontSize: 16,),
+                        "Market Places",
+                        fontWeight: 600,
+                        fontSize: 16,
+                      ),
                     ),
                     CheckboxWidget(
                         values: marketPlaces!.map((e) => e.name).toList(),
@@ -163,5 +169,4 @@ class _ListingRequestViewState extends State<ListingRequestView> {
           );
         });
   }
-
 }

@@ -4,7 +4,16 @@ import 'package:mca_leads_management_mobile/models/entities/session/session.dart
 
 part 'backend_req.g.dart';
 
-enum CommandObject { user, region, lead, session, inventory, listing, offer, transport }
+enum CommandObject {
+  user,
+  region,
+  lead,
+  session,
+  inventory,
+  listing,
+  offer,
+  transport
+}
 
 enum CommandIntent {
   create,
@@ -50,14 +59,15 @@ class BackendReq {
   ///Either LeadAction, SessionAction or UserAction enums
   Map<String, String>? params;
 
-  BackendReq({required this.username,
-    required this.object,
-    required this.intent,
-    this.action,
-    this.objectId,
-    this.lead,
-    this.session,
-    this.params});
+  BackendReq(
+      {required this.username,
+      required this.object,
+      required this.intent,
+      this.action,
+      this.objectId,
+      this.lead,
+      this.session,
+      this.params});
 
   factory BackendReq.fromJson(Map<String, dynamic> json) =>
       _$BackendReqFromJson(json);

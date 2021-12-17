@@ -15,7 +15,6 @@ enum InventoryItemState {
 extension InventoryItemStateExt on InventoryItemState {
   getViewTag() {
     switch (this) {
-
       case InventoryItemState.ACTIVE:
         return LeadViewTag.inventory;
       case InventoryItemState.TRANSFERRED_IN:
@@ -45,7 +44,6 @@ class InventoryItem {
   String? sellerId;
   int? tradedPrice;
 
-
   InventoryItem(
       this.id,
       this.vehicleId,
@@ -66,7 +64,6 @@ class InventoryItem {
       _$InventoryItemFromJson(json);
 
   Map<String, dynamic> toJson() => _$InventoryItemToJson(this);
-
 }
 
 @JsonSerializable()

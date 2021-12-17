@@ -76,7 +76,6 @@ extension LeadViewTagExt on LeadViewTag {
         return "TI";
       case LeadViewTag.transferOut:
         return "TO";
-
     }
   }
 
@@ -143,7 +142,8 @@ extension LeadViewTagExt on LeadViewTag {
 
 @JsonSerializable()
 class LeadSummary {
-  LeadSummary(this.id, this.vehicleId, this.title, this.vin, this.viewTag, this.updateDate);
+  LeadSummary(this.id, this.vehicleId, this.title, this.vin, this.viewTag,
+      this.updateDate);
 
   String id;
   String vehicleId;
@@ -161,7 +161,8 @@ class LeadSummary {
     if (updateDate == null) {
       return "";
     }
-    return updateDate!.day.toString() + " " +
+    return updateDate!.day.toString() +
+        " " +
         DateFormat('MMM').format(DateTime(0, updateDate!.month));
   }
 
@@ -172,4 +173,3 @@ class LeadSummary {
     return title.substring(0, 27) + "...";
   }
 }
-

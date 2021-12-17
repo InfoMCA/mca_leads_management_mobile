@@ -21,10 +21,8 @@ class AppModule extends Module {
 
   @override
   final List<ModularRoute> routes = [
-    ChildRoute('/security/login',
-        child: (_, args) => const LoginPage()),
-    ChildRoute('/home',
-        child: (_, args) => const DashBoard()),
+    ChildRoute('/security/login', child: (_, args) => const LoginPage()),
+    ChildRoute('/home', child: (_, args) => const DashBoard()),
     ChildRoute('/home/lead',
         child: (_, args) => LeadDetailsView(args: args.data)),
     ChildRoute('/home/lead-schedule',

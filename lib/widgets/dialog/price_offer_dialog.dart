@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/text_style.dart';
 import 'package:mca_leads_management_mobile/widgets/button/button.dart';
@@ -14,7 +15,6 @@ class OfferPriceDialog extends StatefulWidget {
 }
 
 class _OfferPriceDialogState extends State<OfferPriceDialog> {
-
   late CustomTheme customTheme;
   late ThemeData theme;
   late String offerPrice;
@@ -57,9 +57,11 @@ class _OfferPriceDialogState extends State<OfferPriceDialog> {
                   child: RichText(
                     text: TextSpan(
                         style:
-                        FxTextStyle.b1(fontWeight: 500, letterSpacing: 0.2),
+                            FxTextStyle.b1(fontWeight: 500, letterSpacing: 0.2),
                         children: const <TextSpan>[
-                          TextSpan(text: "Please let the buyer know how much you are willing to pay?"),
+                          TextSpan(
+                              text:
+                                  "Please let the buyer know how much you are willing to pay?"),
                         ]),
                   ),
                 )
@@ -72,13 +74,9 @@ class _OfferPriceDialogState extends State<OfferPriceDialog> {
                 onChanged: (text) => offerPrice = text,
                 decoration: InputDecoration(
                   border: theme.inputDecorationTheme.border,
-                  enabledBorder:
-                  theme.inputDecorationTheme.border,
-                  focusedBorder:
-                  theme.inputDecorationTheme.focusedBorder,
-                  prefixIcon: const Icon(
-                      Icons.price_check,
-                      size: 24),
+                  enabledBorder: theme.inputDecorationTheme.border,
+                  focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                  prefixIcon: const Icon(Icons.price_check, size: 24),
                 ),
               ),
             ),
@@ -101,7 +99,11 @@ class _OfferPriceDialogState extends State<OfferPriceDialog> {
                         borderRadiusAll: 4,
                         onPressed: () {
                           if (offerPrice.isEmpty) {
-                            showSnackBar(context: context, text: "Offer Price is Empty!");
+                            showSnackBar(
+                                context: context,
+                                text: "Offer Price is Empty!",
+                                backgroundColor:
+                                    lightColor.defaultError.primaryVariant);
                           } else {
                             widget.onSubmit(offerPrice);
                             Navigator.pop(context);

@@ -10,7 +10,6 @@
 
 import 'package:flutter/material.dart';
 
-
 enum FxButtonType { elevated, outlined, text }
 
 class FxButton extends StatelessWidget {
@@ -65,13 +64,14 @@ class FxButton extends StatelessWidget {
       this.msShadowColor,
       this.msSide,
       this.side,
-      this.borderColor=Colors.transparent,
+      this.borderColor = Colors.transparent,
       this.disabled = false,
       this.block = false,
-        this.soft = false,
+      this.soft = false,
       this.msElevation,
       this.elevation = 4,
-      this.shadowColor, this.splashColor});
+      this.shadowColor,
+      this.splashColor});
 
   FxButton.rounded(
       {required this.onPressed,
@@ -90,12 +90,13 @@ class FxButton extends StatelessWidget {
       this.msSide,
       this.disabled = false,
       this.side,
-        this.soft = false,
-      this.borderColor=Colors.transparent,
+      this.soft = false,
+      this.borderColor = Colors.transparent,
       this.msShadowColor,
       this.msElevation,
       this.elevation = 4,
-      this.shadowColor, this.splashColor});
+      this.shadowColor,
+      this.splashColor});
 
   FxButton.small(
       {required this.onPressed,
@@ -112,14 +113,15 @@ class FxButton extends StatelessWidget {
       this.style,
       this.block = false,
       this.msSide,
-        this.soft = false,
+      this.soft = false,
       this.disabled = false,
       this.side,
-      this.borderColor=Colors.transparent,
+      this.borderColor = Colors.transparent,
       this.msShadowColor,
       this.msElevation,
       this.elevation = 4,
-      this.shadowColor, this.splashColor});
+      this.shadowColor,
+      this.splashColor});
 
   FxButton.medium(
       {required this.onPressed,
@@ -129,7 +131,7 @@ class FxButton extends StatelessWidget {
       this.msShape,
       this.block = false,
       this.shape,
-        this.soft = false,
+      this.soft = false,
       this.borderRadius,
       this.borderRadiusAll = 0,
       this.msBackgroundColor,
@@ -139,13 +141,14 @@ class FxButton extends StatelessWidget {
       this.msSide,
       this.disabled = false,
       this.side,
-      this.borderColor=Colors.transparent,
+      this.borderColor = Colors.transparent,
       this.msShadowColor,
       this.msElevation,
       this.elevation = 4,
-      this.shadowColor, this.splashColor});
+      this.shadowColor,
+      this.splashColor});
 
- FxButton.text(
+  FxButton.text(
       {required this.onPressed,
       required this.child,
       this.msPadding,
@@ -153,7 +156,7 @@ class FxButton extends StatelessWidget {
       this.msShape,
       this.block = false,
       this.shape,
-        this.soft = false,
+      this.soft = false,
       this.borderRadius,
       this.borderRadiusAll = 0,
       this.msBackgroundColor,
@@ -163,11 +166,12 @@ class FxButton extends StatelessWidget {
       this.msSide,
       this.disabled = false,
       this.side,
-      this.borderColor=Colors.transparent,
+      this.borderColor = Colors.transparent,
       this.msShadowColor,
       this.msElevation,
       this.elevation = 4,
-      this.shadowColor, this.splashColor});
+      this.shadowColor,
+      this.splashColor});
 
   FxButton.block(
       {required this.onPressed,
@@ -177,7 +181,7 @@ class FxButton extends StatelessWidget {
       this.msShape,
       this.block = true,
       this.shape,
-        this.soft = false,
+      this.soft = false,
       this.borderRadius,
       this.borderRadiusAll = 0,
       this.msBackgroundColor,
@@ -187,11 +191,12 @@ class FxButton extends StatelessWidget {
       this.msSide,
       this.disabled = false,
       this.side,
-      this.borderColor=Colors.transparent,
+      this.borderColor = Colors.transparent,
       this.msShadowColor,
       this.msElevation,
       this.elevation = 4,
-      this.shadowColor, this.splashColor});
+      this.shadowColor,
+      this.splashColor});
 
   FxButton.outlined(
       {required this.onPressed,
@@ -199,7 +204,7 @@ class FxButton extends StatelessWidget {
       this.msPadding,
       this.padding = const EdgeInsets.fromLTRB(24, 16, 24, 16),
       this.msShape,
-        this.soft = false,
+      this.soft = false,
       this.shape,
       this.borderRadius,
       this.borderRadiusAll = 0,
@@ -211,11 +216,12 @@ class FxButton extends StatelessWidget {
       this.block = false,
       this.side,
       this.disabled = false,
-      this.borderColor=Colors.transparent,
+      this.borderColor = Colors.transparent,
       this.msShadowColor,
       this.msElevation,
       this.elevation = 4,
-      this.shadowColor, this.splashColor});
+      this.shadowColor,
+      this.splashColor});
 
   FxButton.large(
       {required this.onPressed,
@@ -224,7 +230,7 @@ class FxButton extends StatelessWidget {
       this.padding = const EdgeInsets.fromLTRB(36, 20, 36, 20),
       this.msShape,
       this.shape,
-        this.soft = false,
+      this.soft = false,
       this.borderRadius,
       this.borderRadiusAll = 0,
       this.msBackgroundColor,
@@ -235,17 +241,17 @@ class FxButton extends StatelessWidget {
       this.msSide,
       this.side,
       this.block = false,
-      this.borderColor=Colors.transparent,
+      this.borderColor = Colors.transparent,
       this.msShadowColor,
       this.msElevation,
       this.elevation = 4,
-      this.shadowColor, this.splashColor});
+      this.shadowColor,
+      this.splashColor});
 
   @override
   Widget build(BuildContext context) {
     Widget button;
-    Color bgColor = backgroundColor??Theme.of(context).primaryColor;
-
+    Color bgColor = backgroundColor ?? Theme.of(context).primaryColor;
 
     if (buttonType == FxButtonType.outlined) {
       button = OutlinedButton(
@@ -256,31 +262,29 @@ class FxButton extends StatelessWidget {
                 side: msSide ??
                     MaterialStateProperty.all(side ??
                         BorderSide(
-                          color: soft? borderColor.withAlpha(100) : borderColor,
-                          width: soft? 0.8 : 1,
+                          color:
+                              soft ? borderColor.withAlpha(100) : borderColor,
+                          width: soft ? 0.8 : 1,
                         )),
-                overlayColor:
-                    MaterialStateProperty.all(splashColor??(bgColor.withAlpha(40))),
-                backgroundColor: soft ?
-                    MaterialStateProperty.all(borderColor.withAlpha(40)) : null,
+                overlayColor: MaterialStateProperty.all(
+                    splashColor ?? (bgColor.withAlpha(40))),
+                backgroundColor: soft
+                    ? MaterialStateProperty.all(borderColor.withAlpha(40))
+                    : null,
                 foregroundColor:
                     MaterialStateProperty.all(borderColor.withAlpha(40)),
                 shadowColor:
                     msShadowColor ?? MaterialStateProperty.all(shadowColor),
                 padding: msPadding ?? MaterialStateProperty.all(padding),
-                shape:
-                    MaterialStateProperty.all(shape ??
-                        RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(borderRadiusAll?? 0),
-                        ))),
+                shape: MaterialStateProperty.all(shape ??
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(borderRadiusAll ?? 0),
+                    ))),
       );
-    } else if(buttonType == FxButtonType.elevated){
+    } else if (buttonType == FxButtonType.elevated) {
       button = ElevatedButton(
-
           style: style ??
               ButtonStyle(
-
                   elevation: msElevation ??
                       MaterialStateProperty.resolveWith<double>(
                         (Set<MaterialState> states) {
@@ -304,36 +308,34 @@ class FxButton extends StatelessWidget {
                   shadowColor: msShadowColor ??
                       MaterialStateProperty.all(shadowColor ?? bgColor),
                   padding: msPadding ?? MaterialStateProperty.all(padding),
-                  overlayColor: MaterialStateProperty.all(splashColor??(bgColor.withAlpha(40))),
-                  shape:
-                      MaterialStateProperty.all(shape ??
-                          RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(borderRadiusAll ?? 0),
-                          ))),
+                  overlayColor: MaterialStateProperty.all(
+                      splashColor ?? (bgColor.withAlpha(40))),
+                  shape: MaterialStateProperty.all(shape ??
+                      RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(borderRadiusAll ?? 0),
+                      ))),
           onPressed: disabled! ? null : onPressed,
           child: child);
-    }else{
-      button=TextButton(
-        style:  ButtonStyle(
-            overlayColor:
-            MaterialStateProperty.all(splashColor ??(bgColor.withAlpha(40))),
-          padding: msPadding ?? MaterialStateProperty.all(padding),
-
-          visualDensity: VisualDensity.compact,
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap
-        ),
+    } else {
+      button = TextButton(
+        style: ButtonStyle(
+            overlayColor: MaterialStateProperty.all(
+                splashColor ?? (bgColor.withAlpha(40))),
+            padding: msPadding ?? MaterialStateProperty.all(padding),
+            visualDensity: VisualDensity.compact,
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap),
         onPressed: disabled! ? null : onPressed,
         child: child,
-
       );
     }
 
-
-    return block! ? Row(
-      children: [
-        Expanded(child: button),
-      ],
-    ) : button;
+    return block!
+        ? Row(
+            children: [
+              Expanded(child: button),
+            ],
+          )
+        : button;
   }
 }

@@ -9,16 +9,17 @@ import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 class LeadUnAnsweredDialog extends StatefulWidget {
   final ValueChanged<LeadUnAnsweredInfo> onSubmit;
 
-  const LeadUnAnsweredDialog({Key? key, required this.onSubmit}) : super(key: key);
+  const LeadUnAnsweredDialog({Key? key, required this.onSubmit})
+      : super(key: key);
   @override
   _LeadUnAnsweredDialogState createState() => _LeadUnAnsweredDialogState();
 }
 
 class _LeadUnAnsweredDialogState extends State<LeadUnAnsweredDialog> {
-
   late CustomTheme customTheme;
   late ThemeData theme;
-  LeadUnAnsweredInfo unAnsweredInfo = LeadUnAnsweredInfo(currentUser!.username, false, false);
+  LeadUnAnsweredInfo unAnsweredInfo =
+      LeadUnAnsweredInfo(currentUser!.username, false, false);
 
   @override
   void initState() {
@@ -57,7 +58,7 @@ class _LeadUnAnsweredDialogState extends State<LeadUnAnsweredDialog> {
                   child: RichText(
                     text: TextSpan(
                         style:
-                        FxTextStyle.b1(fontWeight: 500, letterSpacing: 0.2),
+                            FxTextStyle.b1(fontWeight: 500, letterSpacing: 0.2),
                         children: const <TextSpan>[
                           TextSpan(text: "Please update call status"),
                         ]),
@@ -90,8 +91,7 @@ class _LeadUnAnsweredDialogState extends State<LeadUnAnsweredDialog> {
                     });
                   },
                 ),
-                FxText.sh2("Left Voice Message",
-                    fontWeight: 600)
+                FxText.sh2("Left Voice Message", fontWeight: 600)
               ],
             ),
             Container(
@@ -112,9 +112,9 @@ class _LeadUnAnsweredDialogState extends State<LeadUnAnsweredDialog> {
                         elevation: 2,
                         borderRadiusAll: 4,
                         onPressed: () {
-                            Navigator.popUntil(
-                                context, ModalRoute.withName('/home'));
-                            widget.onSubmit(unAnsweredInfo);
+                          Navigator.popUntil(
+                              context, ModalRoute.withName('/home'));
+                          widget.onSubmit(unAnsweredInfo);
                         },
                         child: FxText.b2("Submit",
                             fontWeight: 600,

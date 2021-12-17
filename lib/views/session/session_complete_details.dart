@@ -1,4 +1,3 @@
-
 /*
 * File : Personal Information Form
 * Version : 1.0.0
@@ -32,10 +31,12 @@ class SessionDetailsCompleteReport extends StatefulWidget {
       : super(key: key);
 
   @override
-  _SessionDetailsCompleteReportState createState() => _SessionDetailsCompleteReportState();
+  _SessionDetailsCompleteReportState createState() =>
+      _SessionDetailsCompleteReportState();
 }
 
-class _SessionDetailsCompleteReportState extends State<SessionDetailsCompleteReport> {
+class _SessionDetailsCompleteReportState
+    extends State<SessionDetailsCompleteReport> {
   late CustomTheme customTheme;
   late ThemeData theme;
   late Session session;
@@ -62,16 +63,18 @@ class _SessionDetailsCompleteReportState extends State<SessionDetailsCompleteRep
 
   void fetchInspectionQA() async {
     try {
-      await SessionInterface().getSessionObject(widget.args.id).then(
-              (GetReportResponse reportQA) async {
-                this.reportQA = reportQA.report;
-            reportImages = reportQA.report.reportItems
-                .where((element) => element.value != 'NA')
-                .where((element) => element.type == ResponseFormat.Image.prettyString())
-                .map((e) => e.name)
-                .toList();
-            setState(() {});
-          });
+      await SessionInterface()
+          .getSessionObject(widget.args.id)
+          .then((GetReportResponse reportQA) async {
+        this.reportQA = reportQA.report;
+        reportImages = reportQA.report.reportItems
+            .where((element) => element.value != 'NA')
+            .where((element) =>
+                element.type == ResponseFormat.Image.prettyString())
+            .map((e) => e.name)
+            .toList();
+        setState(() {});
+      });
     } catch (e, s) {
       dev.log("Error getting report items: " + e.toString(), stackTrace: s);
     }
@@ -134,18 +137,15 @@ class _SessionDetailsCompleteReportState extends State<SessionDetailsCompleteRep
                 dev.log(value.toString());
                 switch (value) {
                   case 0:
-                    Navigator.pushNamed(
-                        context, SessionTransportView.routeName,
+                    Navigator.pushNamed(context, SessionTransportView.routeName,
                         arguments: session);
                     break;
                   case 1:
-                    Navigator.popUntil(
-                        context, ModalRoute.withName('/home'));
+                    Navigator.popUntil(context, ModalRoute.withName('/home'));
                     break;
                 }
 
-                setState(() =>
-                _currentIndex = value); // Respond to item press.
+                setState(() => _currentIndex = value); // Respond to item press.
               },
               items: const [
                 BottomNavigationBarItem(
@@ -166,8 +166,7 @@ class _SessionDetailsCompleteReportState extends State<SessionDetailsCompleteRep
                     Container(
                         margin: const EdgeInsets.only(
                             top: 16, left: 16, right: 16, bottom: 16),
-                        child: FxText.sh1(session.title, fontWeight: 700)
-                    ),
+                        child: FxText.sh1(session.title, fontWeight: 700)),
                     ExpansionPanelList(
                       expansionCallback: (int index, bool isExpanded) {
                         setState(() {
@@ -176,8 +175,8 @@ class _SessionDetailsCompleteReportState extends State<SessionDetailsCompleteRep
                       },
                       children: [
                         buildExpansionPanel(
-                            header:
-                            FxText.sh1("Vehicle Information", fontWeight: 600),
+                            header: FxText.sh1("Vehicle Information",
+                                fontWeight: 600),
                             child: Column(
                               children: _buildVehicleInfo(),
                             ),
@@ -189,7 +188,8 @@ class _SessionDetailsCompleteReportState extends State<SessionDetailsCompleteRep
                             ),
                             isExpanded: _isExpanded[1]),
                         buildExpansionPanel(
-                            header: FxText.sh1("Inspection QA", fontWeight: 600),
+                            header:
+                                FxText.sh1("Inspection QA", fontWeight: 600),
                             child: _getInspectionQA(),
                             isExpanded: _isExpanded[2]),
                         /*
@@ -203,8 +203,8 @@ class _SessionDetailsCompleteReportState extends State<SessionDetailsCompleteRep
                              child: _getInspectionPdfs(),
                              isExpanded: _isExpanded[4]),*/
                         buildExpansionPanel(
-                            header:
-                            FxText.sh1("Customer Information", fontWeight: 600),
+                            header: FxText.sh1("Customer Information",
+                                fontWeight: 600),
                             child: Column(
                               children: [
                                 Container(
@@ -215,9 +215,9 @@ class _SessionDetailsCompleteReportState extends State<SessionDetailsCompleteRep
                                       labelText: "Customer Name",
                                       border: theme.inputDecorationTheme.border,
                                       enabledBorder:
-                                      theme.inputDecorationTheme.border,
-                                      focusedBorder:
-                                      theme.inputDecorationTheme.focusedBorder,
+                                          theme.inputDecorationTheme.border,
+                                      focusedBorder: theme
+                                          .inputDecorationTheme.focusedBorder,
                                       prefixIcon: const Icon(
                                           MdiIcons.accountChildOutline,
                                           size: 24),
@@ -232,9 +232,9 @@ class _SessionDetailsCompleteReportState extends State<SessionDetailsCompleteRep
                                       labelText: "Customer Contact",
                                       border: theme.inputDecorationTheme.border,
                                       enabledBorder:
-                                      theme.inputDecorationTheme.border,
-                                      focusedBorder:
-                                      theme.inputDecorationTheme.focusedBorder,
+                                          theme.inputDecorationTheme.border,
+                                      focusedBorder: theme
+                                          .inputDecorationTheme.focusedBorder,
                                       prefixIcon: const Icon(
                                           MdiIcons.gamepadCircleOutline,
                                           size: 24),
@@ -256,8 +256,8 @@ class _SessionDetailsCompleteReportState extends State<SessionDetailsCompleteRep
 
   ExpansionPanel buildExpansionPanel(
       {required Widget header,
-        required Widget child,
-        required bool isExpanded}) {
+      required Widget child,
+      required bool isExpanded}) {
     return ExpansionPanel(
         backgroundColor: isExpanded ? AppColors.gallery : Colors.white,
         canTapOnHeader: true,
@@ -360,14 +360,15 @@ class _SessionDetailsCompleteReportState extends State<SessionDetailsCompleteRep
                     TextButton.icon(
                       label: FxText.sh1('Inventory'),
                       onPressed: () {
-                        MarketplaceInterface().sendSessionToInventory(session.id);
+                        MarketplaceInterface()
+                            .sendSessionToInventory(session.id);
                         Navigator.pop(context);
                         Navigator.pop(context);
                       },
                       icon: Icon(Icons.inventory,
                           size: 26,
                           color:
-                          theme.colorScheme.primaryVariant.withAlpha(220)),
+                              theme.colorScheme.primaryVariant.withAlpha(220)),
                     ),
                     TextButton.icon(
                       label: FxText.sh1('Transfer'),
@@ -375,7 +376,7 @@ class _SessionDetailsCompleteReportState extends State<SessionDetailsCompleteRep
                       icon: Icon(Icons.emoji_transportation,
                           size: 26,
                           color:
-                          theme.colorScheme.primaryVariant.withAlpha(220)),
+                              theme.colorScheme.primaryVariant.withAlpha(220)),
                     ),
                   ],
                 ),
@@ -409,8 +410,8 @@ class _SessionDetailsCompleteReportState extends State<SessionDetailsCompleteRep
         child: TextFormField(
           readOnly: true,
           initialValue:
-          ((session.purchasedPrice ?? 0) - (session.deductionsAmount ?? 0))
-              .toString(),
+              ((session.purchasedPrice ?? 0) - (session.deductionsAmount ?? 0))
+                  .toString(),
           decoration: InputDecoration(
             labelText: "Purchased Price",
             border: theme.inputDecorationTheme.border,
@@ -542,12 +543,13 @@ class _SessionDetailsCompleteReportState extends State<SessionDetailsCompleteRep
       height: 200,
       child: ListView(
         scrollDirection: Axis.horizontal,
-        children: reportImages!.map((e) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: ImageZoomViewer(e!, context: context),
-          );
-        })
+        children: reportImages!
+            .map((e) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: ImageZoomViewer(e!, context: context),
+              );
+            })
             .toList()
             .cast<Widget>(),
       ),

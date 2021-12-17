@@ -1,5 +1,4 @@
 class AppImages {
-
   static const _extSvg = ".svg";
   static const _extPng = ".png";
   static const _extJpg = ".jpg";
@@ -12,7 +11,8 @@ class AppImages {
   static const phone_msg = _basePath + "phone_msg" + _extSvg;
   static const settings = _basePath + "settings" + _extSvg;
   static const completed_session = _basePath + "completed_session" + _extSvg;
-  static const pending_approved_session = _basePath + "pending_approved_session" + _extSvg;
+  static const pending_approved_session =
+      _basePath + "pending_approved_session" + _extSvg;
   static const uploading_session = _basePath + "uploading_session" + _extSvg;
   static const upcoming_session = _basePath + "upcoming_session" + _extSvg;
   static const ongoing_session = _basePath + "ongoing_session" + _extSvg;
@@ -45,5 +45,4 @@ class AppImages {
 
   // GIF Images
   static const recording_gif = _basePath + "recording_gif" + _extGif;
-
 }

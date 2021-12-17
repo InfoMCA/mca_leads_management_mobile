@@ -1,4 +1,3 @@
-
 import 'package:mca_leads_management_mobile/utils/theme/theme_type.dart';
 
 extension ThemeExtension on ThemeType {

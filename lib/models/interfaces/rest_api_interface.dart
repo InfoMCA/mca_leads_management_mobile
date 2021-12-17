@@ -67,6 +67,7 @@ class RestAPIInterface {
       throw (e.toString());
     }
   }
+
   Future<Response> sendPatchReq(String path) async {
     try {
       dev.log("Patch Req: $path");
@@ -85,7 +86,7 @@ class RestAPIInterface {
     try {
       dev.log("Patch Req: $path");
       dev.log("Patch Req: $data");
-      Response response = await dio.patch(endpoint + path, data:data);
+      Response response = await dio.patch(endpoint + path, data: data);
       if (response.statusCode == HttpStatus.ok) {
         return response;
       }

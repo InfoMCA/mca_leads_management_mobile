@@ -14,24 +14,28 @@ import 'package:mca_leads_management_mobile/models/entities/marketplace/offer.da
 import 'package:mca_leads_management_mobile/models/interfaces/rest_api_interface.dart';
 
 class MarketplaceInterface extends RestAPIInterface {
-
   MarketplaceInterface() : super(CommandObject.inventory);
 
   Future<GetInventoryResponse> getInventories() async {
-    Response response = await sendGetReq(
-        "/inventory?dealerId=" + currentUser!.username);
+    Response response =
+        await sendGetReq("/inventory?dealerId=" + currentUser!.username);
     return GetInventoryResponse.fromJson(response.data);
   }
 
   Future<List<LeadSummary>> getInventoriesSummary() async {
-    Response response = await sendGetReq(
-        "/inventory/summary?userId=" + currentUser!.username);
-    GetInventorySummaryResponse inventorySummaryResponse = GetInventorySummaryResponse.fromJson(
-        response.data);
+    Response response =
+        await sendGetReq("/inventory/summary?userId=" + currentUser!.username);
+    GetInventorySummaryResponse inventorySummaryResponse =
+        GetInventorySummaryResponse.fromJson(response.data);
     dev.log(inventorySummaryResponse.toJson().toString());
-    return inventorySummaryResponse.inventorySummary.map((e) => LeadSummary(
-        e.inventoryItemSummary.id, e.inventoryItemSummary.vehicleId, e.vehicleSummary.ymmt, e.vehicleSummary.vin,
-        e.inventoryItemSummary.state.getViewTag(), e.inventoryItemSummary.purchaseDate ?? DateTime.now()))
+    return inventorySummaryResponse.inventorySummary
+        .map((e) => LeadSummary(
+            e.inventoryItemSummary.id,
+            e.inventoryItemSummary.vehicleId,
+            e.vehicleSummary.ymmt,
+            e.vehicleSummary.vin,
+            e.inventoryItemSummary.state.getViewTag(),
+            e.inventoryItemSummary.purchaseDate ?? DateTime.now()))
         .toList();
   }
 
@@ -41,49 +45,59 @@ class MarketplaceInterface extends RestAPIInterface {
   }
 
   Future<List<Marketplace>> getMarketPlaces() async {
-    Response response = await sendGetReq(
-        "/marketplaces?userId=" + currentUser!.username);
+    Response response =
+        await sendGetReq("/marketplaces?userId=" + currentUser!.username);
     return GetMarketplacesResponse.fromJson(response.data).marketplaces;
   }
 
   Future<GetListingsResponse> getListings() async {
-    Response response = await sendGetReq(
-        "/listing/user?id=" + currentUser!.username);
+    Response response =
+        await sendGetReq("/listing/user?id=" + currentUser!.username);
     return GetListingsResponse.fromJson(response.data);
   }
 
   Future<List<LeadSummary>> getListingsSummary() async {
     /*Response response = await sendGetReq(
         "listing/summary?id=" + currentUser!.username);*/
-    Response response = await sendGetReq(
-        "/listing/user?userId=" + currentUser!.username + "&states=" + ListingState.ACTIVE.getName());
+    Response response = await sendGetReq("/listing/user?userId=" +
+        currentUser!.username +
+        "&states=" +
+        ListingState.ACTIVE.getName());
 
-    List<LeadSummary> leadSummaries = GetListingsResponse
-        .fromJson(response.data)
-        .listings
-        .map((e) => LeadSummary(
-        e.listing.id, e.listing.vehicleId, e.vehicle.ymmt, e.vehicle.vin, LeadViewTag.listing,
-        e.listing.expirationTime))
-        .toList();
+    List<LeadSummary> leadSummaries =
+        GetListingsResponse.fromJson(response.data)
+            .listings
+            .map((e) => LeadSummary(
+                e.listing.id,
+                e.listing.vehicleId,
+                e.vehicle.ymmt,
+                e.vehicle.vin,
+                LeadViewTag.listing,
+                e.listing.expirationTime))
+            .toList();
     return leadSummaries;
   }
 
   Future<List<LeadSummary>> getListingsReceivedOffer() async {
     /*Response response = await sendGetReq(
         "listing/summary?id=" + currentUser!.username);*/
-    Response response = await sendGetReq(
-        "/listing/seller?userId=" + currentUser!.username + "&states=" + ListingState.ACTIVE.getName());
+    Response response = await sendGetReq("/listing/seller?userId=" +
+        currentUser!.username +
+        "&states=" +
+        ListingState.ACTIVE.getName());
 
-    List<LeadSummary> leadSummaries = GetListingsResponse
-        .fromJson(response.data)
-        .listings
-        .where((element) => element.listing.offerCount != 0)
-        .map((e) =>
-        LeadSummary(
-            e.listing.id, e.listing.vehicleId, e.vehicle.ymmt, e.vehicle.vin,
-            LeadViewTag.listing,
-            e.listing.expirationTime))
-        .toList();
+    List<LeadSummary> leadSummaries =
+        GetListingsResponse.fromJson(response.data)
+            .listings
+            .where((element) => element.listing.offerCount != 0)
+            .map((e) => LeadSummary(
+                e.listing.id,
+                e.listing.vehicleId,
+                e.vehicle.ymmt,
+                e.vehicle.vin,
+                LeadViewTag.listing,
+                e.listing.expirationTime))
+            .toList();
     return leadSummaries;
   }
 
@@ -96,26 +110,29 @@ class MarketplaceInterface extends RestAPIInterface {
     Response response = await sendGetReq(
         "/listing/buyer?userId=" + currentUser!.username + "&states=" + states);
 
-    List<LeadSummary> leadSummaries = GetListingsResponse
-        .fromJson(response.data)
-        .listings
-        .map((e) =>
-        LeadSummary(
-            e.listing.id, e.listing.vehicleId, e.vehicle.ymmt, e.vehicle.vin,
-            LeadViewTag.listing,
-            e.listing.expirationTime))
-        .toList();
+    List<LeadSummary> leadSummaries =
+        GetListingsResponse.fromJson(response.data)
+            .listings
+            .map((e) => LeadSummary(
+                e.listing.id,
+                e.listing.vehicleId,
+                e.vehicle.ymmt,
+                e.vehicle.vin,
+                LeadViewTag.listing,
+                e.listing.expirationTime))
+            .toList();
     return leadSummaries;
   }
 
   Future<List<Offer>> getOffers(String listingId) async {
-    Response response = await sendGetReq("/offers/listing?listingId=" + listingId);
+    Response response =
+        await sendGetReq("/offers/listing?listingId=" + listingId);
     return GetOffersResponse.fromJson(response.data).offers;
   }
 
   Future<List<LeadSummary>> getOffersSummary() async {
-    Response response = await sendGetReq(
-        "/offers/summary?listingId=" + currentUser!.username);
+    Response response =
+        await sendGetReq("/offers/summary?listingId=" + currentUser!.username);
     return [];
   }
 
@@ -131,8 +148,9 @@ class MarketplaceInterface extends RestAPIInterface {
 
   void sendSessionToInventory(String sessionId) async {
     sendPostReq(
-        "/inventory/from-session?sessionId=$sessionId&dealerId=${currentUser!.dealerId}",
-        '').whenComplete(() {
+            "/inventory/from-session?sessionId=$sessionId&dealerId=${currentUser!.dealerId}",
+            '')
+        .whenComplete(() {
       InventoryItem inventoryItem = InventoryItem(
           sessionId,
           sessionId,
@@ -153,7 +171,8 @@ class MarketplaceInterface extends RestAPIInterface {
     });
   }
 
-  void createNewListing(String vehicleId, String inventoryId, ListingNewReq listingNewReq) {
+  void createNewListing(
+      String vehicleId, String inventoryId, ListingNewReq listingNewReq) {
     for (String marketPlace in listingNewReq.marketPlaces) {
       Listing listing = Listing(
           "",
@@ -168,7 +187,8 @@ class MarketplaceInterface extends RestAPIInterface {
           DateTime.now().toUtc(),
           DateTime.now().toUtc(),
           listingNewReq.expirationDate.toUtc());
-      sendPostReq('/listing?userId=' + currentUser!.username, json.encode(listing));
+      sendPostReq(
+          '/listing?userId=' + currentUser!.username, json.encode(listing));
     }
   }
 
@@ -189,19 +209,22 @@ class MarketplaceInterface extends RestAPIInterface {
   }
 
   void acceptOffer(String offerId, String listingId) {
-    sendPatchReq("offers/accept?userId=${currentUser!
-        .username}&listingId=$listingId&offerId=$offerId");
+    sendPatchReq(
+        "offers/accept?userId=${currentUser!.username}&listingId=$listingId&offerId=$offerId");
   }
 
   void rejectOffer(String offerId, String listingId) {
-    sendPatchReq("offers/reject?userId=${currentUser!
-        .username}&listingId=$listingId&offerId=$offerId");
-
+    sendPatchReq(
+        "offers/reject?userId=${currentUser!.username}&listingId=$listingId&offerId=$offerId");
   }
 
   void counterOffer(String offerId, String listingId, int offerPrice) {
-    CounterOfferRequest counterOfferRequest = CounterOfferRequest(currentUser!
-        .username, listingId, offerId, offerPrice, DateTime.now().toUtc());
+    CounterOfferRequest counterOfferRequest = CounterOfferRequest(
+        currentUser!.username,
+        listingId,
+        offerId,
+        offerPrice,
+        DateTime.now().toUtc());
     sendPostReq("offers/counter/", json.encode(counterOfferRequest));
   }
 }

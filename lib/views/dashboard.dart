@@ -44,7 +44,6 @@ class _DashBoardState extends State<DashBoard> {
   late LogicalView logicalView;
   List<DrawerItem> drawerItems = [];
 
-
   void _getLeads() async {
     _leadList.clear();
     List<LeadSummary>? newLeads = await getLeads(logicalView);
@@ -65,61 +64,77 @@ class _DashBoardState extends State<DashBoard> {
     theme = AppTheme.theme;
     logicalView = LogicalView.approval;
     _getLeads();
-    for (var element in DrawerPanel.values) {_panelsExpansionStatus.add(false);}
+    for (var element in DrawerPanel.values) {
+      _panelsExpansionStatus.add(false);
+    }
     drawerItems = [
-      DrawerItem(panel: DrawerPanel.leads,
+      DrawerItem(
+          panel: DrawerPanel.leads,
           logicalView: LogicalView.approval,
           icon: Icons.approval,
           position: 1),
-      DrawerItem(panel: DrawerPanel.leads,
+      DrawerItem(
+          panel: DrawerPanel.leads,
           logicalView: LogicalView.followUpManager,
           icon: MdiIcons.contain,
           position: 2),
-      DrawerItem(panel: DrawerPanel.leads,
+      DrawerItem(
+          panel: DrawerPanel.leads,
           logicalView: LogicalView.appraisal,
           icon: Icons.price_check,
           position: 3),
-      DrawerItem(panel: DrawerPanel.inspections,
+      DrawerItem(
+          panel: DrawerPanel.inspections,
           logicalView: LogicalView.dispatched,
           icon: Icons.schedule_sharp,
           position: 4),
-      DrawerItem(panel: DrawerPanel.inspections,
+      DrawerItem(
+          panel: DrawerPanel.inspections,
           logicalView: LogicalView.active,
           icon: Icons.play_arrow,
           position: 5),
-      DrawerItem(panel: DrawerPanel.inspections,
+      DrawerItem(
+          panel: DrawerPanel.inspections,
           logicalView: LogicalView.completed,
           icon: Icons.done_outline,
           position: 6),
-      DrawerItem(panel: DrawerPanel.marketPlace,
+      DrawerItem(
+          panel: DrawerPanel.marketPlace,
           logicalView: LogicalView.inventory,
           icon: Icons.inventory,
           position: 7),
-      DrawerItem(panel: DrawerPanel.marketPlace,
+      DrawerItem(
+          panel: DrawerPanel.marketPlace,
           logicalView: LogicalView.receivedOffer,
           icon: MdiIcons.storeOutline,
           position: 8),
-      DrawerItem(panel: DrawerPanel.marketPlace,
+      DrawerItem(
+          panel: DrawerPanel.marketPlace,
           logicalView: LogicalView.sentOffer,
           icon: MdiIcons.storeOutline,
           position: 9),
-      DrawerItem(panel: DrawerPanel.marketPlace,
+      DrawerItem(
+          panel: DrawerPanel.marketPlace,
           logicalView: LogicalView.marketplace,
           icon: Icons.shopping_bag,
           position: 10),
-      DrawerItem(panel: DrawerPanel.transport,
+      DrawerItem(
+          panel: DrawerPanel.transport,
           logicalView: LogicalView.transferPlaced,
           icon: Icons.emoji_transportation,
           position: 11),
-      DrawerItem(panel: DrawerPanel.transport,
+      DrawerItem(
+          panel: DrawerPanel.transport,
           logicalView: LogicalView.transferRequest,
           icon: Icons.ev_station,
           position: 12),
-      DrawerItem(panel: DrawerPanel.transport,
+      DrawerItem(
+          panel: DrawerPanel.transport,
           logicalView: LogicalView.transferActive,
           icon: Icons.car_rental,
           position: 13),
-      DrawerItem(panel: DrawerPanel.transport,
+      DrawerItem(
+          panel: DrawerPanel.transport,
           logicalView: LogicalView.transferCompleted,
           icon: Icons.car_repair,
           position: 14),
@@ -129,8 +144,7 @@ class _DashBoardState extends State<DashBoard> {
   ExpansionPanel _buildExpansionPanel(DrawerPanel panel) {
     return ExpansionPanel(
         canTapOnHeader: true,
-        headerBuilder:
-            (BuildContext context, bool isExpanded) {
+        headerBuilder: (BuildContext context, bool isExpanded) {
           return ListTile(
             title: FxText.b1(panel.getName(),
                 color: isExpanded
@@ -142,10 +156,10 @@ class _DashBoardState extends State<DashBoard> {
         body: Container(
           padding: const EdgeInsets.only(bottom: 16),
           child: Column(
-              children: drawerItems.where((element) => element.panel == panel)
+              children: drawerItems
+                  .where((element) => element.panel == panel)
                   .map((e) => singleDrawerItem(e))
-                  .toList()
-          ),
+                  .toList()),
         ),
         isExpanded: _panelsExpansionStatus[DrawerPanel.values.indexOf(panel)]);
   }
@@ -153,86 +167,81 @@ class _DashBoardState extends State<DashBoard> {
   Widget _buildDrawer() {
     return Drawer(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            /*---------- Drawer Header ----------------*/
-            Expanded(
-              flex: 2,
-              child: DrawerHeader(
-                padding: const EdgeInsets.all(0),
-                margin: const EdgeInsets.all(0),
-                child: Container(
-                  color: lightColor.primaryVariant,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 16.0, bottom: 8, right: 16),
-                    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        /*---------- Drawer Header ----------------*/
+        Expanded(
+          flex: 2,
+          child: DrawerHeader(
+            padding: const EdgeInsets.all(0),
+            margin: const EdgeInsets.all(0),
+            child: Container(
+              color: lightColor.primaryVariant,
+              child: Padding(
+                padding:
+                    const EdgeInsets.only(left: 16.0, bottom: 8, right: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                      flex: 1,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const <Widget>[],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Expanded(
-                          flex: 1,
-                          child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Row(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
-                                children: const <Widget>[
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment:
-                          CrossAxisAlignment.start,
-                          children: <Widget>[
-                            FxText.h6(currentUser!.username,
-                                color: theme.colorScheme.onPrimary,
-                                fontWeight: 600),
-                            FxText.b2("manager1@mycarauction.com",
-                                color: theme.colorScheme.onPrimary,
-                                fontWeight: 400)
-                          ],
-                        ),
+                        FxText.h6(currentUser!.username,
+                            color: theme.colorScheme.onPrimary,
+                            fontWeight: 600),
+                        FxText.b2("manager1@mycarauction.com",
+                            color: theme.colorScheme.onPrimary, fontWeight: 400)
                       ],
                     ),
-                  ),
+                  ],
                 ),
-                decoration: BoxDecoration(color: theme.primaryColor),
               ),
             ),
+            decoration: BoxDecoration(color: theme.primaryColor),
+          ),
+        ),
 
-            /*------------- Drawer Content -------------*/
-            Expanded(
-              flex: 8,
-              child: Container(
-                color: theme.backgroundColor,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: ListView(
-                    padding: const EdgeInsets.all(0),
-                    children: <Widget>[
-                      ExpansionPanelList(
-                          expandedHeaderPadding: const EdgeInsets.all(0),
-                          expansionCallback: (int index, bool isExpanded) {
-                            setState(() {
-                              _panelsExpansionStatus[index] = !isExpanded;
-                            });
-                          },
-                          animationDuration: const Duration(milliseconds: 500),
-                          children: DrawerPanel.values.map((e) =>
-                              _buildExpansionPanel(e)).toList()
-                      ),
-                    ],
-                  ),
-                ),
+        /*------------- Drawer Content -------------*/
+        Expanded(
+          flex: 8,
+          child: Container(
+            color: theme.backgroundColor,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: ListView(
+                padding: const EdgeInsets.all(0),
+                children: <Widget>[
+                  ExpansionPanelList(
+                      expandedHeaderPadding: const EdgeInsets.all(0),
+                      expansionCallback: (int index, bool isExpanded) {
+                        setState(() {
+                          _panelsExpansionStatus[index] = !isExpanded;
+                        });
+                      },
+                      animationDuration: const Duration(milliseconds: 500),
+                      children: DrawerPanel.values
+                          .map((e) => _buildExpansionPanel(e))
+                          .toList()),
+                ],
               ),
-            )
-          ],
-        ));
+            ),
+          ),
+        )
+      ],
+    ));
   }
 
   Widget _buildItemList() {
@@ -243,12 +252,10 @@ class _DashBoardState extends State<DashBoard> {
             color: theme.backgroundColor,
             child: ListTile(
               leading: CircleAvatar(
-                backgroundColor: _leadList[index].viewTag
-                    .getBackgroundColor(),
+                backgroundColor: _leadList[index].viewTag.getBackgroundColor(),
                 child: FxText.b1(_leadList[index].viewTag.getAbbrv(),
                     fontWeight: 600,
-                    color: _leadList[index].viewTag
-                        .getForegroundColor()),
+                    color: _leadList[index].viewTag.getForegroundColor()),
               ),
               subtitle: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -264,8 +271,7 @@ class _DashBoardState extends State<DashBoard> {
                 ],
               ),
               title: FxText.b1(_leadList[index].getCompactTitle(),
-                  fontWeight: 700,
-                  color: theme.colorScheme.onBackground),
+                  fontWeight: 700, color: theme.colorScheme.onBackground),
               onTap: () {
                 Navigator.pushNamed(
                   context,
@@ -275,15 +281,13 @@ class _DashBoardState extends State<DashBoard> {
                       _leadList[index].vehicleId,
                       _leadList[index].vin,
                       _leadList[index].title,
-                      logicalView
-                  ),
+                      logicalView),
                 );
               },
             ),
           );
         },
-        separatorBuilder: (_, __) =>
-            Divider(
+        separatorBuilder: (_, __) => Divider(
               height: 0.5,
               color: theme.dividerColor,
             ));
@@ -295,16 +299,19 @@ class _DashBoardState extends State<DashBoard> {
         key: _scaffoldKey,
         appBar: AppBar(
           elevation: 0,
-          title: FxText.sh1(logicalView.getName(), fontWeight: 600,
-            color: theme.backgroundColor,),
+          title: FxText.sh1(
+            logicalView.getName(),
+            fontWeight: 600,
+            color: theme.backgroundColor,
+          ),
           iconTheme: IconThemeData(color: theme.backgroundColor),
         ),
         drawer: _buildDrawer(),
         body: Column(
           children: [
             Container(
-              padding: const EdgeInsets.only(
-                  left: 12, top: 8, right: 12, bottom: 8),
+              padding:
+                  const EdgeInsets.only(left: 12, top: 8, right: 12, bottom: 8),
               child: Row(
                 children: <Widget>[
                   Expanded(
@@ -318,12 +325,10 @@ class _DashBoardState extends State<DashBoard> {
                           decoration: InputDecoration(
                             hintText: "VIN or Last Six",
                             border: theme.inputDecorationTheme.border,
-                            enabledBorder: theme.inputDecorationTheme
-                                .border,
-                            focusedBorder: theme.inputDecorationTheme
-                                .focusedBorder,
-                            prefixIcon:
-                            const Icon(MdiIcons.numeric, size: 24),
+                            enabledBorder: theme.inputDecorationTheme.border,
+                            focusedBorder:
+                                theme.inputDecorationTheme.focusedBorder,
+                            prefixIcon: const Icon(MdiIcons.numeric, size: 24),
                           )),
                     ),
                   ),
@@ -331,8 +336,7 @@ class _DashBoardState extends State<DashBoard> {
               ),
             ),
             Expanded(
-              child:
-              NotificationListener<ScrollNotification>(
+              child: NotificationListener<ScrollNotification>(
                 onNotification: (ScrollNotification scrollInfo) {
                   if (scrollInfo.metrics.pixels ==
                       scrollInfo.metrics.maxScrollExtent) {
@@ -344,8 +348,7 @@ class _DashBoardState extends State<DashBoard> {
               ),
             ),
           ],
-        )
-    );
+        ));
   }
 
   void _searchLeadSession(context, keyword) async {
@@ -362,41 +365,45 @@ class _DashBoardState extends State<DashBoard> {
         _leadList.add(leadSummary);
         setState(() {});
       } catch (e) {
-        showSnackBar(context: context, text: 'Lead was not found');
+        showSnackBar(
+            context: context,
+            text: 'Lead was not found',
+            backgroundColor: lightColor.defaultError.primaryVariant);
       }
     }
   }
 
   Widget singleDrawerItem(DrawerItem drawerItem) {
-    return _singleDrawerItem(drawerItem.icon, drawerItem.logicalView, drawerItem.position);
+    return _singleDrawerItem(
+        drawerItem.icon, drawerItem.logicalView, drawerItem.position);
   }
-  Widget _singleDrawerItem(IconData iconData, LogicalView logicalView, int position) {
+
+  Widget _singleDrawerItem(
+      IconData iconData, LogicalView logicalView, int position) {
     return ListTile(
-      dense: true,
-      contentPadding: const EdgeInsets.only(top: 0.0, left: 16, right: 16, bottom: 0),
-      leading: Icon(iconData,
-          size: 20,
-          color: _selectedPage == position
-              ? theme.colorScheme.primary
-              : theme.colorScheme.onBackground.withAlpha(240)),
-      title: FxText.sh2(logicalView.getName(),
-          fontSize: 14,
-          fontWeight: _selectedPage == position ? 600 : 500,
-          letterSpacing: 0.2,
-          color: _selectedPage == position
-              ? theme.colorScheme.primary
-              : theme.colorScheme.onBackground.withAlpha(240)),
-      onTap: () {
+        dense: true,
+        contentPadding:
+            const EdgeInsets.only(top: 0.0, left: 16, right: 16, bottom: 0),
+        leading: Icon(iconData,
+            size: 20,
+            color: _selectedPage == position
+                ? theme.colorScheme.primary
+                : theme.colorScheme.onBackground.withAlpha(240)),
+        title: FxText.sh2(logicalView.getName(),
+            fontSize: 14,
+            fontWeight: _selectedPage == position ? 600 : 500,
+            letterSpacing: 0.2,
+            color: _selectedPage == position
+                ? theme.colorScheme.primary
+                : theme.colorScheme.onBackground.withAlpha(240)),
+        onTap: () {
           setState(() {
             this.logicalView = logicalView;
             _getLeads();
             _selectedPage = position;
           });
 
-        _scaffoldKey.currentState!.openEndDrawer();
-      }
-    );
+          _scaffoldKey.currentState!.openEndDrawer();
+        });
   }
-
-
 }

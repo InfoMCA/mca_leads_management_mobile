@@ -17,12 +17,11 @@ import 'package:mca_leads_management_mobile/models/entities/session/session_summ
 import 'package:mca_leads_management_mobile/models/interfaces/rest_api_interface.dart';
 
 class TransportInterface extends RestAPIInterface {
-
   TransportInterface() : super(CommandObject.transport);
 
-  Future<Response> transfer(String id, PutNewOrderRequest putNewOrderRequest) async {
-    return await sendPutReq("/transport/new-order",
-        json.encode(putNewOrderRequest));
+  Future<Response> transfer(
+      String id, PutNewOrderRequest putNewOrderRequest) async {
+    return await sendPutReq(
+        "/transport/new-order", json.encode(putNewOrderRequest));
   }
-
 }

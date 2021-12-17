@@ -19,8 +19,6 @@ class CustomTheme {
       shimmerBaseColor,
       shimmerHighlightColor;
 
-
-
   final Color groceryPrimary, groceryOnPrimary;
 
   final Color medicarePrimary, medicareOnPrimary;
@@ -76,7 +74,6 @@ class CustomTheme {
 
     this.groceryPrimary = const Color(0xff10bb6b),
     this.groceryOnPrimary = const Color(0xffffffff),
-
 
     //Cookify
     this.cookifyPrimary = const Color(0xffdf7463),
@@ -159,5 +156,4 @@ class CustomTheme {
       onError: Color(0xffffffff),
       shimmerBaseColor: Color(0xFF1a1a1a),
       shimmerHighlightColor: Color(0xFF454545));
-
 }

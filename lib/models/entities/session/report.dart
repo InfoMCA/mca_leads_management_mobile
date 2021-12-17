@@ -15,24 +15,24 @@ class ReportItem {
 
   ReportItem(
       {required this.name,
-        required this.placeholder,
-        required this.questionFormat,
-        this.items = const [],
-        required this.responseFormat,
-        required this.defaultValue,
-        this.value = "",
-        this.comments = ""});
+      required this.placeholder,
+      required this.questionFormat,
+      this.items = const [],
+      required this.responseFormat,
+      required this.defaultValue,
+      this.value = "",
+      this.comments = ""});
 
   factory ReportItem.fromJson(Map<String, dynamic> jsonMap) {
     return ReportItem(
         name: jsonMap['name'],
         placeholder: jsonMap['placeholder'],
         questionFormat: EnumToString.fromString(
-            QuestionFormat.values, jsonMap['questionFormat']) ??
+                QuestionFormat.values, jsonMap['questionFormat']) ??
             QuestionFormat.None,
         items: List<String>.from(jsonMap['items'] as List),
         responseFormat: EnumToString.fromString(
-            ResponseFormat.values, jsonMap['responseFormat'] ?? "") ??
+                ResponseFormat.values, jsonMap['responseFormat'] ?? "") ??
             ResponseFormat.Text,
         defaultValue: jsonMap['defaultValue'],
         value: jsonMap['value'] ?? jsonMap['defaultValue'],
@@ -82,7 +82,6 @@ class ReportV1 {
       _$ReportV1FromJson(json);
 
   Map<String, dynamic> toJson() => _$ReportV1ToJson(this);
-
 }
 
 @JsonSerializable()
@@ -131,7 +130,7 @@ enum QuestionFormat {
 enum ResponseFormat { Text, Image, Pdf }
 
 extension ResponseFormatExt on ResponseFormat {
-  String prettyString () {
+  String prettyString() {
     return toString().substring(toString().lastIndexOf(".") + 1);
   }
 

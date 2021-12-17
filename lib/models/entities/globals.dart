@@ -48,9 +48,8 @@ Future<List<LeadSummary>?> getLeads(LogicalView logicalView) async {
     newLeads = await MarketplaceInterface().getListingsSummary();
   } else if (logicalView == LogicalView.receivedOffer) {
     newLeads = await MarketplaceInterface().getListingsReceivedOffer();
-  }  else if (logicalView == LogicalView.sentOffer) {
+  } else if (logicalView == LogicalView.sentOffer) {
     newLeads = await MarketplaceInterface().getListingsSentOffer();
   }
   return newLeads;
 }
-

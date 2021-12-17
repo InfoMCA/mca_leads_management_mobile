@@ -6,13 +6,13 @@
 import 'dart:developer' as dev;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:mca_leads_management_mobile/models/entities/api/lead/lead_req.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/lead_interface.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_lost_dialog.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_question_view.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_schedule_view.dart';
+import 'package:mca_leads_management_mobile/widgets/common/notifications.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -41,9 +41,6 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
   late ThemeData theme;
   late Lead? lead;
   late Future<Lead?> leadFuture;
-  late DateTime? selectedDate;
-  final followupDateController = TextEditingController();
-  late ScrollController _controller;
   int _currentIndex = 0;
   late LeadUpdateRequest leadUpdateRequest;
 
@@ -52,13 +49,9 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
   @override
   void initState() {
     super.initState();
-    _controller = ScrollController();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
     _getLead(widget.args.id);
-    selectedDate = DateTime.now();
-    followupDateController.text =
-        DateFormat('yyyy-MM-dd').format(selectedDate!);
   }
 
   Future<void> _getLead(String leadId) async {
@@ -72,6 +65,332 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
       path: phoneNumber,
     );
     await launch(launchUri.toString());
+  }
+
+  _buildActionBar() {
+    return BottomNavigationBar(
+      currentIndex: _currentIndex,
+      type: BottomNavigationBarType.fixed,
+      backgroundColor: lightColor.secondary,
+      selectedItemColor: Colors.white.withOpacity(.80),
+      unselectedItemColor: Colors.white.withOpacity(.80),
+      onTap: (value) {
+        dev.log(value.toString());
+        switch (value) {
+          case 0:
+            Navigator.pushNamed(context, LeadScheduleView.routeName,
+                arguments: lead);
+            break;
+          case 1:
+            showDialog(
+                context: context,
+                builder: (BuildContext context) =>
+                    LeadFollowUpDialog(onSubmit: (followUpInfo) {
+                      LeadInterface().setForFollowUp(lead!.id, followUpInfo);
+                    }));
+            break;
+          case 2:
+            showDialog(
+                context: context,
+                builder: (BuildContext context) =>
+                    LeadUnAnsweredDialog(onSubmit: (unansweredInfo) {
+                      LeadInterface().setAsUnAnswered(lead!.id, unansweredInfo);
+                    }));
+            break;
+          case 3:
+            showDialog(
+                context: context,
+                builder: (BuildContext context) =>
+                    LeadLostDialog(onSubmit: (lostReason) {
+                      LeadInterface().setAsLost(lead!.id, lostReason);
+                    }));
+            break;
+          case 4:
+            LeadInterface().update(lead!.id, leadUpdateRequest);
+            Navigator.pop(context);
+            break;
+          case 5:
+            if (lead!.conditionQuestions != null) {
+              Navigator.pushNamed(context, LeadQuestionView.routeName,
+                  arguments: lead);
+            } else {
+              showSnackBar(
+                  context: context,
+                  text: "There is no condition questions for this lead!",
+                  backgroundColor: lightColor.defaultError.primaryVariant);
+            }
+            break;
+        }
+
+        setState(() => _currentIndex = value); // Respond to item press.
+      },
+      items: const [
+        BottomNavigationBarItem(
+          label: 'Dispatch',
+          icon: Icon(Icons.calendar_today),
+        ),
+        BottomNavigationBarItem(
+          label: 'FollowUp',
+          icon: Icon(Icons.call),
+        ),
+        BottomNavigationBarItem(
+          label: 'UnAnswered',
+          icon: Icon(Icons.call_missed),
+        ),
+        BottomNavigationBarItem(
+          label: 'Lost',
+          icon: Icon(Icons.delete),
+        ),
+        BottomNavigationBarItem(
+          label: 'Save',
+          icon: Icon(Icons.save),
+        ),
+        BottomNavigationBarItem(
+          label: 'Questions',
+          icon: Icon(Icons.question_answer),
+        ),
+      ],
+    );
+  }
+
+  _buildVehicleInfoPanel() {
+    return ExpansionPanel(
+        backgroundColor: Colors.grey[100],
+        canTapOnHeader: true,
+        headerBuilder: (BuildContext context, bool isExpanded) {
+          return ListTile(
+            title: FxText.b1("Vehicle Information",
+                color: isExpanded
+                    ? lightColor.primary
+                    : theme.colorScheme.onBackground,
+                fontWeight: isExpanded ? 700 : 600),
+          );
+        },
+        body: Container(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Column(children: [
+            Container(
+              margin: const EdgeInsets.only(top: 8, left: 8, right: 8),
+              child: TextFormField(
+                readOnly: true,
+                initialValue: lead!.vin,
+                decoration: InputDecoration(
+                  labelText: "VIN",
+                  border: theme.inputDecorationTheme.border,
+                  enabledBorder: theme.inputDecorationTheme.border,
+                  focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                  prefixIcon:
+                      const Icon(Icons.confirmation_number_outlined, size: 24),
+                ),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 8, left: 8, right: 8),
+              child: TextFormField(
+                initialValue: lead!.color,
+                readOnly: true,
+                decoration: InputDecoration(
+                  labelText: "Color",
+                  border: theme.inputDecorationTheme.border,
+                  enabledBorder: theme.inputDecorationTheme.border,
+                  focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                  prefixIcon: const Icon(Icons.color_lens_outlined, size: 24),
+                ),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 8, left: 8, right: 8),
+              child: TextFormField(
+                readOnly: true,
+                initialValue: lead!.mileage.toString(),
+                decoration: InputDecoration(
+                  labelText: "Mileage",
+                  border: theme.inputDecorationTheme.border,
+                  enabledBorder: theme.inputDecorationTheme.border,
+                  focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                  prefixIcon: const Icon(
+                    Icons.speed,
+                    size: 24,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 8, left: 8, right: 8),
+              child: TextFormField(
+                readOnly: true,
+                initialValue: lead!.estimatedCr.toString(),
+                decoration: InputDecoration(
+                  labelText: "Estimated CR",
+                  border: theme.inputDecorationTheme.border,
+                  enabledBorder: theme.inputDecorationTheme.border,
+                  focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                  prefixIcon: const Icon(
+                    Icons.high_quality,
+                    size: 24,
+                  ),
+                ),
+              ),
+            ),
+          ]),
+        ),
+        isExpanded: _panelsExpansionStatus[0]);
+  }
+
+  _buildPriceInformationPanel() {
+    return ExpansionPanel(
+        backgroundColor: Colors.grey[100],
+        canTapOnHeader: true,
+        headerBuilder: (BuildContext context, bool isExpanded) {
+          return ListTile(
+            title: FxText.b1("Price Information",
+                color: isExpanded
+                    ? lightColor.primary
+                    : theme.colorScheme.onBackground,
+                fontWeight: isExpanded ? 700 : 600),
+          );
+        },
+        body: Container(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Column(children: [
+            Container(
+              margin: const EdgeInsets.only(top: 8, left: 8, right: 8),
+              child: TextFormField(
+                readOnly: true,
+                initialValue: lead!.askingPrice.toString(),
+                decoration: InputDecoration(
+                  labelText: "Listing Price",
+                  border: theme.inputDecorationTheme.border,
+                  enabledBorder: theme.inputDecorationTheme.border,
+                  focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                  prefixIcon: const Icon(
+                    Icons.list,
+                    size: 24,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 8, left: 8, right: 8),
+              child: TextFormField(
+                readOnly: true,
+                initialValue: lead!.mmr.toString(),
+                decoration: InputDecoration(
+                  labelText: "MMR",
+                  border: theme.inputDecorationTheme.border,
+                  enabledBorder: theme.inputDecorationTheme.border,
+                  focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                  prefixIcon: const Icon(
+                    Icons.price_change,
+                    size: 24,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 8, left: 8, right: 8),
+              child: TextFormField(
+                initialValue: (lead!.offeredPrice ?? 0).toString(),
+                onChanged: (text) =>
+                    leadUpdateRequest.offerPrice = int.parse(text),
+                decoration: InputDecoration(
+                  labelText: "Offered Price",
+                  border: theme.inputDecorationTheme.border,
+                  enabledBorder: theme.inputDecorationTheme.border,
+                  focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                  prefixIcon: const Icon(
+                    Icons.price_change_outlined,
+                    size: 24,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 8, left: 8, right: 8),
+              child: TextFormField(
+                initialValue: (lead!.requestedPrice ?? 0).toString(),
+                onChanged: (text) =>
+                    leadUpdateRequest.requestedPrice = int.parse(text),
+                decoration: InputDecoration(
+                  labelText: "Requested Price",
+                  border: theme.inputDecorationTheme.border,
+                  enabledBorder: theme.inputDecorationTheme.border,
+                  focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                  prefixIcon: const Icon(
+                    Icons.price_change,
+                    size: 24,
+                  ),
+                ),
+              ),
+            ),
+          ]),
+        ),
+        isExpanded: _panelsExpansionStatus[1]);
+  }
+
+  _buildCustomerInformationPanel() {
+    return ExpansionPanel(
+        backgroundColor: Colors.grey[100],
+        canTapOnHeader: true,
+        headerBuilder: (BuildContext context, bool isExpanded) {
+          return ListTile(
+            title: FxText.b1("Customer Information",
+                color: isExpanded
+                    ? lightColor.primary
+                    : theme.colorScheme.onBackground,
+                fontWeight: isExpanded ? 700 : 600),
+          );
+        },
+        body: Container(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Column(children: [
+            Container(
+              margin: const EdgeInsets.only(top: 8, left: 8, right: 8),
+              child: TextFormField(
+                initialValue: lead!.customerName ?? "",
+                onChanged: (text) => leadUpdateRequest.customerName = text,
+                decoration: InputDecoration(
+                  labelText: "Customer Name",
+                  border: theme.inputDecorationTheme.border,
+                  enabledBorder: theme.inputDecorationTheme.border,
+                  focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                  prefixIcon:
+                      const Icon(MdiIcons.accountChildOutline, size: 24),
+                ),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 8, left: 8, right: 8),
+              child: TextFormField(
+                initialValue: lead!.payoffStatus ?? "",
+                onChanged: (text) => leadUpdateRequest.payoffStatus = text,
+                decoration: InputDecoration(
+                  labelText: "Payoff Status",
+                  border: theme.inputDecorationTheme.border,
+                  enabledBorder: theme.inputDecorationTheme.border,
+                  focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                  prefixIcon:
+                      const Icon(MdiIcons.gamepadCircleOutline, size: 24),
+                ),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 8, left: 8, right: 8),
+              child: TextFormField(
+                onChanged: (text) => leadUpdateRequest.comment = text,
+                decoration: InputDecoration(
+                  labelText: "Comment",
+                  border: theme.inputDecorationTheme.border,
+                  enabledBorder: theme.inputDecorationTheme.border,
+                  focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                  prefixIcon:
+                      const Icon(MdiIcons.gamepadCircleOutline, size: 24),
+                ),
+              ),
+            ),
+          ]),
+        ),
+        isExpanded: _panelsExpansionStatus[2]);
   }
 
   @override
@@ -98,11 +417,14 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
           }
           lead = snapshot.data;
           leadUpdateRequest = LeadUpdateRequest(
-              lead!.customerName ?? "", lead!.offeredPrice ?? 0,
-              lead!.requestedPrice ?? 0, lead!.payoffStatus ?? '', '');
+              lead!.customerName ?? "",
+              lead!.offeredPrice ?? 0,
+              lead!.requestedPrice ?? 0,
+              lead!.payoffStatus ?? '',
+              '');
           return Scaffold(
               appBar: AppBar(
-                backgroundColor: lightColor.primary,
+                backgroundColor: lightColor.secondary,
                 elevation: 0,
                 leading: InkWell(
                   onTap: () => Navigator.of(context).pop(),
@@ -130,94 +452,7 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                   color: theme.backgroundColor,
                 ),
               ),
-              bottomNavigationBar: BottomNavigationBar(
-                currentIndex: _currentIndex,
-                type: BottomNavigationBarType.fixed,
-                backgroundColor: lightColor.primary,
-                selectedItemColor: Colors.white.withOpacity(.80),
-                unselectedItemColor: Colors.white.withOpacity(.80),
-                onTap: (value) {
-                  dev.log(value.toString());
-                  switch (value) {
-                    case 0:
-                      Navigator.pushNamed(
-                          context, LeadScheduleView.routeName,
-                          arguments: lead);
-                      break;
-                    case 1:
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) =>
-                              LeadFollowUpDialog(
-                                  onSubmit: (followUpInfo) {
-                                    LeadInterface().setForFollowUp(
-                                        lead!.id, followUpInfo);
-                                  }
-                              ));
-                      break;
-                    case 2:
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) =>
-                              LeadUnAnsweredDialog(
-                                  onSubmit: (unansweredInfo) {
-                                    LeadInterface().setAsUnAnswered(
-                                        lead!.id, unansweredInfo);
-                                  }
-                              ));
-                      break;
-                    case 3:
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) =>
-                              LeadLostDialog(
-                                  onSubmit: (lostReason) {
-                                    LeadInterface().setAsLost(
-                                        lead!.id, lostReason);
-                                  }
-                              ));
-                      break;
-                    case 4:
-                      LeadInterface().update(lead!.id, leadUpdateRequest);
-                      Navigator.pop(context);
-                      break;
-                    case 5:
-                      Navigator.pushNamed(
-                          context, LeadQuestionView.routeName,
-                          arguments: lead);
-                      break;
-                  }
-
-                  setState(() =>
-                  _currentIndex = value); // Respond to item press.
-                },
-                items: const [
-                  BottomNavigationBarItem(
-                    label: 'Dispatch',
-                    icon: Icon(Icons.calendar_today),
-                  ),
-                  BottomNavigationBarItem(
-                    label: 'FollowUp',
-                    icon: Icon(Icons.call),
-                  ),
-                  BottomNavigationBarItem(
-                    label: 'UnAnswered',
-                    icon: Icon(Icons.call_missed),
-                  ),
-                  BottomNavigationBarItem(
-                    label: 'Lost',
-                    icon: Icon(Icons.delete),
-                  ),
-                  BottomNavigationBarItem(
-                    label: 'Save',
-                    icon: Icon(Icons.save),
-                  ),
-                  BottomNavigationBarItem(
-                    label: 'Questions',
-                    icon: Icon(Icons.question_answer),
-                  ),
-                ],
-              ),
+              bottomNavigationBar: _buildActionBar(),
               body: GestureDetector(
                   onTap: () {
                     FocusScopeNode currentFocus = FocusScope.of(context);
@@ -226,7 +461,6 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                     }
                   },
                   child: SingleChildScrollView(
-                    controller: _controller,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
@@ -234,8 +468,7 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                           Container(
                               margin: const EdgeInsets.only(
                                   top: 16, left: 16, right: 16, bottom: 16),
-                              child: FxText.sh1(lead!.name, fontWeight: 700)
-                          ),
+                              child: FxText.sh1(lead!.name, fontWeight: 700)),
                           ExpansionPanelList(
                             expandedHeaderPadding: const EdgeInsets.all(0),
                             expansionCallback: (int index, bool isExpanded) {
@@ -243,345 +476,12 @@ class _LeadDetailsViewState extends State<LeadDetailsView> {
                                 _panelsExpansionStatus[index] = !isExpanded;
                               });
                             },
-                            animationDuration: const Duration(
-                                milliseconds: 500),
+                            animationDuration:
+                                const Duration(milliseconds: 500),
                             children: [
-                              ExpansionPanel(
-                                  backgroundColor: Colors.grey[100],
-                                  canTapOnHeader: true,
-                                  headerBuilder:
-                                      (BuildContext context, bool isExpanded) {
-                                    return ListTile(
-                                      title: FxText.b1("Vehicle Information",
-                                          color: isExpanded
-                                              ? lightColor.primary
-                                              : theme.colorScheme.onBackground,
-                                          fontWeight: isExpanded ? 700 : 600),
-                                    );
-                                  },
-                                  body: Container(
-                                    padding: const EdgeInsets.only(bottom: 16),
-                                    child: Column(
-                                        children: [
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                top: 8, left: 8, right: 8),
-                                            child: TextFormField(
-                                              readOnly: true,
-                                              initialValue: lead!.vin,
-                                              decoration: InputDecoration(
-                                                labelText: "VIN",
-                                                border: theme
-                                                    .inputDecorationTheme
-                                                    .border,
-                                                enabledBorder: theme
-                                                    .inputDecorationTheme
-                                                    .border,
-                                                focusedBorder:
-                                                theme.inputDecorationTheme
-                                                    .focusedBorder,
-                                                prefixIcon: const Icon(
-                                                    Icons
-                                                        .confirmation_number_outlined,
-                                                    size: 24),
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                top: 8, left: 8, right: 8),
-                                            child: TextFormField(
-                                              initialValue: lead!.color,
-                                              readOnly: true,
-                                              decoration: InputDecoration(
-                                                labelText: "Color",
-                                                border: theme
-                                                    .inputDecorationTheme
-                                                    .border,
-                                                enabledBorder:
-                                                theme.inputDecorationTheme
-                                                    .border,
-                                                focusedBorder:
-                                                theme.inputDecorationTheme
-                                                    .focusedBorder,
-                                                prefixIcon: const Icon(
-                                                    Icons.color_lens_outlined,
-                                                    size: 24),
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                top: 8, left: 8, right: 8),
-                                            child: TextFormField(
-                                              readOnly: true,
-                                              initialValue: lead!.mileage
-                                                  .toString(),
-                                              decoration: InputDecoration(
-                                                labelText: "Mileage",
-                                                border: theme
-                                                    .inputDecorationTheme
-                                                    .border,
-                                                enabledBorder:
-                                                theme.inputDecorationTheme
-                                                    .border,
-                                                focusedBorder:
-                                                theme.inputDecorationTheme
-                                                    .focusedBorder,
-                                                prefixIcon: const Icon(
-                                                  Icons.speed,
-                                                  size: 24,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                top: 8, left: 8, right: 8),
-                                            child: TextFormField(
-                                              readOnly: true,
-                                              initialValue: lead!.estimatedCr
-                                                  .toString(),
-                                              decoration: InputDecoration(
-                                                labelText: "Estimated CR",
-                                                border: theme
-                                                    .inputDecorationTheme
-                                                    .border,
-                                                enabledBorder:
-                                                theme.inputDecorationTheme
-                                                    .border,
-                                                focusedBorder:
-                                                theme.inputDecorationTheme
-                                                    .focusedBorder,
-                                                prefixIcon: const Icon(
-                                                  Icons.high_quality,
-                                                  size: 24,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-
-                                        ]
-                                    ),
-                                  ),
-                                  isExpanded: _panelsExpansionStatus[0]),
-                              ExpansionPanel(
-                                  backgroundColor: Colors.grey[100],
-                                  canTapOnHeader: true,
-                                  headerBuilder:
-                                      (BuildContext context, bool isExpanded) {
-                                    return ListTile(
-                                      title: FxText.b1("Price Information",
-                                          color: isExpanded
-                                              ? lightColor.primary
-                                              : theme.colorScheme.onBackground,
-                                          fontWeight: isExpanded ? 700 : 600),
-                                    );
-                                  },
-                                  body: Container(
-                                    padding: const EdgeInsets.only(bottom: 16),
-                                    child: Column(
-                                        children: [
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                top: 8, left: 8, right: 8),
-                                            child: TextFormField(
-                                              readOnly: true,
-                                              initialValue: lead!.askingPrice
-                                                  .toString(),
-                                              decoration: InputDecoration(
-                                                labelText: "Listing Price",
-                                                border: theme
-                                                    .inputDecorationTheme
-                                                    .border,
-                                                enabledBorder:
-                                                theme.inputDecorationTheme
-                                                    .border,
-                                                focusedBorder:
-                                                theme.inputDecorationTheme
-                                                    .focusedBorder,
-                                                prefixIcon: const Icon(
-                                                  Icons.list,
-                                                  size: 24,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                top: 8, left: 8, right: 8),
-                                            child: TextFormField(
-                                              readOnly: true,
-                                              initialValue: lead!.mmr
-                                                  .toString(),
-                                              decoration: InputDecoration(
-                                                labelText: "MMR",
-                                                border: theme
-                                                    .inputDecorationTheme
-                                                    .border,
-                                                enabledBorder:
-                                                theme.inputDecorationTheme
-                                                    .border,
-                                                focusedBorder:
-                                                theme.inputDecorationTheme
-                                                    .focusedBorder,
-                                                prefixIcon: const Icon(
-                                                  Icons.price_change,
-                                                  size: 24,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                top: 8, left: 8, right: 8),
-                                            child: TextFormField(
-                                              initialValue:
-                                              (lead!.offeredPrice ?? 0)
-                                                  .toString(),
-                                              onChanged: (text) => leadUpdateRequest.offerPrice = int.parse(text),
-                                              decoration: InputDecoration(
-                                                labelText: "Offered Price",
-                                                border: theme
-                                                    .inputDecorationTheme
-                                                    .border,
-                                                enabledBorder:
-                                                theme.inputDecorationTheme
-                                                    .border,
-                                                focusedBorder:
-                                                theme.inputDecorationTheme
-                                                    .focusedBorder,
-                                                prefixIcon: const Icon(
-                                                  Icons.price_change_outlined,
-                                                  size: 24,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                top: 8, left: 8, right: 8),
-                                            child: TextFormField(
-                                              initialValue:
-                                              (lead!.requestedPrice ?? 0)
-                                                  .toString(),
-                                              onChanged: (text) => leadUpdateRequest.requestedPrice = int.parse(text),
-                                              decoration: InputDecoration(
-                                                labelText: "Requested Price",
-                                                border: theme
-                                                    .inputDecorationTheme
-                                                    .border,
-                                                enabledBorder:
-                                                theme.inputDecorationTheme
-                                                    .border,
-                                                focusedBorder:
-                                                theme.inputDecorationTheme
-                                                    .focusedBorder,
-                                                prefixIcon: const Icon(
-                                                  Icons.price_change,
-                                                  size: 24,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ]
-                                    ),
-                                  ),
-                                  isExpanded: _panelsExpansionStatus[1]),
-                              ExpansionPanel(
-                                  backgroundColor: Colors.grey[100],
-                                  canTapOnHeader: true,
-                                  headerBuilder:
-                                      (BuildContext context, bool isExpanded) {
-                                    return ListTile(
-                                      title: FxText.b1("Customer Information",
-                                          color: isExpanded
-                                              ? lightColor.primary
-                                              : theme.colorScheme.onBackground,
-                                          fontWeight: isExpanded ? 700 : 600),
-                                    );
-                                  },
-                                  body: Container(
-                                    padding: const EdgeInsets.only(bottom: 16),
-                                    child: Column(
-                                        children: [
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                top: 8, left: 8, right: 8),
-                                            child: TextFormField(
-                                              initialValue: lead!
-                                                  .customerName ?? "",
-                                              onChanged: (text) => leadUpdateRequest.customerName = text,
-                                              decoration: InputDecoration(
-                                                labelText: "Customer Name",
-                                                border: theme
-                                                    .inputDecorationTheme
-                                                    .border,
-                                                enabledBorder:
-                                                theme.inputDecorationTheme
-                                                    .border,
-                                                focusedBorder:
-                                                theme.inputDecorationTheme
-                                                    .focusedBorder,
-                                                prefixIcon: const Icon(
-                                                    MdiIcons
-                                                        .accountChildOutline,
-                                                    size: 24),
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                top: 8, left: 8, right: 8),
-                                            child: TextFormField(
-                                              initialValue: lead!
-                                                  .payoffStatus ?? "",
-                                              onChanged: (text) => leadUpdateRequest.payoffStatus = text,
-                                              decoration: InputDecoration(
-                                                labelText: "Payoff Status",
-                                                border: theme
-                                                    .inputDecorationTheme
-                                                    .border,
-                                                enabledBorder:
-                                                theme.inputDecorationTheme
-                                                    .border,
-                                                focusedBorder:
-                                                theme.inputDecorationTheme
-                                                    .focusedBorder,
-                                                prefixIcon: const Icon(
-                                                    MdiIcons
-                                                        .gamepadCircleOutline,
-                                                    size: 24),
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                top: 8, left: 8, right: 8),
-                                            child: TextFormField(
-                                              onChanged: (text) => leadUpdateRequest.comment = text,
-                                              decoration: InputDecoration(
-                                                labelText: "Comment",
-                                                border: theme
-                                                    .inputDecorationTheme
-                                                    .border,
-                                                enabledBorder:
-                                                theme.inputDecorationTheme
-                                                    .border,
-                                                focusedBorder:
-                                                theme.inputDecorationTheme
-                                                    .focusedBorder,
-                                                prefixIcon: const Icon(
-                                                    MdiIcons
-                                                        .gamepadCircleOutline,
-                                                    size: 24),
-                                              ),
-                                            ),
-                                          ),
-                                        ]
-                                    ),
-                                  ),
-                                  isExpanded: _panelsExpansionStatus[2]),
+                              _buildVehicleInfoPanel(),
+                              _buildPriceInformationPanel(),
+                              _buildCustomerInformationPanel()
                             ],
                           ),
                         ],

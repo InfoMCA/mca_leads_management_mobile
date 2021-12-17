@@ -14,7 +14,6 @@ enum OfferState {
   EXPIRED
 }
 
-
 extension OfferStateExt on OfferState {
   getName() => toString().substring(toString().indexOf(".") + 1);
 
@@ -110,7 +109,8 @@ class Offer {
   DateTime lastModifiedTime;
   DateTime expirationTime;
 
-  Offer(this.id,
+  Offer(
+      this.id,
       this.sellerId,
       this.buyerId,
       this.listingId,
@@ -122,9 +122,7 @@ class Offer {
       this.lastModifiedTime,
       this.expirationTime);
 
-  factory Offer.fromJson(Map<String, dynamic> json) =>
-      _$OfferFromJson(json);
+  factory Offer.fromJson(Map<String, dynamic> json) => _$OfferFromJson(json);
 
   Map<String, dynamic> toJson() => _$OfferToJson(this);
-
 }

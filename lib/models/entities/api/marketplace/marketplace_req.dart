@@ -1,4 +1,3 @@
-
 import 'package:json_annotation/json_annotation.dart';
 
 part 'marketplace_req.g.dart';
@@ -18,5 +17,4 @@ class CounterOfferRequest {
       _$CounterOfferRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$CounterOfferRequestToJson(this);
-
 }

@@ -43,7 +43,6 @@ class AppTheme {
     });
   }
 
-
   static ThemeData getTheme([ThemeType? themeType]) {
     themeType = themeType ?? AppTheme.themeType;
     if (themeType == ThemeType.light) return lightTheme;
@@ -63,8 +62,6 @@ class AppTheme {
       FxAppTheme.changeThemeType(FxAppThemeType.dark);
     }
   }
-
-  
 
   /// -------------------------- Light Theme  -------------------------------------------- ///
   static final ThemeData lightTheme = ThemeData(
@@ -111,7 +108,8 @@ class AppTheme {
         foregroundColor: const Color(0xffeeeeee)),
 
     /// Divider Theme
-    dividerTheme: const DividerThemeData(color: Color(0xffe8e8e8), thickness: 1),
+    dividerTheme:
+        const DividerThemeData(color: Color(0xffe8e8e8), thickness: 1),
     dividerColor: const Color(0xffe8e8e8),
 
     /// Bottom AppBar Theme
@@ -119,7 +117,7 @@ class AppTheme {
         const BottomAppBarTheme(color: Color(0xffeeeeee), elevation: 2),
 
     /// Tab bar Theme
-    tabBarTheme:  TabBarTheme(
+    tabBarTheme: TabBarTheme(
       unselectedLabelColor: Color(0xff495057),
       labelColor: Color(0xff3d63ff),
       indicatorSize: TabBarIndicatorSize.label,
@@ -141,26 +139,26 @@ class AppTheme {
 
     ///Switch Theme
     switchTheme: SwitchThemeData(
-      trackColor: MaterialStateProperty.resolveWith((state){
+      trackColor: MaterialStateProperty.resolveWith((state) {
         const Set<MaterialState> interactiveStates = <MaterialState>{
           MaterialState.pressed,
           MaterialState.hovered,
           MaterialState.focused,
           MaterialState.selected,
         };
-        if(state.any(interactiveStates.contains)){
+        if (state.any(interactiveStates.contains)) {
           return const Color(0xffabb3ea);
         }
         return null;
       }),
-      thumbColor: MaterialStateProperty.resolveWith((state){
+      thumbColor: MaterialStateProperty.resolveWith((state) {
         const Set<MaterialState> interactiveStates = <MaterialState>{
           MaterialState.pressed,
           MaterialState.hovered,
           MaterialState.focused,
           MaterialState.selected,
         };
-        if(state.any(interactiveStates.contains)){
+        if (state.any(interactiveStates.contains)) {
           return const Color(0xff3C4EC5);
         }
         return null;
@@ -221,7 +219,6 @@ class AppTheme {
       onBackground: Color(0xfff3f3f3),
       onSecondary: Colors.white,
       surface: Color(0xff585e63),
-
     ),
 
     /// Input (Text-Field) Theme
@@ -269,32 +266,31 @@ class AppTheme {
 
     ///Switch Theme
     switchTheme: SwitchThemeData(
-      trackColor: MaterialStateProperty.resolveWith((state){
+      trackColor: MaterialStateProperty.resolveWith((state) {
         const Set<MaterialState> interactiveStates = <MaterialState>{
           MaterialState.pressed,
           MaterialState.hovered,
           MaterialState.focused,
           MaterialState.selected,
         };
-        if(state.any(interactiveStates.contains)){
+        if (state.any(interactiveStates.contains)) {
           return Color(0xffabb3ea);
         }
         return null;
       }),
-      thumbColor: MaterialStateProperty.resolveWith((state){
+      thumbColor: MaterialStateProperty.resolveWith((state) {
         const Set<MaterialState> interactiveStates = <MaterialState>{
           MaterialState.pressed,
           MaterialState.hovered,
           MaterialState.focused,
           MaterialState.selected,
         };
-        if(state.any(interactiveStates.contains)){
+        if (state.any(interactiveStates.contains)) {
           return Color(0xff3C4EC5);
         }
         return null;
       }),
     ),
-
 
     /// Slider Theme
     sliderTheme: SliderThemeData(
@@ -326,7 +322,6 @@ class AppTheme {
 enum FxAppThemeType { light, dark }
 
 class FxAppTheme {
-
   static FxAppThemeType defaultThemeType = FxAppThemeType.light;
 
   static TextDirection _textDirection = TextDirection.ltr;
@@ -335,13 +330,11 @@ class FxAppTheme {
   static TextDirection get textDirection => _textDirection;
 
   // ignore: unnecessary_getters_setters
-  static set textDirection(TextDirection textDirection){
+  static set textDirection(TextDirection textDirection) {
     _textDirection = textDirection;
   }
 
-
   static ThemeData get theme => FxAppTheme.getThemeFromThemeMode();
-
 
   static ThemeData lightTheme = ThemeData.light().copyWith(
     brightness: Brightness.light,
@@ -358,9 +351,9 @@ class FxAppTheme {
     ),
     navigationRailTheme: const NavigationRailThemeData(
         selectedIconTheme:
-        IconThemeData(color: Color(0xff3d63ff), opacity: 1, size: 24),
+            IconThemeData(color: Color(0xff3d63ff), opacity: 1, size: 24),
         unselectedIconTheme:
-        IconThemeData(color: Color(0xff495057), opacity: 1, size: 24),
+            IconThemeData(color: Color(0xff495057), opacity: 1, size: 24),
         backgroundColor: Color(0xffffffff),
         elevation: 3,
         selectedLabelTextStyle: TextStyle(color: Color(0xff3d63ff)),
@@ -375,7 +368,6 @@ class FxAppTheme {
         surface: Color(0xffe2e7f1),
         background: Color(0xfffefefe),
         onBackground: Color(0xff495057)),
-
     cardTheme: CardTheme(
       color: Colors.white,
       shadowColor: Colors.black.withOpacity(0.4),
@@ -401,7 +393,6 @@ class FxAppTheme {
     iconTheme: IconThemeData(
       color: Colors.white,
     ),
-
     indicatorColor: Colors.white,
     disabledColor: Color(0xffdcc7ff),
     highlightColor: Colors.white,
@@ -418,10 +409,9 @@ class FxAppTheme {
     cardColor: Colors.white,
     popupMenuTheme: PopupMenuThemeData(
       color: Color(0xffffffff),
-
     ),
     bottomAppBarTheme:
-    BottomAppBarTheme(color: Color(0xffffffff), elevation: 2),
+        BottomAppBarTheme(color: Color(0xffffffff), elevation: 2),
     tabBarTheme: TabBarTheme(
       unselectedLabelColor: Color(0xff495057),
       labelColor: Color(0xff3d63ff),
@@ -482,10 +472,7 @@ class FxAppTheme {
       indicatorColor: Colors.white,
       disabledColor: Color(0xffa3a3a3),
       highlightColor: Colors.white,
-
-
       inputDecorationTheme: InputDecorationTheme(
-
         fillColor: Color(0xff3E444A),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(4)),
@@ -493,15 +480,12 @@ class FxAppTheme {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(4)),
-          borderSide: BorderSide(width: 1,
-              color: Colors.white70),
+          borderSide: BorderSide(width: 1, color: Colors.white70),
         ),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(4)),
             borderSide: BorderSide(width: 1, color: Colors.white70)),
       ),
-
-
       dividerColor: Color(0xff363636),
       errorColor: Colors.orange,
       cardColor: Color(0xff282a2b),
@@ -516,10 +500,9 @@ class FxAppTheme {
           foregroundColor: Colors.white),
       popupMenuTheme: PopupMenuThemeData(
         color: Color(0xff37404a),
-
       ),
       bottomAppBarTheme:
-      BottomAppBarTheme(color: Color(0xff464c52), elevation: 2),
+          BottomAppBarTheme(color: Color(0xff464c52), elevation: 2),
       tabBarTheme: TabBarTheme(
         unselectedLabelColor: Color(0xff495057),
         labelColor: Color(0xff3d63ff),
@@ -556,17 +539,15 @@ class FxAppTheme {
     }
   }
 
-
-  static void changeLightTheme(ThemeData themeData){
+  static void changeLightTheme(ThemeData themeData) {
     lightTheme = themeData;
   }
 
-  static void changeDarkTheme(ThemeData themeData){
+  static void changeDarkTheme(ThemeData themeData) {
     darkTheme = themeData;
   }
 
-  static void changeThemeType(FxAppThemeType? themeType){
+  static void changeThemeType(FxAppThemeType? themeType) {
     defaultThemeType = themeType!;
   }
-
 }

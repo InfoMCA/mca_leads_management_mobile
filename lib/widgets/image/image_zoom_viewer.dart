@@ -6,10 +6,10 @@ class ImageZoomViewer extends StatelessWidget {
   final String url;
 
   const ImageZoomViewer(
-      this.url, {
-        Key? key,
-        required this.context,
-      }) : super(key: key);
+    this.url, {
+    Key? key,
+    required this.context,
+  }) : super(key: key);
 
   final BuildContext context;
 
@@ -19,7 +19,7 @@ class ImageZoomViewer extends StatelessWidget {
       child: CachedNetworkImage(
         imageUrl: url,
         progressIndicatorBuilder: (context, url, downloadProgress) =>
-        const CircularProgressIndicator(),
+            const CircularProgressIndicator(),
         errorWidget: (context, url, error) => const Icon(Icons.device_unknown),
       ),
       onTap: () {
@@ -27,19 +27,19 @@ class ImageZoomViewer extends StatelessWidget {
             barrierDismissible: false,
             context: context,
             builder: (_) => InteractiveViewer(
-              child: GestureDetector(
-                onTap: () => Modular.to.pop(),
-                child: CachedNetworkImage(
-                  imageUrl: url,
-                  progressIndicatorBuilder:
-                      (context, url, downloadProgress) =>
-                      CircularProgressIndicator(
-                          value: downloadProgress.progress),
-                  errorWidget: (context, url, error) =>
-                  const Icon(Icons.device_unknown),
-                ),
-              ),
-            ));
+                  child: GestureDetector(
+                    onTap: () => Modular.to.pop(),
+                    child: CachedNetworkImage(
+                      imageUrl: url,
+                      progressIndicatorBuilder:
+                          (context, url, downloadProgress) =>
+                              CircularProgressIndicator(
+                                  value: downloadProgress.progress),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.device_unknown),
+                    ),
+                  ),
+                ));
       },
     );
   }

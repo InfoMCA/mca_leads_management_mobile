@@ -58,7 +58,6 @@ class LeadUpdateRequest {
       _$LeadUpdateRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$LeadUpdateRequestToJson(this);
-
 }
 
 @JsonSerializable()
@@ -68,7 +67,8 @@ class GetInspectorsResp {
   String userPhone;
   List<String> inspectors;
 
-  GetInspectorsResp(this.region, this.timeZone, this.userPhone, this.inspectors);
+  GetInspectorsResp(
+      this.region, this.timeZone, this.userPhone, this.inspectors);
 
   factory GetInspectorsResp.fromJson(Map<String, dynamic> json) =>
       _$GetInspectorsRespFromJson(json);
@@ -124,4 +124,3 @@ class LeadSearchRequest {
 
   Map<String, dynamic> toJson() => _$LeadSearchRequestToJson(this);
 }
-

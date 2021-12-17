@@ -9,7 +9,6 @@
 
 /// [FxTextStyle] - gives 13 different type of styles to the text on the basis of size
 
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -32,12 +31,7 @@ enum FxTextSize {
   overline
 }
 
-
-
-
 class FxTextStyle {
-
-
   static Function _fontFamily = GoogleFonts.poppins;
 
   static Map<int, FontWeight> _defaultFontWeight = {

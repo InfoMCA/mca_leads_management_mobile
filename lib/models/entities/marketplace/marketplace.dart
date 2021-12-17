@@ -13,7 +13,6 @@ class Marketplace {
       _$MarketplaceFromJson(json);
 
   Map<String, dynamic> toJson() => _$MarketplaceToJson(this);
-
 }
 
 @JsonSerializable()

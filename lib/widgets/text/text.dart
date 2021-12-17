@@ -393,20 +393,21 @@ class FxText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: style?? FxTextStyle.getStyle(
-        textStyle: style,
-        color: color,
-        fontWeight: fontWeight,
-        muted: muted,
-        letterSpacing: letterSpacing ??
-            FxTextStyle.defaultLetterSpacing[fxTextSize] ??
-            0.15,
-        height: height,
-        xMuted: xMuted,
-        decoration: decoration,
-        wordSpacing: wordSpacing,
-        fontSize: fontSize ?? FxTextStyle.defaultTextSize[fxTextSize],
-      ),
+      style: style ??
+          FxTextStyle.getStyle(
+            textStyle: style,
+            color: color,
+            fontWeight: fontWeight,
+            muted: muted,
+            letterSpacing: letterSpacing ??
+                FxTextStyle.defaultLetterSpacing[fxTextSize] ??
+                0.15,
+            height: height,
+            xMuted: xMuted,
+            decoration: decoration,
+            wordSpacing: wordSpacing,
+            fontSize: fontSize ?? FxTextStyle.defaultTextSize[fxTextSize],
+          ),
       textAlign: textAlign,
       maxLines: maxLines,
       locale: locale,
@@ -414,7 +415,7 @@ class FxText extends StatelessWidget {
       semanticsLabel: semanticsLabel,
       softWrap: softWrap,
       strutStyle: strutStyle,
-      textDirection: textDirection??FxAppTheme.textDirection,
+      textDirection: textDirection ?? FxAppTheme.textDirection,
       textHeightBehavior: textHeightBehavior,
       textScaleFactor: textScaleFactor,
       textWidthBasis: textWidthBasis,
