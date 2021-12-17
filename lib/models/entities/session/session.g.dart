@@ -27,13 +27,15 @@ Session _$SessionFromJson(Map<String, dynamic> json) => Session(
       region: json['region'] as String?,
       service: json['service'] as String,
       staff: json['staff'] as String,
-      scheduledDateTime: json['scheduledDateTime'] as String,
     )
       ..purchasedPrice = (json['purchasedPrice'] as num?)?.toDouble()
       ..deductionsAmount = (json['deductionsAmount'] as num?)?.toDouble()
       ..lenderAmount = (json['lenderAmount'] as num?)?.toDouble()
       ..customerAmount = (json['customerAmount'] as num?)?.toDouble()
       ..withholdingAmount = (json['withholdingAmount'] as num?)?.toDouble()
+      ..scheduledTime = json['scheduledTime'] == null
+          ? null
+          : DateTime.parse(json['scheduledTime'] as String)
       ..purchasedDate = json['purchasedDate'] == null
           ? null
           : DateTime.parse(json['purchasedDate'] as String);
@@ -54,6 +56,7 @@ Map<String, dynamic> _$SessionToJson(Session instance) => <String, dynamic>{
       'lenderAmount': instance.lenderAmount,
       'customerAmount': instance.customerAmount,
       'withholdingAmount': instance.withholdingAmount,
+      'scheduledTime': instance.scheduledTime?.toIso8601String(),
       'purchasedDate': instance.purchasedDate?.toIso8601String(),
       'address1': instance.address1,
       'address2': instance.address2,
@@ -65,5 +68,4 @@ Map<String, dynamic> _$SessionToJson(Session instance) => <String, dynamic>{
       'service': instance.service,
       'phone': instance.phone,
       'customerName': instance.customerName,
-      'scheduledDateTime': instance.scheduledDateTime?.toIso8601String(),
     };

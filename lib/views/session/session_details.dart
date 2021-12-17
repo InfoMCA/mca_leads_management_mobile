@@ -571,21 +571,19 @@ class _SessionDetailsState extends State<SessionDetails> {
                                     margin: const EdgeInsets.only(top: 8),
                                     child: FxDateText(
                                         label: 'Schedule Date',
-                                        initValue: session?.scheduledDateTime ??
+                                        initValue: session?.scheduledTime ??
                                             DateTime.now(),
-                                        onDateChanged: (newDate) =>
-                                            session?.scheduledDate = newDate,
-                                        validator: (value) =>
-                                            _validate(value))),
+                                        onDateChanged: (newDate) {}
+                                      )
+                                ),
                                 Container(
                                     margin: const EdgeInsets.only(top: 8),
                                     child: FxTimeText(
                                         label: 'Schedule Time',
                                         initValue: TimeOfDay.fromDateTime(
-                                            session?.scheduledDateTime ??
+                                            session?.scheduledTime ??
                                                 DateTime.now()),
-                                        onTimeChanged: (newTime) =>
-                                            session?.scheduledTime = newTime,
+                                        onTimeChanged: (newTime) {},
                                         validator: (value) =>
                                             _validate(value))),
                               ]),

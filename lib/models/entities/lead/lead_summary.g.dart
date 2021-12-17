@@ -28,6 +28,10 @@ Map<String, dynamic> _$LeadSummaryToJson(LeadSummary instance) =>
     };
 
 const _$LeadViewTagEnumMap = {
+  LeadViewTag.callerReady: 'callerReady',
+  LeadViewTag.callerFollowUp: 'callerFollowUp',
+  LeadViewTag.callerDenied: 'callerDenied',
+  LeadViewTag.callerLost: 'callerLost',
   LeadViewTag.approvalBuyNow: 'approvalBuyNow',
   LeadViewTag.approvalAuction: 'approvalAuction',
   LeadViewTag.approvalDealMade: 'approvalDealMade',
