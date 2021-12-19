@@ -142,7 +142,6 @@ class _SessionDetailsCompleteReportState
                         arguments: PutNewOrderRequest.fromSession(session));
                     break;
                   case 1:
-                    MarketplaceInterface().sendSessionToInventory(session.id);
                     Navigator.pop(context);
                     break;
                 }

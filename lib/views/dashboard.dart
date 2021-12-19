@@ -75,12 +75,13 @@ class _DashBoardState extends State<DashBoard> {
     NotificationHandler.start();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
-    logicalView = LogicalView.approval;
+    logicalView = LogicalView.inventory;
     _getLeads();
     for (var element in DrawerPanel.values) {
       _panelsExpansionStatus.add(false);
     }
     drawerItems = [
+      /*
       DrawerItem(
           panel: DrawerPanel.leads,
           logicalView: LogicalView.approval,
@@ -110,27 +111,28 @@ class _DashBoardState extends State<DashBoard> {
           panel: DrawerPanel.inspections,
           logicalView: LogicalView.completed,
           icon: Icons.done_outline,
-          position: 6),
+          position: 6),*/
       DrawerItem(
           panel: DrawerPanel.marketPlace,
           logicalView: LogicalView.inventory,
           icon: Icons.inventory,
-          position: 7),
+          position: 1),
       DrawerItem(
           panel: DrawerPanel.marketPlace,
           logicalView: LogicalView.receivedOffer,
           icon: MdiIcons.storeOutline,
-          position: 8),
+          position: 2),
       DrawerItem(
           panel: DrawerPanel.marketPlace,
           logicalView: LogicalView.sentOffer,
           icon: MdiIcons.storeOutline,
-          position: 9),
+          position: 3),
       DrawerItem(
           panel: DrawerPanel.marketPlace,
           logicalView: LogicalView.marketplace,
           icon: Icons.shopping_bag,
-          position: 10),
+          position: 4)
+      /*
       DrawerItem(
           panel: DrawerPanel.transport,
           logicalView: LogicalView.transferPlaced,
@@ -150,7 +152,7 @@ class _DashBoardState extends State<DashBoard> {
           panel: DrawerPanel.transport,
           logicalView: LogicalView.transferCompleted,
           icon: Icons.car_repair,
-          position: 14),
+          position: 14),*/
     ];
   }
 
