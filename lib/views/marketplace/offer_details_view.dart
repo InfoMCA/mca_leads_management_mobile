@@ -141,7 +141,8 @@ class _OfferDetailViewState extends State<OfferDetailView> {
                       children: [
                         FxText.h6(
                           _getTitle(offers![index]),
-                          color: offers![index].state.getTitleColor(logicalView),
+                          color:
+                              offers![index].state.getTitleColor(logicalView),
                           fontWeight: 600,
                           xMuted: true,
                         ),

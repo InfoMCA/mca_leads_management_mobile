@@ -142,7 +142,8 @@ class _SessionDetailsCompleteReportState
                         arguments: PutNewOrderRequest.fromSession(session));
                     break;
                   case 1:
-                    Navigator.popUntil(context, ModalRoute.withName('/home'));
+                    MarketplaceInterface().sendSessionToInventory(session.id);
+                    Navigator.pop(context);
                     break;
                 }
 

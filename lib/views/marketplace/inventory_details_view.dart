@@ -3,6 +3,7 @@ import 'dart:developer' as dev;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:intl/intl.dart';
 import 'package:mca_leads_management_mobile/models/entities/api/transport/transport_req.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead/lead_summary.dart';
@@ -153,9 +154,26 @@ class _InventoryDetailViewState extends State<InventoryDetailView> {
                     margin: const EdgeInsets.only(top: 8, left: 8, right: 8),
                     child: TextFormField(
                       readOnly: true,
-                      initialValue: inventoryItem.sellerId,
+                      initialValue: inventoryItem.sellerName,
                       decoration: InputDecoration(
                         labelText: "Seller Name",
+                        border: theme.inputDecorationTheme.border,
+                        enabledBorder: theme.inputDecorationTheme.border,
+                        focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                        prefixIcon: const Icon(
+                          Icons.price_change,
+                          size: 24,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 8, left: 8, right: 8),
+                    child: TextFormField(
+                      readOnly: true,
+                      initialValue: inventoryItem.buyerName,
+                      decoration: InputDecoration(
+                        labelText: "Buyer Name",
                         border: theme.inputDecorationTheme.border,
                         enabledBorder: theme.inputDecorationTheme.border,
                         focusedBorder: theme.inputDecorationTheme.focusedBorder,
@@ -173,6 +191,24 @@ class _InventoryDetailViewState extends State<InventoryDetailView> {
                       initialValue: inventoryItem.tradedPrice.toString(),
                       decoration: InputDecoration(
                         labelText: "Traded Price",
+                        border: theme.inputDecorationTheme.border,
+                        enabledBorder: theme.inputDecorationTheme.border,
+                        focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                        prefixIcon: const Icon(
+                          Icons.price_change,
+                          size: 24,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 8, left: 8, right: 8),
+                    child: TextFormField(
+                      readOnly: true,
+                      initialValue: DateFormat.yMMMd()
+                          .format(inventoryItem.tradedTime ?? DateTime.now()),
+                      decoration: InputDecoration(
+                        labelText: "Traded Date",
                         border: theme.inputDecorationTheme.border,
                         enabledBorder: theme.inputDecorationTheme.border,
                         focusedBorder: theme.inputDecorationTheme.focusedBorder,

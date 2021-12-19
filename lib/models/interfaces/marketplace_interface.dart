@@ -153,8 +153,10 @@ class MarketplaceInterface extends RestAPIInterface {
           DateTime.now().toUtc(),
           DateTime.now().toUtc(),
           DateTime.now().toUtc(),
+          0,
+          DateTime.now().toUtc(),
           "",
-          0);
+          "");
       sendPostReq('/inventory/item?userId=' + currentUser!.username,
           json.encode(inventoryItem));
     });

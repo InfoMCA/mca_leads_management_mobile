@@ -90,7 +90,7 @@ extension OfferStateExt on OfferState {
       case OfferState.BUYER_REJECTED:
       case OfferState.SELLER_REJECTED:
       case OfferState.EXPIRED:
-      return Colors.black45;
+        return Colors.black45;
     }
   }
 
