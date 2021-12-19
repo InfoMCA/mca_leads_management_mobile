@@ -2,14 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:intl/intl.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mca_leads_management_mobile/models/entities/api/marketplace/marketplace_resp.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
+import 'package:mca_leads_management_mobile/models/entities/lead/lead_summary.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/marketplace_interface.dart';
 import 'package:mca_leads_management_mobile/utils/spacing.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_view_arg.dart';
+import 'package:mca_leads_management_mobile/widgets/common/notifications.dart';
 import 'package:mca_leads_management_mobile/widgets/dialog/price_offer_dialog.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 
@@ -30,13 +31,8 @@ class _MarketListingDetailViewState extends State<MarketListingDetailView> {
   late ThemeData theme;
   late GetListingResponse? listingInfo;
   late Future<GetListingResponse> listingInfoFuture;
-  final regionController = TextEditingController();
+  late LeadViewTag viewTag;
 
-  late List<String> inspectors = [];
-  late String inspector;
-  late int inspectionTime;
-  late DateTime scheduleDate;
-  late TimeOfDay scheduleTime;
   var _currentIndex = 1;
   final _panelsExpansionStatus = [false, true];
 
@@ -51,6 +47,7 @@ class _MarketListingDetailViewState extends State<MarketListingDetailView> {
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
     _getListingInfo(widget.args.id);
+    viewTag = widget.args.leadViewTag;
   }
 
   @override
@@ -77,6 +74,7 @@ class _MarketListingDetailViewState extends State<MarketListingDetailView> {
           return Scaffold(
             appBar: AppBar(
               elevation: 0,
+              backgroundColor: lightColor.secondary,
               leading: InkWell(
                 onTap: () => Navigator.of(context).pop(),
                 child: Icon(
@@ -86,27 +84,39 @@ class _MarketListingDetailViewState extends State<MarketListingDetailView> {
                 ),
               ),
               title: FxText.sh1(
-                'Marketplace Listing Detail',
+                'Marketplace Listing',
                 fontWeight: 600,
                 color: theme.backgroundColor,
               ),
             ),
             bottomNavigationBar: BottomNavigationBar(
               currentIndex: _currentIndex,
+              backgroundColor: lightColor.secondary,
               type: BottomNavigationBarType.fixed,
-              backgroundColor: lightColor.primary,
               selectedItemColor: Colors.white.withOpacity(.80),
               unselectedItemColor: Colors.white.withOpacity(.80),
               onTap: (value) {
-                if (value == 1) {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) => OfferPriceDialog(
-                            onSubmit: (text) {
-                              MarketplaceInterface().submitOffer(
-                                  listingInfo!.listing.id, int.parse(text));
-                            },
-                          ));
+                if (value == 0) {
+                  if (viewTag != LeadViewTag.ownership) {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) => OfferPriceDialog(
+                              onSubmit: (offerRequest) {
+                                offerRequest.listingId =
+                                    listingInfo!.listing.id;
+                                offerRequest.offerExpirationTime =
+                                    listingInfo!.listing.expirationTime;
+                                MarketplaceInterface()
+                                    .submitOffer(offerRequest);
+                              },
+                            ));
+                  } else {
+                    showSnackBar(
+                        context: context,
+                        text: "You can't offer for your listed vehicle!",
+                        backgroundColor:
+                            lightColor.defaultError.primaryVariant);
+                  }
                 } else {
                   Navigator.pop(context);
                 }
@@ -114,12 +124,12 @@ class _MarketListingDetailViewState extends State<MarketListingDetailView> {
               },
               items: const [
                 BottomNavigationBarItem(
-                  label: 'Buy',
-                  icon: Icon(Icons.thumb_up),
-                ),
-                BottomNavigationBarItem(
                   label: 'Offer',
                   icon: Icon(Icons.local_offer),
+                ),
+                BottomNavigationBarItem(
+                  label: 'Close',
+                  icon: Icon(Icons.close),
                 ),
               ],
             ),
@@ -325,62 +335,6 @@ class _MarketListingDetailViewState extends State<MarketListingDetailView> {
                             ),
                             isExpanded: _panelsExpansionStatus[1]),
                       ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        });
-  }
-
-  void _showBottomSheet(context) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext buildContext) {
-          return Container(
-            height: 80,
-            color: Colors.transparent,
-            child: Container(
-              decoration: BoxDecoration(
-                  color: theme.backgroundColor,
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16))),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    TextButton.icon(
-                      label: FxText.sh1('Buy'),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: Icon(Icons.sell,
-                          size: 32,
-                          color:
-                              theme.colorScheme.primaryVariant.withAlpha(220)),
-                    ),
-                    TextButton.icon(
-                      label: FxText.sh1('Offer'),
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) => OfferPriceDialog(
-                                  onSubmit: (text) {
-                                    MarketplaceInterface().submitOffer(
-                                        listingInfo!.listing.id,
-                                        int.parse(text));
-                                  },
-                                ));
-                      },
-                      icon: Icon(Icons.thumb_up_alt,
-                          size: 32,
-                          color:
-                              theme.colorScheme.primaryVariant.withAlpha(220)),
                     ),
                   ],
                 ),

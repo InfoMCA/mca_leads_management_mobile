@@ -3,18 +3,23 @@ import 'dart:developer' as dev;
 import 'dart:collection';
 
 import 'package:flex_color_scheme/flex_color_scheme.dart';
+import 'package:flutter/material.dart';
 import 'package:mca_leads_management_mobile/models/entities/auth_user.dart';
-import 'package:mca_leads_management_mobile/models/entities/api/backend_req.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead/lead_summary.dart';
 import 'package:mca_leads_management_mobile/models/entities/marketplace/listing.dart';
 import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
-import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/lead_interface.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/marketplace_interface.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/session_interface.dart';
 
 import 'api/logical_view.dart';
 import 'marketplace/offer.dart';
+
+class GlobalVariable {
+  /// This global key is used in material app for navigation through firebase notifications.
+  static final GlobalKey<NavigatorState> navigatorState =
+      GlobalKey<NavigatorState>();
+}
 
 String? inspectionConfigStr;
 AuthUserModel? _user;

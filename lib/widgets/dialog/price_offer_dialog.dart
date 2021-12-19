@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:mca_leads_management_mobile/models/entities/api/marketplace/marketplace_req.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/text_style.dart';
 import 'package:mca_leads_management_mobile/widgets/button/button.dart';
 import 'package:mca_leads_management_mobile/widgets/common/notifications.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
+import 'package:mca_leads_management_mobile/widgets/textfield/date_time_text.dart';
 
 class OfferPriceDialog extends StatefulWidget {
-  final ValueChanged<String> onSubmit;
+  final ValueChanged<OfferRequest> onSubmit;
 
   const OfferPriceDialog({Key? key, required this.onSubmit}) : super(key: key);
   @override
@@ -17,14 +19,14 @@ class OfferPriceDialog extends StatefulWidget {
 class _OfferPriceDialogState extends State<OfferPriceDialog> {
   late CustomTheme customTheme;
   late ThemeData theme;
-  late String offerPrice;
+  late OfferRequest counterOfferRequest;
 
   @override
   void initState() {
     super.initState();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
-    offerPrice = "";
+    counterOfferRequest = OfferRequest.empty();
   }
 
   @override
@@ -71,7 +73,8 @@ class _OfferPriceDialogState extends State<OfferPriceDialog> {
               margin: const EdgeInsets.only(top: 8),
               child: TextFormField(
                 keyboardType: TextInputType.number,
-                onChanged: (text) => offerPrice = text,
+                onChanged: (text) =>
+                    counterOfferRequest.offerPrice = int.parse(text),
                 decoration: InputDecoration(
                   border: theme.inputDecorationTheme.border,
                   enabledBorder: theme.inputDecorationTheme.border,
@@ -80,6 +83,13 @@ class _OfferPriceDialogState extends State<OfferPriceDialog> {
                 ),
               ),
             ),
+            const SizedBox(height: 8),
+            FxDateTimeText(
+                label: 'Expiration Date',
+                maxValue: counterOfferRequest.offerExpirationTime,
+                onDateChanged: (expirationDate) {
+                  counterOfferRequest.offerExpirationTime = expirationDate;
+                }),
             Container(
                 margin: const EdgeInsets.only(top: 8),
                 alignment: AlignmentDirectional.centerEnd,
@@ -98,14 +108,14 @@ class _OfferPriceDialogState extends State<OfferPriceDialog> {
                         elevation: 2,
                         borderRadiusAll: 4,
                         onPressed: () {
-                          if (offerPrice.isEmpty) {
+                          if (counterOfferRequest.offerPrice == 0) {
                             showSnackBar(
                                 context: context,
                                 text: "Offer Price is Empty!",
                                 backgroundColor:
                                     lightColor.defaultError.primaryVariant);
                           } else {
-                            widget.onSubmit(offerPrice);
+                            widget.onSubmit(counterOfferRequest);
                             Navigator.pop(context);
                             //Navigator.popUntil(context, ModalRoute.withName('/home'));
                           }

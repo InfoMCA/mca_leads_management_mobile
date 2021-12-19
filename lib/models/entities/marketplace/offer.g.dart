@@ -18,6 +18,7 @@ Offer _$OfferFromJson(Map<String, dynamic> json) => Offer(
       DateTime.parse(json['createdTime'] as String),
       DateTime.parse(json['lastModifiedTime'] as String),
       DateTime.parse(json['expirationTime'] as String),
+      DateTime.parse(json['listingExpirationTime'] as String),
     );
 
 Map<String, dynamic> _$OfferToJson(Offer instance) => <String, dynamic>{
@@ -32,6 +33,7 @@ Map<String, dynamic> _$OfferToJson(Offer instance) => <String, dynamic>{
       'createdTime': instance.createdTime.toIso8601String(),
       'lastModifiedTime': instance.lastModifiedTime.toIso8601String(),
       'expirationTime': instance.expirationTime.toIso8601String(),
+      'listingExpirationTime': instance.listingExpirationTime.toIso8601String(),
     };
 
 const _$OfferStateEnumMap = {

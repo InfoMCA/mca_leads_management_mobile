@@ -22,8 +22,6 @@ class NotificationHandler {
       String? fcmToken = await messaging.getToken();
       dev.log("fcm token: $fcmToken");
       CommonInterface().updateToken(fcmToken ?? "");
-      // await AdminInterface() //TODO: Send FCM to server
-      //     .registerUserFCM(currentStaff.username, await messaging.getToken());
       if (Platform.isIOS) {
         await messaging.requestPermission(
           alert: true,
@@ -39,7 +37,9 @@ class NotificationHandler {
         String title =
             event.notification?.title ?? "Unknown notification title";
         String body = event.notification?.body ?? "Unknown notification body";
-        dev.log("notofcation title:" + title);
+        dev.log("notification title:" + title);
+        //showSnackBar(context: GlobalVariable.navigatorState.currentContext!, text: "text", backgroundColor: Colors.white);
+        //showSnackBar(context: context, text: "You received new offer for $body", backgroundColor: lightColor.primary)
       }, onError: (error) {}, cancelOnError: false);
     } catch (e) {
       _isFirebaseServiceStarted = false;

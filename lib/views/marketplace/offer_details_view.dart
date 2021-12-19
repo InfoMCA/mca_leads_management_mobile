@@ -1,3 +1,4 @@
+import 'dart:developer' as dev;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -53,11 +54,12 @@ class _OfferDetailViewState extends State<OfferDetailView> {
     logicalView = widget.args.logicalView;
   }
 
-  bool isOfferAcceptable(OfferState offerState) {
+  bool isAcceptable(OfferState offerState) {
     if (offerState == OfferState.BUYER_ACCEPTED ||
         offerState == OfferState.BUYER_REJECTED ||
         offerState == OfferState.SELLER_ACCEPTED ||
-        offerState == OfferState.BUYER_REJECTED) {
+        offerState == OfferState.SELLER_REJECTED ||
+        offerState == OfferState.EXPIRED) {
       return false;
     }
     if (offerState == OfferState.BUYER_OFFER &&
@@ -69,6 +71,51 @@ class _OfferDetailViewState extends State<OfferDetailView> {
       return false;
     }
     return true;
+  }
+
+  bool isRejectable(OfferState offerState) {
+    if (offerState == OfferState.BUYER_ACCEPTED ||
+        offerState == OfferState.BUYER_ACCEPTED ||
+        offerState == OfferState.SELLER_ACCEPTED ||
+        offerState == OfferState.SELLER_REJECTED ||
+        offerState == OfferState.EXPIRED) {
+      return false;
+    }
+    return true;
+  }
+
+  String _getTitle(Offer offer) {
+    switch (offer.state) {
+      case OfferState.BUYER_OFFER:
+        return "${oCcy.format(offer.buyerOfferPrice)} Offer ";
+      case OfferState.SELLER_OFFER:
+        return "${oCcy.format(offer.sellerOfferPrice)} Counter Offer";
+      case OfferState.BUYER_ACCEPTED:
+      case OfferState.SELLER_ACCEPTED:
+        return "Accepted Offer";
+      case OfferState.BUYER_REJECTED:
+      case OfferState.SELLER_REJECTED:
+        return "Rejected Offer";
+      case OfferState.EXPIRED:
+        return "Expired Offer";
+    }
+  }
+
+  String _getTitleColor(Offer offer) {
+    switch (offer.state) {
+      case OfferState.BUYER_OFFER:
+        return "${oCcy.format(offer.buyerOfferPrice)} Offer ";
+      case OfferState.SELLER_OFFER:
+        return "${oCcy.format(offer.sellerOfferPrice)} Counter Offer";
+      case OfferState.BUYER_ACCEPTED:
+      case OfferState.SELLER_ACCEPTED:
+        return "Accepted Offer";
+      case OfferState.BUYER_REJECTED:
+      case OfferState.SELLER_REJECTED:
+        return "Rejected Offer";
+      case OfferState.EXPIRED:
+        return "Expired Offer";
+    }
   }
 
   Widget _buildItemList() {
@@ -93,72 +140,12 @@ class _OfferDetailViewState extends State<OfferDetailView> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         FxText.h6(
-                          offers![index].state.getTitle(),
+                          _getTitle(offers![index]),
+                          color: offers![index].state.getTitleColor(logicalView),
                           fontWeight: 600,
-                          color: lightColor.primary,
                           xMuted: true,
                         ),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 150,
-                              child: FxText.b2(
-                                "Buyer: ",
-                                fontWeight: 700,
-                                color: Colors.black,
-                                xMuted: true,
-                              ),
-                            ),
-                            FxText.b2(
-                              offers![index].buyerId,
-                              fontWeight: 800,
-                              color: Colors.black,
-                              xMuted: true,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 150,
-                              child: FxText.b2(
-                                "Seller: ",
-                                fontWeight: 700,
-                                color: Colors.black,
-                                xMuted: true,
-                              ),
-                            ),
-                            FxText.b2(
-                              offers![index].sellerId,
-                              fontWeight: 800,
-                              color: Colors.black,
-                              xMuted: true,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 150,
-                              child: FxText.b2(
-                                "Offer: ",
-                                fontWeight: 700,
-                                color: Colors.black,
-                                xMuted: true,
-                              ),
-                            ),
-                            FxText.b2(
-                              oCcy.format(offers![index].buyerOfferPrice),
-                              fontWeight: 800,
-                              color: Colors.black,
-                              xMuted: true,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
+                        Divider(),
                         Row(
                           children: [
                             SizedBox(
@@ -211,8 +198,29 @@ class _OfferDetailViewState extends State<OfferDetailView> {
                               ),
                             ),
                             FxText.b2(
-                              DateFormat.yMMMd()
+                              DateFormat('EEE, MMM d hh:mm')
                                   .format(offers![index].lastModifiedTime),
+                              fontWeight: 800,
+                              color: Colors.black,
+                              xMuted: true,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 150,
+                              child: FxText.b2(
+                                "Offer expires at: ",
+                                fontWeight: 700,
+                                color: Colors.black,
+                                xMuted: true,
+                              ),
+                            ),
+                            FxText.b2(
+                              DateFormat('EEE, MMM d hh:mm')
+                                  .format(offers![index].expirationTime),
                               fontWeight: 800,
                               color: Colors.black,
                               xMuted: true,
@@ -232,8 +240,8 @@ class _OfferDetailViewState extends State<OfferDetailView> {
                               ),
                             ),
                             FxText.b2(
-                              DateFormat.yMMMd()
-                                  .format(offers![index].expirationTime),
+                              DateFormat('EEE, MMM d hh:mm')
+                                  .format(offers![index].listingExpirationTime),
                               fontWeight: 800,
                               color: Colors.black,
                               xMuted: true,
@@ -243,70 +251,7 @@ class _OfferDetailViewState extends State<OfferDetailView> {
                         const Divider(
                           height: 16,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            FxButton.rounded(
-                              onPressed: () {
-                                if (isOfferAcceptable(offers![index].state)) {
-                                  Navigator.pop(context);
-                                  MarketplaceInterface().acceptOffer(
-                                      offers![index].id,
-                                      offers![index].listingId);
-                                }
-                              },
-                              child: Icon(Icons.check,
-                                  color: isOfferAcceptable(offers![index].state)
-                                      ? Colors.green
-                                      : Colors.grey),
-                              backgroundColor: theme.backgroundColor,
-                            ),
-                            FxButton.rounded(
-                              onPressed: () {
-                                Navigator.pop(context);
-                                MarketplaceInterface().rejectOffer(
-                                    offers![index].id,
-                                    offers![index].listingId);
-                              },
-                              child: const Icon(
-                                Icons.clear,
-                                color: Colors.red,
-                              ),
-                              backgroundColor: theme.backgroundColor,
-                            ),
-                            FxButton.rounded(
-                                onPressed: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) =>
-                                          OfferPriceDialog(
-                                            onSubmit: (text) {
-                                              MarketplaceInterface()
-                                                  .counterOffer(
-                                                      offers![index].id,
-                                                      offers![index].listingId,
-                                                      int.parse(text));
-                                              _getOffers(
-                                                  offers![index].listingId,
-                                                  logicalView);
-                                              setState(() {});
-                                            },
-                                          ));
-                                },
-                                child: Icon(
-                                  Icons.sell,
-                                  color: theme.primaryColor,
-                                ),
-                                backgroundColor: theme.backgroundColor),
-                            FxButton.rounded(
-                                onPressed: () {},
-                                child: Icon(
-                                  Icons.history,
-                                  color: theme.primaryColor,
-                                ),
-                                backgroundColor: theme.backgroundColor),
-                          ],
-                        )
+                        _buildActionRow(offers![index]),
                       ],
                     ),
                   ),
@@ -345,6 +290,7 @@ class _OfferDetailViewState extends State<OfferDetailView> {
           return Scaffold(
               appBar: AppBar(
                 elevation: 0,
+                backgroundColor: lightColor.secondary,
                 leading: InkWell(
                   onTap: () => Navigator.of(context).pop(),
                   child: Icon(
@@ -368,6 +314,11 @@ class _OfferDetailViewState extends State<OfferDetailView> {
                   ],
                 ),
               ),
+              floatingActionButton: FloatingActionButton(
+                backgroundColor: lightColor.secondaryVariant,
+                onPressed: _onRefresh,
+                child: const Icon(Icons.refresh),
+              ),
               body: Column(
                 children: [
                   Expanded(
@@ -376,5 +327,66 @@ class _OfferDetailViewState extends State<OfferDetailView> {
                 ],
               ));
         });
+  }
+
+  Widget _buildActionRow(Offer offer) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        isAcceptable(offer.state)
+            ? FxButton.rounded(
+                onPressed: () {
+                  Navigator.pop(context);
+                  MarketplaceInterface().acceptOffer(offer.id, offer.listingId);
+                },
+                child: const Icon(Icons.check, color: Colors.green),
+                backgroundColor: theme.backgroundColor,
+              )
+            : Container(width: 48),
+        isRejectable(offer.state)
+            ? FxButton.rounded(
+                onPressed: () {
+                  Navigator.pop(context);
+                  MarketplaceInterface().rejectOffer(offer.id, offer.listingId);
+                },
+                child: const Icon(
+                  Icons.clear,
+                  color: Colors.red,
+                ),
+                backgroundColor: theme.backgroundColor,
+              )
+            : Container(width: 48),
+        isRejectable(offer.state)
+            ? FxButton.rounded(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) => OfferPriceDialog(
+                            onSubmit: (offerRequest) {
+                              offerRequest.listingId = offer.listingId;
+                              offerRequest.offerId = offer.id;
+                              offerRequest.expirationTime =
+                                  offer.listingExpirationTime;
+                              MarketplaceInterface().counterOffer(offerRequest);
+                              _getOffers(offer.listingId, logicalView);
+                              setState(() {});
+                            },
+                          ));
+                },
+                child: Icon(
+                  Icons.sell,
+                  color: theme.primaryColor,
+                ),
+                backgroundColor: theme.backgroundColor)
+            : Container(width: 48),
+        FxButton.rounded(
+            onPressed: () {},
+            child: Icon(
+              Icons.history,
+              color: theme.primaryColor,
+            ),
+            backgroundColor: theme.backgroundColor),
+      ],
+    );
   }
 }

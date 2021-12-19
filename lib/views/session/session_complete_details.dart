@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:mca_leads_management_mobile/models/entities/api/transport/transport_req.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/models/entities/session/report.dart';
 import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
@@ -19,7 +20,7 @@ import 'package:mca_leads_management_mobile/utils/theme/app_colors.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_view_arg.dart';
-import 'package:mca_leads_management_mobile/views/session/session_transport_view.dart';
+import 'package:mca_leads_management_mobile/views/transport/transport_request_view.dart';
 import 'package:mca_leads_management_mobile/widgets/image/image_zoom_viewer.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 
@@ -137,8 +138,8 @@ class _SessionDetailsCompleteReportState
                 dev.log(value.toString());
                 switch (value) {
                   case 0:
-                    Navigator.pushNamed(context, SessionTransportView.routeName,
-                        arguments: session);
+                    Navigator.pushNamed(context, TransportRequestView.routeName,
+                        arguments: PutNewOrderRequest.fromSession(session));
                     break;
                   case 1:
                     Navigator.popUntil(context, ModalRoute.withName('/home'));

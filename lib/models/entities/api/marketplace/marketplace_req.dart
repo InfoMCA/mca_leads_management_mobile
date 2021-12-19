@@ -1,20 +1,31 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 
 part 'marketplace_req.g.dart';
 
 @JsonSerializable()
-class CounterOfferRequest {
+class OfferRequest {
   String userId;
   String listingId;
   String offerId;
   int offerPrice;
+  DateTime expirationTime;
   DateTime offerExpirationTime;
 
-  CounterOfferRequest(this.userId, this.listingId, this.offerId,
-      this.offerPrice, this.offerExpirationTime);
+  OfferRequest(this.userId, this.listingId, this.offerId, this.offerPrice,
+      this.expirationTime, this.offerExpirationTime);
 
-  factory CounterOfferRequest.fromJson(Map<String, dynamic> json) =>
-      _$CounterOfferRequestFromJson(json);
+  OfferRequest.build(
+      userId, listingId, offerId, offerPrice, offerExpirationTime)
+      : this(userId, listingId, offerId, offerPrice, offerExpirationTime,
+            offerExpirationTime);
 
-  Map<String, dynamic> toJson() => _$CounterOfferRequestToJson(this);
+  OfferRequest.empty()
+      : this(currentUser!.username, '', '', 0, DateTime.now().toUtc(),
+            DateTime.now().toUtc());
+
+  factory OfferRequest.fromJson(Map<String, dynamic> json) =>
+      _$OfferRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$OfferRequestToJson(this);
 }

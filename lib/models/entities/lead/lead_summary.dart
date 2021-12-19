@@ -27,6 +27,7 @@ enum LeadViewTag {
   listing,
   transferIn,
   transferOut,
+  ownership,
 }
 
 extension LeadViewTagExt on LeadViewTag {
@@ -76,6 +77,8 @@ extension LeadViewTagExt on LeadViewTag {
         return "TI";
       case LeadViewTag.transferOut:
         return "TO";
+      case LeadViewTag.ownership:
+        return "O";
     }
   }
 
@@ -90,6 +93,7 @@ extension LeadViewTagExt on LeadViewTag {
       case LeadViewTag.activePendingApproval:
       case LeadViewTag.rejected:
       case LeadViewTag.inventory:
+      case LeadViewTag.ownership:
         return const Color.fromARGB(255, 255, 236, 235);
       case LeadViewTag.callerFollowUp:
       case LeadViewTag.approvalDealMade:
@@ -98,13 +102,13 @@ extension LeadViewTagExt on LeadViewTag {
       case LeadViewTag.ready:
       case LeadViewTag.activeProgress:
       case LeadViewTag.approved:
-      case LeadViewTag.listing:
       case LeadViewTag.transferIn:
         return const Color.fromARGB(255, 234, 241, 254);
       case LeadViewTag.callerReady:
       case LeadViewTag.approvalPotentialDeal:
       case LeadViewTag.complete:
       case LeadViewTag.transferOut:
+      case LeadViewTag.listing:
         return const Color.fromARGB(255, 233, 249, 236);
     }
   }
@@ -120,6 +124,7 @@ extension LeadViewTagExt on LeadViewTag {
       case LeadViewTag.activePendingApproval:
       case LeadViewTag.rejected:
       case LeadViewTag.inventory:
+      case LeadViewTag.ownership:
         return const Color.fromARGB(255, 245, 45, 59);
       case LeadViewTag.callerFollowUp:
       case LeadViewTag.approvalDealMade:
@@ -128,13 +133,13 @@ extension LeadViewTagExt on LeadViewTag {
       case LeadViewTag.ready:
       case LeadViewTag.activeProgress:
       case LeadViewTag.approved:
-      case LeadViewTag.listing:
       case LeadViewTag.transferIn:
         return const Color.fromARGB(255, 44, 121, 244);
       case LeadViewTag.callerReady:
       case LeadViewTag.approvalPotentialDeal:
       case LeadViewTag.complete:
       case LeadViewTag.transferOut:
+      case LeadViewTag.listing:
         return const Color.fromARGB(255, 50, 175, 84);
     }
   }

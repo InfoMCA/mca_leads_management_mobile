@@ -13,7 +13,7 @@ import 'package:mca_leads_management_mobile/views/session/session_complete_detai
 import 'package:mca_leads_management_mobile/views/session/session_details.dart';
 import 'package:mca_leads_management_mobile/views/security/login_page.dart';
 import 'package:mca_leads_management_mobile/views/session/session_schedule_view.dart';
-import 'package:mca_leads_management_mobile/views/session/session_transport_view.dart';
+import 'package:mca_leads_management_mobile/views/transport/transport_request_view.dart';
 
 class AppModule extends Module {
   @override
@@ -35,8 +35,6 @@ class AppModule extends Module {
         child: (_, args) => SessionActiveDetailsView(args: args.data)),
     ChildRoute('/home/session-schedule',
         child: (_, args) => SessionScheduleView(session: args.data)),
-    ChildRoute('/home/session-transport',
-        child: (_, args) => SessionTransportView(session: args.data)),
     ChildRoute('/home/session-complete-report',
         child: (_, args) => SessionDetailsCompleteReport(args: args.data)),
     ChildRoute('/home/listing',
@@ -49,5 +47,7 @@ class AppModule extends Module {
         child: (_, args) => OfferDetailView(args: args.data)),
     ChildRoute('/home/inventory',
         child: (_, args) => InventoryDetailView(args: args.data)),
+    ChildRoute('/home/transport-request',
+        child: (_, args) => TransportRequestView(request: args.data)),
   ];
 }

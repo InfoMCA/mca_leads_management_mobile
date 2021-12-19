@@ -33,12 +33,6 @@ class _ListingRequestViewState extends State<ListingRequestView> {
   late InventoryItem inventoryItem;
   late DateTime expirationDate;
   late int listingPrice;
-  List<String> selectedMarketPlaces = [];
-
-  Future<void> _getMarketPlaces(String sessionId) async {
-    marketPlacesFuture = MarketplaceInterface().getMarketPlaces();
-    marketPlacesFuture.whenComplete(() => setState(() {}));
-  }
 
   @override
   void initState() {
@@ -48,7 +42,6 @@ class _ListingRequestViewState extends State<ListingRequestView> {
     inventoryVehicle = widget.args;
     vehicle = inventoryVehicle.vehicle;
     inventoryItem = inventoryVehicle.inventoryItem;
-    _getMarketPlaces(vehicle.id);
     listingPrice =
         (inventoryItem.purchasedPrice - inventoryItem.deductionsAmount).toInt();
     expirationDate = DateTime.now().add(const Duration(days: 2));
@@ -99,8 +92,7 @@ class _ListingRequestViewState extends State<ListingRequestView> {
                   MarketplaceInterface().createNewListing(
                       vehicle.id,
                       inventoryItem.id,
-                      ListingNewReq(
-                          listingPrice, expirationDate, selectedMarketPlaces));
+                      ListingNewReq(listingPrice, expirationDate));
                 },
                 child: Icon(
                   Icons.check,
@@ -150,18 +142,6 @@ class _ListingRequestViewState extends State<ListingRequestView> {
                         fontSize: 16,
                       ),
                     ),
-                    CheckboxWidget(
-                        values: marketPlaces!.map((e) => e.name).toList(),
-                        onValueChanged: (marketPlacesStatus) {
-                          selectedMarketPlaces.clear();
-
-                          /// ToDo improve coding.
-                          for (int i = 0; i < marketPlaces!.length; i++) {
-                            if (marketPlacesStatus[i]) {
-                              selectedMarketPlaces.add(marketPlaces![i].id);
-                            }
-                          }
-                        }),
                   ],
                 ),
               ),

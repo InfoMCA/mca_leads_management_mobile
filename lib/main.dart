@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -8,10 +9,10 @@ import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/app/app_module.dart';
 import 'package:mca_leads_management_mobile/models/entities/auth_user.dart';
 import 'package:mca_leads_management_mobile/utils/local_storage.dart';
-import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await dotenv.load(fileName: ".env");
   try {
     String object = await LocalStorage.getObject(ObjectType.driver);

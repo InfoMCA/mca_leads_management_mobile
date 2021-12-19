@@ -44,6 +44,7 @@ Map<String, dynamic> _$InventoryItemToJson(InventoryItem instance) =>
 
 const _$InventoryItemStateEnumMap = {
   InventoryItemState.ACTIVE: 'ACTIVE',
+  InventoryItemState.LISTED: 'LISTED',
   InventoryItemState.TRANSFERRED_IN: 'TRANSFERRED_IN',
   InventoryItemState.TRANSFERRED_OUT: 'TRANSFERRED_OUT',
   InventoryItemState.REMOVED: 'REMOVED',

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:mca_leads_management_mobile/models/entities/api/logical_view.dart';
+import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 
 part 'offer.g.dart';
 
@@ -59,23 +60,37 @@ extension OfferStateExt on OfferState {
     switch (this) {
       case OfferState.BUYER_OFFER:
         if (logicalView == LogicalView.sentOffer) {
-          return const Color.fromARGB(255, 234, 241, 254);
+          return darkColor.primary;
         } else {
-          return const Color.fromARGB(255, 255, 236, 235);
+          return darkColor.primaryVariant;
         }
       case OfferState.SELLER_OFFER:
         if (logicalView == LogicalView.receivedOffer) {
-          return const Color.fromARGB(255, 234, 241, 254);
+          return darkColor.primary;
         } else {
-          return const Color.fromARGB(255, 255, 236, 235);
+          return darkColor.primaryVariant;
         }
       case OfferState.BUYER_ACCEPTED:
       case OfferState.SELLER_ACCEPTED:
-        return const Color.fromARGB(255, 233, 249, 236);
+        return darkColor.secondary;
       case OfferState.BUYER_REJECTED:
       case OfferState.SELLER_REJECTED:
       case OfferState.EXPIRED:
-        return const Color.fromARGB(255, 255, 236, 235);
+        return darkColor.secondaryVariant;
+    }
+  }
+
+  Color getTitleColor(LogicalView logicalView) {
+    switch (this) {
+      case OfferState.BUYER_OFFER:
+      case OfferState.SELLER_OFFER:
+        return Colors.white54;
+      case OfferState.BUYER_ACCEPTED:
+      case OfferState.SELLER_ACCEPTED:
+      case OfferState.BUYER_REJECTED:
+      case OfferState.SELLER_REJECTED:
+      case OfferState.EXPIRED:
+      return Colors.black45;
     }
   }
 
@@ -108,6 +123,7 @@ class Offer {
   DateTime createdTime;
   DateTime lastModifiedTime;
   DateTime expirationTime;
+  DateTime listingExpirationTime;
 
   Offer(
       this.id,
@@ -120,7 +136,8 @@ class Offer {
       this.buyerOfferPrice,
       this.createdTime,
       this.lastModifiedTime,
-      this.expirationTime);
+      this.expirationTime,
+      this.listingExpirationTime);
 
   factory Offer.fromJson(Map<String, dynamic> json) => _$OfferFromJson(json);
 

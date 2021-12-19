@@ -2,15 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:mca_leads_management_mobile/models/entities/api/backend_resp.dart';
+import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
-import 'package:mca_leads_management_mobile/models/interfaces/backend_interface.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/session_interface.dart';
 import 'package:mca_leads_management_mobile/utils/spacing.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_view_arg.dart';
-import 'package:mca_leads_management_mobile/widgets/common/notifications.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 import 'package:mca_leads_management_mobile/widgets/textfield/date_text.dart';
 import 'package:mca_leads_management_mobile/widgets/textfield/select_text.dart';
@@ -97,6 +95,7 @@ class _ListingDetailViewState extends State<ListingDetailView> {
           return Scaffold(
             appBar: AppBar(
               elevation: 0,
+              backgroundColor: lightColor.secondary,
               leading: InkWell(
                 onTap: () => Navigator.of(context).pop(),
                 child: Icon(
@@ -446,18 +445,15 @@ class _ListingDetailViewState extends State<ListingDetailView> {
                         margin: const EdgeInsets.only(top: 8),
                         child: FxDateText(
                             label: 'Schedule Date',
-                            initValue:
-                                scheduleDate,
-                            onDateChanged: (newDate) =>
-                                scheduleDate = newDate,
+                            initValue: scheduleDate,
+                            onDateChanged: (newDate) => scheduleDate = newDate,
                             validator: (value) => _validate(value))),
                     Container(
                         margin: const EdgeInsets.only(top: 8),
                         child: FxTimeText(
                             label: 'Schedule Time',
                             initValue: scheduleTime,
-                            onTimeChanged: (newTime) =>
-                                scheduleTime = newTime,
+                            onTimeChanged: (newTime) => scheduleTime = newTime,
                             validator: (value) => _validate(value))),
                   ],
                 ),

@@ -1,29 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:mca_leads_management_mobile/models/entities/globals.dart';
-import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
-import 'package:mca_leads_management_mobile/models/entities/marketplace/inventory.dart';
 import 'package:mca_leads_management_mobile/models/entities/marketplace/listing.dart';
-import 'package:mca_leads_management_mobile/models/entities/marketplace/marketplace.dart';
-import 'package:mca_leads_management_mobile/models/interfaces/marketplace_interface.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/text_style.dart';
 import 'package:mca_leads_management_mobile/widgets/button/button.dart';
-import 'package:mca_leads_management_mobile/widgets/checkbox/checkbox_input.dart';
-import 'package:mca_leads_management_mobile/widgets/common/notifications.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 import 'package:mca_leads_management_mobile/widgets/textfield/date_text.dart';
 
 class ListingNewDialog extends StatefulWidget {
   final int initOfferPrice;
-  final List<Marketplace> marketplaces;
   final ValueChanged<ListingNewReq> onSubmit;
 
   const ListingNewDialog(
-      {Key? key,
-      required this.onSubmit,
-      required this.initOfferPrice,
-      required this.marketplaces})
+      {Key? key, required this.onSubmit, required this.initOfferPrice})
       : super(key: key);
   @override
   _ListingNewDialogState createState() => _ListingNewDialogState();
@@ -39,8 +27,8 @@ class _ListingNewDialogState extends State<ListingNewDialog> {
     super.initState();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
-    listingNewReq = listingNewReq =
-        ListingNewReq(widget.initOfferPrice, DateTime.now(), []);
+    listingNewReq =
+        listingNewReq = ListingNewReq(widget.initOfferPrice, DateTime.now());
   }
 
   @override
@@ -102,27 +90,6 @@ class _ListingNewDialogState extends State<ListingNewDialog> {
                   listingNewReq.expirationDate = expirationDate;
                 }),
             Container(
-              padding: const EdgeInsets.only(
-                  left: 8, right: 20, top: 20, bottom: 12),
-              child: FxText.sh1(
-                "Market Places",
-                fontWeight: 600,
-                fontSize: 16,
-              ),
-            ),
-            CheckboxWidget(
-                values: widget.marketplaces.map((e) => e.name).toList(),
-                onValueChanged: (marketPlacesStatus) {
-                  listingNewReq.marketPlaces.clear();
-
-                  /// ToDo improve coding.
-                  for (int i = 0; i < widget.marketplaces.length; i++) {
-                    if (marketPlacesStatus[i]) {
-                      listingNewReq.marketPlaces.add(widget.marketplaces[i].id);
-                    }
-                  }
-                }),
-            Container(
                 margin: const EdgeInsets.only(top: 8),
                 alignment: AlignmentDirectional.centerEnd,
                 child: Row(
@@ -140,17 +107,7 @@ class _ListingNewDialogState extends State<ListingNewDialog> {
                         elevation: 2,
                         borderRadiusAll: 4,
                         onPressed: () {
-                          if (listingNewReq.marketPlaces.isEmpty) {
-                            showSnackBar(
-                                context: context,
-                                text: "Please select one of the marketplaces!",
-                                backgroundColor:
-                                    lightColor.defaultError.primaryVariant);
-                          } else {
-                            Navigator.popUntil(
-                                context, ModalRoute.withName('/home'));
-                            widget.onSubmit(listingNewReq);
-                          }
+                          widget.onSubmit(listingNewReq);
                         },
                         child: FxText.b2("Submit",
                             fontWeight: 600,

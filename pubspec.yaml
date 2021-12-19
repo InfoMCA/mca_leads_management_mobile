@@ -33,6 +33,7 @@ dependencies:
   cached_network_image: ^3.2.0
   firebase_messaging: ^11.2.3
   basic_utils: ^3.9.3
+  flutter_datetime_picker: ^1.5.1
 
 
 dev_dependencies:

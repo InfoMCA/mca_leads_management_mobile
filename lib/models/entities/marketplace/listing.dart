@@ -15,7 +15,6 @@ extension ListingStateExt on ListingState {
 @JsonSerializable()
 class Listing {
   String id;
-  String marketplaceId;
   String sellerId;
   String vehicleId;
   String inventoryItemId;
@@ -29,7 +28,6 @@ class Listing {
 
   Listing(
       this.id,
-      this.marketplaceId,
       this.sellerId,
       this.vehicleId,
       this.inventoryItemId,
@@ -50,7 +48,6 @@ class Listing {
 class ListingNewReq {
   int offerPrice;
   DateTime expirationDate;
-  List<String> marketPlaces;
 
-  ListingNewReq(this.offerPrice, this.expirationDate, this.marketPlaces);
+  ListingNewReq(this.offerPrice, this.expirationDate);
 }

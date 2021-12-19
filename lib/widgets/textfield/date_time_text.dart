@@ -9,55 +9,39 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
-class FxDateText extends StatefulWidget {
+class FxDateTimeText extends StatefulWidget {
   final String label;
-  final DateTime? initValue;
+  final DateTime? maxValue;
   final ValueChanged<DateTime> onDateChanged;
   final FormFieldValidator<String>? validator;
 
-  const FxDateText(
+  const FxDateTimeText(
       {Key? key,
       required this.label,
-      required this.initValue,
+      required this.maxValue,
       required this.onDateChanged,
       this.validator})
       : super(key: key);
 
   @override
-  _FxDateTextState createState() => _FxDateTextState();
+  _FxDateTimeTextState createState() => _FxDateTimeTextState();
 }
 
-class _FxDateTextState extends State<FxDateText> {
+class _FxDateTimeTextState extends State<FxDateTimeText> {
   late CustomTheme customTheme;
   late ThemeData theme;
   late DateTime dateTime;
   final _controller = TextEditingController();
-
-  Future<void> _selectDate(BuildContext context) async {
-    DateTime initialDate = widget.initValue ?? DateTime.now();
-    final DateTime? pickedDate = await showDatePicker(
-        context: context,
-        initialDate: initialDate,
-        firstDate: initialDate,
-        lastDate: initialDate.add(const Duration(days: 60)));
-    if (pickedDate != null) {
-      setState(() {
-        dateTime = pickedDate;
-        _controller.text = DateFormat('yyyy-MM-dd').format(pickedDate);
-        widget.onDateChanged(dateTime);
-      });
-    }
-  }
 
   @override
   void initState() {
     super.initState();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
-    _controller.text = widget.initValue != null
-        ? DateFormat('yyyy-MM-dd').format(widget.initValue ?? DateTime.now())
-        : "";
+    _controller.text = DateFormat('yyyy-MM-dd hh:mm aaa')
+        .format(DateTime.now().add(const Duration(days: 1)));
   }
 
   @override
@@ -65,7 +49,15 @@ class _FxDateTextState extends State<FxDateText> {
     return TextFormField(
         controller: _controller,
         readOnly: true,
-        onTap: () => _selectDate(context),
+        onTap: () {
+          DatePicker.showDateTimePicker(context,
+              showTitleActions: true,
+              minTime: DateTime.now().add(const Duration(days: 1)),
+              maxTime: widget.maxValue, onConfirm: (date) {
+            _controller.text = DateFormat('yyyy-MM-dd hh:mm aaa').format(date);
+            widget.onDateChanged(date);
+          });
+        },
         validator: widget.validator,
         decoration: InputDecoration(
           labelText: widget.label,

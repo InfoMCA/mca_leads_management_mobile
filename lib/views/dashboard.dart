@@ -4,27 +4,36 @@
 * Description :
 * */
 
+import 'dart:async';
 import 'dart:developer' as dev;
+import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mca_leads_management_mobile/controllers/notification_handler.dart';
-import 'package:mca_leads_management_mobile/models/entities/api/backend_resp.dart';
 import 'package:mca_leads_management_mobile/models/entities/api/logical_view.dart';
 import 'package:mca_leads_management_mobile/models/entities/drawer_item.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
-import 'package:mca_leads_management_mobile/models/entities/lead/lead.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead/lead_summary.dart';
-import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
+import 'package:mca_leads_management_mobile/models/interfaces/common_interface.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/lead_interface.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/session_interface.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
-import 'package:mca_leads_management_mobile/views/lead/lead_details_view.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_view_arg.dart';
-import 'package:mca_leads_management_mobile/views/session/session_details.dart';
 import 'package:mca_leads_management_mobile/widgets/common/notifications.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+class PushNotification {
+  PushNotification({
+    this.title,
+    this.body,
+  });
+  String? title;
+  String? body;
+}
 
 class DashBoard extends StatefulWidget {
   const DashBoard({Key? key}) : super(key: key);
@@ -44,6 +53,9 @@ class _DashBoardState extends State<DashBoard> {
   late LogicalView logicalView;
   List<DrawerItem> drawerItems = [];
 
+  late PushNotification _notificationInfo;
+  var _totalNotifications = 0;
+
   void _getLeads() async {
     _leadList.clear();
     List<LeadSummary>? newLeads = await getLeads(logicalView);
@@ -59,6 +71,7 @@ class _DashBoardState extends State<DashBoard> {
   @override
   void initState() {
     super.initState();
+    //registerNotification();
     NotificationHandler.start();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
@@ -98,7 +111,148 @@ class _DashBoardState extends State<DashBoard> {
           logicalView: LogicalView.completed,
           icon: Icons.done_outline,
           position: 6),
+      DrawerItem(
+          panel: DrawerPanel.marketPlace,
+          logicalView: LogicalView.inventory,
+          icon: Icons.inventory,
+          position: 7),
+      DrawerItem(
+          panel: DrawerPanel.marketPlace,
+          logicalView: LogicalView.receivedOffer,
+          icon: MdiIcons.storeOutline,
+          position: 8),
+      DrawerItem(
+          panel: DrawerPanel.marketPlace,
+          logicalView: LogicalView.sentOffer,
+          icon: MdiIcons.storeOutline,
+          position: 9),
+      DrawerItem(
+          panel: DrawerPanel.marketPlace,
+          logicalView: LogicalView.marketplace,
+          icon: Icons.shopping_bag,
+          position: 10),
+      DrawerItem(
+          panel: DrawerPanel.transport,
+          logicalView: LogicalView.transferPlaced,
+          icon: Icons.emoji_transportation,
+          position: 11),
+      DrawerItem(
+          panel: DrawerPanel.transport,
+          logicalView: LogicalView.transferRequest,
+          icon: Icons.ev_station,
+          position: 12),
+      DrawerItem(
+          panel: DrawerPanel.transport,
+          logicalView: LogicalView.transferActive,
+          icon: Icons.car_rental,
+          position: 13),
+      DrawerItem(
+          panel: DrawerPanel.transport,
+          logicalView: LogicalView.transferCompleted,
+          icon: Icons.car_repair,
+          position: 14),
     ];
+  }
+
+  void registerNotification() async {
+    await Firebase.initializeApp();
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    String? fcmToken = await messaging.getToken();
+    dev.log("fcm token: $fcmToken");
+    CommonInterface().updateToken(fcmToken ?? "");
+
+    // 3. On iOS, this helps to take the user permissions
+    if (Platform.isIOS) {
+      NotificationSettings settings = await messaging.requestPermission(
+        alert: true,
+        badge: true,
+        provisional: false,
+        sound: true,
+      );
+
+      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+        dev.log('User granted permission');
+
+        // For handling the received notifications
+        FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+          dev.log("Receive Notification");
+          // Parse the message received
+          PushNotification notification = PushNotification(
+            title: message.notification?.title,
+            body: message.notification?.body,
+          );
+
+          setState(() {
+            _notificationInfo = notification;
+            _totalNotifications++;
+          });
+        });
+      } else {
+        dev.log('User declined or has not accepted permission');
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          elevation: 0,
+          title: FxText.sh1(
+            logicalView.getName(),
+            fontWeight: 600,
+            color: theme.backgroundColor,
+          ),
+          iconTheme: IconThemeData(color: theme.backgroundColor),
+        ),
+        drawer: _buildDrawer(),
+        floatingActionButton: FloatingActionButton(
+            backgroundColor: lightColor.primaryVariant,
+            child: const Icon(Icons.refresh),
+            onPressed: _getLeads),
+        body: Column(
+          children: [
+            Container(
+              padding:
+                  const EdgeInsets.only(left: 12, top: 8, right: 12, bottom: 8),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      color: Colors.grey[100],
+                      child: TextField(
+                          onSubmitted: (text) {
+                            _searchLeadSession(context, text);
+                          },
+                          decoration: InputDecoration(
+                            hintText: "VIN or Last Six",
+                            border: theme.inputDecorationTheme.border,
+                            enabledBorder: theme.inputDecorationTheme.border,
+                            focusedBorder:
+                                theme.inputDecorationTheme.focusedBorder,
+                            prefixIcon: const Icon(MdiIcons.numeric, size: 24),
+                          )),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: NotificationListener<ScrollNotification>(
+                onNotification: (ScrollNotification scrollInfo) {
+                  if (scrollInfo.metrics.pixels ==
+                      scrollInfo.metrics.maxScrollExtent) {
+                    setState(() {});
+                  }
+                  return true;
+                },
+                child: _buildItemList(),
+              ),
+            ),
+          ],
+        ));
   }
 
   ExpansionPanel _buildExpansionPanel(DrawerPanel panel) {
@@ -241,6 +395,7 @@ class _DashBoardState extends State<DashBoard> {
                       _leadList[index].vehicleId,
                       _leadList[index].vin,
                       _leadList[index].title,
+                      _leadList[index].viewTag,
                       logicalView),
                 );
               },
@@ -251,64 +406,6 @@ class _DashBoardState extends State<DashBoard> {
               height: 0.5,
               color: theme.dividerColor,
             ));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(
-          elevation: 0,
-          title: FxText.sh1(
-            logicalView.getName(),
-            fontWeight: 600,
-            color: theme.backgroundColor,
-          ),
-          iconTheme: IconThemeData(color: theme.backgroundColor),
-        ),
-        drawer: _buildDrawer(),
-        body: Column(
-          children: [
-            Container(
-              padding:
-                  const EdgeInsets.only(left: 12, top: 8, right: 12, bottom: 8),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      color: Colors.grey[100],
-                      child: TextField(
-                          onSubmitted: (text) {
-                            _searchLeadSession(context, text);
-                          },
-                          decoration: InputDecoration(
-                            hintText: "VIN or Last Six",
-                            border: theme.inputDecorationTheme.border,
-                            enabledBorder: theme.inputDecorationTheme.border,
-                            focusedBorder:
-                                theme.inputDecorationTheme.focusedBorder,
-                            prefixIcon: const Icon(MdiIcons.numeric, size: 24),
-                          )),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: NotificationListener<ScrollNotification>(
-                onNotification: (ScrollNotification scrollInfo) {
-                  if (scrollInfo.metrics.pixels ==
-                      scrollInfo.metrics.maxScrollExtent) {
-                    setState(() {});
-                  }
-                  return true;
-                },
-                child: _buildItemList(),
-              ),
-            ),
-          ],
-        ));
   }
 
   void _searchLeadSession(context, keyword) async {
@@ -365,5 +462,16 @@ class _DashBoardState extends State<DashBoard> {
 
           _scaffoldKey.currentState!.openEndDrawer();
         });
+  }
+
+  Widget _showNotification(BuildContext context) {
+    if (_totalNotifications != 0) {
+      showSnackBar(
+          context: context,
+          text: _notificationInfo.body!,
+          backgroundColor: lightColor.primaryVariant);
+      _totalNotifications--;
+    }
+    return Container();
   }
 }

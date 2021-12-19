@@ -110,6 +110,33 @@ class GetInventoryVehicleSummaryResponse {
 }
 
 @JsonSerializable()
+class GetListingsSummaryResponse {
+  List<GetListingSummaryResponse> listingSummary;
+
+  GetListingsSummaryResponse(this.listingSummary);
+
+  factory GetListingsSummaryResponse.fromJson(Map<String, dynamic> json) =>
+      _$GetListingsSummaryResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$GetListingsSummaryResponseToJson(this);
+}
+
+@JsonSerializable()
+class GetListingSummaryResponse {
+  Listing listing;
+  InventoryItemSummary inventoryItemSummary;
+  VehicleSummary vehicleSummary;
+
+  GetListingSummaryResponse(
+      this.listing, this.inventoryItemSummary, this.vehicleSummary);
+
+  factory GetListingSummaryResponse.fromJson(Map<String, dynamic> json) =>
+      _$GetListingSummaryResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$GetListingSummaryResponseToJson(this);
+}
+
+@JsonSerializable()
 class InventoryItemSummary {
   String id;
   String vehicleId;

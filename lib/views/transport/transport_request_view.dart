@@ -2,9 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:mca_leads_management_mobile/models/entities/api/session/session_req.dart';
+import 'package:mca_leads_management_mobile/models/entities/api/transport/transport_req.dart';
 import 'package:mca_leads_management_mobile/models/entities/globals.dart';
-import 'package:mca_leads_management_mobile/models/entities/session/session.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/transport_interface.dart';
 import 'package:mca_leads_management_mobile/utils/spacing.dart';
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
@@ -16,17 +15,17 @@ import 'package:mca_leads_management_mobile/widgets/textfield/select_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:us_states/us_states.dart';
 
-class SessionTransportView extends StatefulWidget {
-  final Session session;
-  static String routeName = '/home/session-transport';
-  const SessionTransportView({Key? key, required this.session})
+class TransportRequestView extends StatefulWidget {
+  final PutNewOrderRequest request;
+  static String routeName = '/home/transport-request';
+  const TransportRequestView({Key? key, required this.request})
       : super(key: key);
 
   @override
-  _SessionTransportViewState createState() => _SessionTransportViewState();
+  _TransportRequestViewState createState() => _TransportRequestViewState();
 }
 
-class _SessionTransportViewState extends State<SessionTransportView> {
+class _TransportRequestViewState extends State<TransportRequestView> {
   late CustomTheme customTheme;
   late ThemeData theme;
   final _formKey = GlobalKey<FormState>();
@@ -59,22 +58,13 @@ class _SessionTransportViewState extends State<SessionTransportView> {
 
     putNewOrderRequest = PutNewOrderRequest(
         'MCA',
-        'GA',
-        widget.session.vin,
-        widget.session.title,
-        '',
-        TransportInfo(
-            widget.session.customerName ?? '',
-            '',
-            widget.session.address1 ?? '',
-            widget.session.address2 ?? '',
-            widget.session.city,
-            widget.session.state,
-            widget.session.zipCode,
-            widget.session.phone,
-            ''),
-        TransportInfo('', '', '', '', '', '', '', '', ''),
-        DateTime.now().toUtc());
+        'GA-Broker',
+        widget.request.vin,
+        widget.request.title,
+        widget.request.notes,
+        widget.request.source,
+        widget.request.destination,
+        widget.request.scheduledDate);
   }
 
   @override
@@ -96,7 +86,7 @@ class _SessionTransportViewState extends State<SessionTransportView> {
               Padding(
                 padding: const EdgeInsets.only(right: 16),
                 child: InkWell(
-                  onTap: () => _makePhoneCall(widget.session.phone),
+                  onTap: () => _makePhoneCall(widget.request.source.phone),
                   child: Icon(
                     Icons.phone,
                     color: theme.backgroundColor,
@@ -104,7 +94,7 @@ class _SessionTransportViewState extends State<SessionTransportView> {
                 ),
               ),
             ],
-            title: FxText.sh1("Schedule Transport",
+            title: FxText.sh1("Transport Request",
                 fontWeight: 600, color: theme.backgroundColor),
           ),
           floatingActionButton: FloatingActionButton(
@@ -116,8 +106,7 @@ class _SessionTransportViewState extends State<SessionTransportView> {
                       backgroundColor: lightColor.defaultError.primaryVariant);
                 } else {
                   putNewOrderRequest.scheduledDate = scheduleDate.toUtc();
-                  TransportInterface()
-                      .transfer(widget.session.id, putNewOrderRequest);
+                  TransportInterface().transfer(putNewOrderRequest);
                   Navigator.popUntil(context, ModalRoute.withName('/home'));
                 }
               },
@@ -137,7 +126,7 @@ class _SessionTransportViewState extends State<SessionTransportView> {
                   Container(
                       margin: const EdgeInsets.only(
                           top: 16, left: 16, right: 16, bottom: 16),
-                      child: FxText.sh1(widget.session.title, fontWeight: 700)),
+                      child: FxText.sh1(widget.request.title, fontWeight: 700)),
                   ExpansionPanelList(
                     expandedHeaderPadding: const EdgeInsets.all(0),
                     expansionCallback: (int index, bool isExpanded) {
@@ -167,7 +156,7 @@ class _SessionTransportViewState extends State<SessionTransportView> {
                                 margin: const EdgeInsets.only(
                                     top: 8, left: 8, right: 8),
                                 child: TextFormField(
-                                  initialValue: widget.session.vin,
+                                  initialValue: widget.request.vin,
                                   readOnly: true,
                                   decoration: InputDecoration(
                                     labelText: "VIN",
@@ -186,7 +175,7 @@ class _SessionTransportViewState extends State<SessionTransportView> {
                                 margin: const EdgeInsets.only(
                                     top: 8, left: 8, right: 8),
                                 child: TextFormField(
-                                  initialValue: widget.session.title,
+                                  initialValue: widget.request.title,
                                   readOnly: true,
                                   decoration: InputDecoration(
                                     labelText: "Title",

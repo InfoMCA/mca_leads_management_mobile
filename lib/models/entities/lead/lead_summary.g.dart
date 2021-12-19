@@ -50,4 +50,5 @@ const _$LeadViewTagEnumMap = {
   LeadViewTag.listing: 'listing',
   LeadViewTag.transferIn: 'transferIn',
   LeadViewTag.transferOut: 'transferOut',
+  LeadViewTag.ownership: 'ownership',
 };

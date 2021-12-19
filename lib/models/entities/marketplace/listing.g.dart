@@ -8,7 +8,6 @@ part of 'listing.dart';
 
 Listing _$ListingFromJson(Map<String, dynamic> json) => Listing(
       json['id'] as String,
-      json['marketplaceId'] as String,
       json['sellerId'] as String,
       json['vehicleId'] as String,
       json['inventoryItemId'] as String,
@@ -23,7 +22,6 @@ Listing _$ListingFromJson(Map<String, dynamic> json) => Listing(
 
 Map<String, dynamic> _$ListingToJson(Listing instance) => <String, dynamic>{
       'id': instance.id,
-      'marketplaceId': instance.marketplaceId,
       'sellerId': instance.sellerId,
       'vehicleId': instance.vehicleId,
       'inventoryItemId': instance.inventoryItemId,

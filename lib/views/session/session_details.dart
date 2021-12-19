@@ -573,9 +573,7 @@ class _SessionDetailsState extends State<SessionDetails> {
                                         label: 'Schedule Date',
                                         initValue: session?.scheduledTime ??
                                             DateTime.now(),
-                                        onDateChanged: (newDate) {}
-                                      )
-                                ),
+                                        onDateChanged: (newDate) {})),
                                 Container(
                                     margin: const EdgeInsets.only(top: 8),
                                     child: FxTimeText(

@@ -118,6 +118,38 @@ Map<String, dynamic> _$GetInventoryVehicleSummaryResponseToJson(
       'vehicleSummary': instance.vehicleSummary,
     };
 
+GetListingsSummaryResponse _$GetListingsSummaryResponseFromJson(
+        Map<String, dynamic> json) =>
+    GetListingsSummaryResponse(
+      (json['listingSummary'] as List<dynamic>)
+          .map((e) =>
+              GetListingSummaryResponse.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$GetListingsSummaryResponseToJson(
+        GetListingsSummaryResponse instance) =>
+    <String, dynamic>{
+      'listingSummary': instance.listingSummary,
+    };
+
+GetListingSummaryResponse _$GetListingSummaryResponseFromJson(
+        Map<String, dynamic> json) =>
+    GetListingSummaryResponse(
+      Listing.fromJson(json['listing'] as Map<String, dynamic>),
+      InventoryItemSummary.fromJson(
+          json['inventoryItemSummary'] as Map<String, dynamic>),
+      VehicleSummary.fromJson(json['vehicleSummary'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$GetListingSummaryResponseToJson(
+        GetListingSummaryResponse instance) =>
+    <String, dynamic>{
+      'listing': instance.listing,
+      'inventoryItemSummary': instance.inventoryItemSummary,
+      'vehicleSummary': instance.vehicleSummary,
+    };
+
 InventoryItemSummary _$InventoryItemSummaryFromJson(
         Map<String, dynamic> json) =>
     InventoryItemSummary(
@@ -142,6 +174,7 @@ Map<String, dynamic> _$InventoryItemSummaryToJson(
 
 const _$InventoryItemStateEnumMap = {
   InventoryItemState.ACTIVE: 'ACTIVE',
+  InventoryItemState.LISTED: 'LISTED',
   InventoryItemState.TRANSFERRED_IN: 'TRANSFERRED_IN',
   InventoryItemState.TRANSFERRED_OUT: 'TRANSFERRED_OUT',
   InventoryItemState.REMOVED: 'REMOVED',

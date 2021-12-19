@@ -6,6 +6,7 @@ part 'inventory.g.dart';
 
 enum InventoryItemState {
   ACTIVE,
+  LISTED,
   TRANSFERRED_IN,
   TRANSFERRED_OUT,
   REMOVED,
@@ -22,7 +23,10 @@ extension InventoryItemStateExt on InventoryItemState {
       case InventoryItemState.TRANSFERRED_OUT:
         return LeadViewTag.transferOut;
       case InventoryItemState.REMOVED:
+      case InventoryItemState.LISTED:
         return LeadViewTag.listing;
+      case InventoryItemState.SOLD:
+        return LeadViewTag.complete;
     }
   }
 }
