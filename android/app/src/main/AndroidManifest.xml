@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mca.mca_leads_management_mobile">
+    <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="mca_leads_management_mobile"
+        android:label="My Car Management"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
