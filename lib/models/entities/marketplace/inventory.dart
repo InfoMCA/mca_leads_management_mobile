@@ -45,8 +45,10 @@ class InventoryItem {
   DateTime createdTime;
   DateTime lastModifiedTime;
   DateTime transferTime;
-  String? sellerId;
   int? tradedPrice;
+  DateTime? tradedTime;
+  String? buyerName;
+  String? sellerName;
 
   InventoryItem(
       this.id,
@@ -61,8 +63,10 @@ class InventoryItem {
       this.createdTime,
       this.lastModifiedTime,
       this.transferTime,
-      this.sellerId,
-      this.tradedPrice);
+      this.tradedPrice,
+      this.tradedTime,
+      this.buyerName,
+      this.sellerName);
 
   factory InventoryItem.fromJson(Map<String, dynamic> json) =>
       _$InventoryItemFromJson(json);

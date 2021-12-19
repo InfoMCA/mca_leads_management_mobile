@@ -20,8 +20,12 @@ InventoryItem _$InventoryItemFromJson(Map<String, dynamic> json) =>
       DateTime.parse(json['createdTime'] as String),
       DateTime.parse(json['lastModifiedTime'] as String),
       DateTime.parse(json['transferTime'] as String),
-      json['sellerId'] as String?,
       json['tradedPrice'] as int?,
+      json['tradedTime'] == null
+          ? null
+          : DateTime.parse(json['tradedTime'] as String),
+      json['buyerName'] as String?,
+      json['sellerName'] as String?,
     );
 
 Map<String, dynamic> _$InventoryItemToJson(InventoryItem instance) =>
@@ -38,8 +42,10 @@ Map<String, dynamic> _$InventoryItemToJson(InventoryItem instance) =>
       'createdTime': instance.createdTime.toIso8601String(),
       'lastModifiedTime': instance.lastModifiedTime.toIso8601String(),
       'transferTime': instance.transferTime.toIso8601String(),
-      'sellerId': instance.sellerId,
       'tradedPrice': instance.tradedPrice,
+      'tradedTime': instance.tradedTime?.toIso8601String(),
+      'buyerName': instance.buyerName,
+      'sellerName': instance.sellerName,
     };
 
 const _$InventoryItemStateEnumMap = {

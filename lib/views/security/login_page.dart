@@ -213,11 +213,10 @@ class _LoginPageState extends State<LoginPage> {
         Container(
           height: 360.0,
           decoration: const BoxDecoration(
-                  image: DecorationImage(
-                image: AssetImage("assets/launcher.jpg"),
-                fit: BoxFit.cover,
-              )
-              ),
+              image: DecorationImage(
+            image: AssetImage("assets/launcher.jpg"),
+            fit: BoxFit.cover,
+          )),
         ),
         Container(
           color: Colors.black.withOpacity(1.0),
