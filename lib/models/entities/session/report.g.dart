@@ -12,6 +12,7 @@ ReportItemV1 _$ReportItemV1FromJson(Map<String, dynamic> json) => ReportItemV1(
       json['comments'] as String?,
       json['format'] as String,
       json['type'] as String,
+      json['category'] as String,
     );
 
 Map<String, dynamic> _$ReportItemV1ToJson(ReportItemV1 instance) =>
@@ -21,6 +22,7 @@ Map<String, dynamic> _$ReportItemV1ToJson(ReportItemV1 instance) =>
       'comments': instance.comments,
       'format': instance.format,
       'type': instance.type,
+      'category': instance.category,
     };
 
 ReportV1 _$ReportV1FromJson(Map<String, dynamic> json) => ReportV1(

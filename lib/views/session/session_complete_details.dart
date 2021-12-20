@@ -70,9 +70,10 @@ class _SessionDetailsCompleteReportState
         this.reportQA = reportQA.report;
         reportImages = reportQA.report.reportItems
             .where((element) => element.value != 'NA')
+            .where((element) => element.category != "Documents")
             .where((element) =>
                 element.type == ResponseFormat.Image.prettyString())
-            .map((e) => e.name)
+            .map((e) => e.value)
             .toList();
         setState(() {});
       });
@@ -193,12 +194,12 @@ class _SessionDetailsCompleteReportState
                                 FxText.sh1("Inspection QA", fontWeight: 600),
                             child: _getInspectionQA(),
                             isExpanded: _isExpanded[2]),
-                        /*
                         buildExpansionPanel(
                             header:
                             FxText.sh1("Inspection images", fontWeight: 600),
                             child: _getInspectionGallery(),
                             isExpanded: _isExpanded[3]),
+                        /*
                          buildExpansionPanel(
                              header: FxText.sh1("Purchase report", fontWeight: 600),
                              child: _getInspectionPdfs(),
@@ -244,7 +245,7 @@ class _SessionDetailsCompleteReportState
                                 ),
                               ],
                             ),
-                            isExpanded: _isExpanded[3])
+                            isExpanded: _isExpanded[4])
                       ],
                     ),
                   ],
