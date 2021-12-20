@@ -118,8 +118,7 @@ class _LeadFollowUpDialogState extends State<LeadFollowUpDialog> {
                                 backgroundColor:
                                     lightColor.defaultError.primaryVariant);
                           } else {
-                            Navigator.popUntil(
-                                context, ModalRoute.withName('/home'));
+                            Navigator.pop(context);
                             widget.onSubmit(followUpInfo);
                           }
                         },

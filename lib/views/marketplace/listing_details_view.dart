@@ -508,8 +508,7 @@ class _ListingDetailViewState extends State<ListingDetailView> {
                     ),
                     InkWell(
                       onTap: () {
-                        Navigator.popUntil(
-                            context, ModalRoute.withName('/home'));
+                        Navigator.pop(context);
                       },
                       child: ListTile(
                         dense: true,

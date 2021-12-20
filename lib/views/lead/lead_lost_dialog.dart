@@ -111,8 +111,7 @@ class _LeadLostDialogState extends State<LeadLostDialog> {
                         elevation: 2,
                         borderRadiusAll: 4,
                         onPressed: () {
-                          Navigator.popUntil(
-                              context, ModalRoute.withName('/home'));
+                          Navigator.pop(context);
                           widget.onSubmit(lostReasons[_selectedIndex]);
                         },
                         child: FxText.b2("Submit",

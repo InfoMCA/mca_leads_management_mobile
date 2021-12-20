@@ -241,8 +241,7 @@ class _InventoryDetailViewState extends State<InventoryDetailView> {
                       onSubmit: (listingNewReq) {
                         MarketplaceInterface().createNewListing(
                             vehicle.id, inventoryItem.id, listingNewReq);
-                        Navigator.popUntil(
-                            context, ModalRoute.withName('/home'));
+                        Navigator.pop(context);
                       },
                       initOfferPrice: inventoryItem.purchasedPrice.toInt(),
                     ));

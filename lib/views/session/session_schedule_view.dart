@@ -167,7 +167,7 @@ class _SessionScheduleViewState extends State<SessionScheduleView> {
                       .toUtc();
                   SessionInterface()
                       .dispatch(widget.session.id, leadDispatchRequest);
-                  Navigator.popUntil(context, ModalRoute.withName('/home'));
+                  Navigator.pop(context);
                 }
               },
               child: Icon(
