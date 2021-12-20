@@ -144,7 +144,7 @@ class _SessionDetailsState extends State<SessionDetails> {
                     break;
                   case 1:
                     SessionInterface().delete(session!.id);
-                    Navigator.popUntil(context, ModalRoute.withName('/home'));
+                    Navigator.pop(context);
                     break;
                 }
 

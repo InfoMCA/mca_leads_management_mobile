@@ -107,7 +107,7 @@ class _TransportRequestViewState extends State<TransportRequestView> {
                 } else {
                   putNewOrderRequest.scheduledDate = scheduleDate.toUtc();
                   TransportInterface().transfer(putNewOrderRequest);
-                  Navigator.popUntil(context, ModalRoute.withName('/home'));
+                  Navigator.pop(context);
                 }
               },
               child: Icon(

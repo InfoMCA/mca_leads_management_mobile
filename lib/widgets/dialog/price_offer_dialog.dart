@@ -117,7 +117,6 @@ class _OfferPriceDialogState extends State<OfferPriceDialog> {
                           } else {
                             widget.onSubmit(counterOfferRequest);
                             Navigator.pop(context);
-                            //Navigator.popUntil(context, ModalRoute.withName('/home'));
                           }
                         },
                         child: FxText.b2("Offer",
