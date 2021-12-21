@@ -62,8 +62,9 @@ class ReportItemV1 {
   String? comments;
   String format;
   String type;
+  String category;
 
-  ReportItemV1(this.name, this.value, this.comments, this.format, this.type);
+  ReportItemV1(this.name, this.value, this.comments, this.format, this.type, this.category);
 
   factory ReportItemV1.fromJson(Map<String, dynamic> json) =>
       _$ReportItemV1FromJson(json);

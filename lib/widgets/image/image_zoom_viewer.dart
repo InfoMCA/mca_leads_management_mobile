@@ -20,7 +20,7 @@ class ImageZoomViewer extends StatelessWidget {
         imageUrl: url,
         progressIndicatorBuilder: (context, url, downloadProgress) =>
             const CircularProgressIndicator(),
-        errorWidget: (context, url, error) => const Icon(Icons.device_unknown),
+        errorWidget: (context, url, error) => Container(),
       ),
       onTap: () {
         showDialog(
