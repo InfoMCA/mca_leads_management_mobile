@@ -212,49 +212,46 @@ class _DashBoardState extends State<DashBoard> {
             backgroundColor: lightColor.primaryVariant,
             child: const Icon(Icons.refresh),
             onPressed: _getLeads),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.only(top: 8, bottom: 8),
-                // child: Row(
-                //   children: <Widget>[
-                //     Expanded(
-                //       flex: 1,
-                //       child: Container(
-                //         color: Colors.grey[100],
-                //         child: TextField(
-                //             onSubmitted: (text) {
-                //               _searchLeadSession(context, text);
-                //             },
-                //             decoration: InputDecoration(
-                //               hintText: "VIN or Last Six",
-                //               border: theme.inputDecorationTheme.border,
-                //               enabledBorder: theme.inputDecorationTheme.border,
-                //               focusedBorder:
-                //                   theme.inputDecorationTheme.focusedBorder,
-                //               prefixIcon: const Icon(MdiIcons.numeric, size: 24),
-                //             )),
-                //       ),
-                //     ),
-                //   ],
-                // ),
+        body: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.only(top: 8, bottom: 8),
+              // child: Row(
+              //   children: <Widget>[
+              //     Expanded(
+              //       flex: 1,
+              //       child: Container(
+              //         color: Colors.grey[100],
+              //         child: TextField(
+              //             onSubmitted: (text) {
+              //               _searchLeadSession(context, text);
+              //             },
+              //             decoration: InputDecoration(
+              //               hintText: "VIN or Last Six",
+              //               border: theme.inputDecorationTheme.border,
+              //               enabledBorder: theme.inputDecorationTheme.border,
+              //               focusedBorder:
+              //                   theme.inputDecorationTheme.focusedBorder,
+              //               prefixIcon: const Icon(MdiIcons.numeric, size: 24),
+              //             )),
+              //       ),
+              //     ),
+              //   ],
+              // ),
+            ),
+            Expanded(
+              child: NotificationListener<ScrollNotification>(
+                onNotification: (ScrollNotification scrollInfo) {
+                  if (scrollInfo.metrics.pixels ==
+                      scrollInfo.metrics.maxScrollExtent) {
+                    setState(() {});
+                  }
+                  return true;
+                },
+                child: _buildItemList(),
               ),
-              Expanded(
-                child: NotificationListener<ScrollNotification>(
-                  onNotification: (ScrollNotification scrollInfo) {
-                    if (scrollInfo.metrics.pixels ==
-                        scrollInfo.metrics.maxScrollExtent) {
-                      setState(() {});
-                    }
-                    return true;
-                  },
-                  child: _buildItemList(),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ));
   }
 
@@ -365,133 +362,147 @@ class _DashBoardState extends State<DashBoard> {
     return ListView.separated(
         itemCount: _leadList.length,
         itemBuilder: (context, index) {
-          return Container(
-            height: 100,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: const BorderRadius.all(Radius.circular(15)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 1,
-                  blurRadius: 15,
-                ),
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    logicalView.getRouteName(),
-                    arguments: LeadViewArguments(
-                        _leadList[index].id,
-                        _leadList[index].vehicleId,
-                        _leadList[index].vin,
-                        _leadList[index].title,
-                        _leadList[index].viewTag,
-                        logicalView),
-                  );
-                },
-                child: Row(
-                  children: [
-                    const Flexible(
-                      child: Placeholder(),
-                      flex: 1,
-                    ),
-                    Flexible(
-                        flex: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 10.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                _leadList[index].getCompactTitle(),
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Text("\$123,000", style: TextStyle(color: Color(0xFF4287f5)),),
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Icon(Icons.speed),
-                                        Text("40,988"),
-                                      ],
-                                    ),
-                                    VerticalDivider(),
-                                    Row(
-                                      children: [
-                                        Icon(Icons.local_gas_station),
-                                        Text("Gasoline"),
-                                      ],
-                                    ),
-                                    VerticalDivider(),
-                                    Row(
-                                      children: [
-                                        Icon(Icons.title),
-                                        Text("Automatic"),
-                                      ],
-                                    ),
-                                  ],
+          if (logicalView == LogicalView.marketplace) {
+            return Container(
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              height: 120,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: const BorderRadius.all(Radius.circular(15)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 1,
+                    blurRadius: 15,
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      logicalView.getRouteName(),
+                      arguments: LeadViewArguments(
+                          _leadList[index].id,
+                          _leadList[index].vehicleId,
+                          _leadList[index].vin,
+                          _leadList[index].title,
+                          _leadList[index].viewTag,
+                          logicalView),
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      Flexible(
+                        child: Image.asset("assets/car_pic.png"),
+                        flex: 1,
+                      ),
+                      Flexible(
+                          flex: 2,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  _leadList[index].getCompactTitle(),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                              )
-                            ],
-                          ),
-                        ))
-                  ],
+                                Divider(
+                                  height: 7,
+                                  color: Colors.transparent,
+                                ),
+                                Text(
+                                  "\$123,000",
+                                  style: TextStyle(color: Color(0xFF4287f5)),
+                                ),
+                                Divider(
+                                  height: 4,
+                                  color: Colors.transparent,
+                                ),
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Icon(Icons.speed),
+                                          Text("40k mi"),
+                                        ],
+                                      ),
+                                      VerticalDivider(),
+                                      Row(
+                                        children: [
+                                          Icon(Icons.local_gas_station),
+                                          Text("Gas"),
+                                        ],
+                                      ),
+                                      VerticalDivider(),
+                                      Row(
+                                        children: [
+                                          Icon(Icons.title),
+                                          Text("Automatic"),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ))
+                    ],
+                  ),
                 ),
               ),
+            );
+          }
+          return Ink(
+            color: theme.backgroundColor,
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundColor: _leadList[index].viewTag.getBackgroundColor(),
+                child: FxText.b1(_leadList[index].viewTag.getAbbrv(),
+                    fontWeight: 600,
+                    color: _leadList[index].viewTag.getForegroundColor()),
+              ),
+              subtitle: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  FxText.b2(_leadList[index].vin,
+                      fontSize: 13,
+                      fontWeight: 500,
+                      color: theme.colorScheme.onBackground),
+                  FxText.b2(_leadList[index].getPrettyTime(),
+                      fontSize: 13,
+                      fontWeight: 500,
+                      color: theme.colorScheme.onBackground),
+                ],
+              ),
+              title: FxText.b1(_leadList[index].getCompactTitle(),
+                  fontWeight: 700, color: theme.colorScheme.onBackground),
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  logicalView.getRouteName(),
+                  arguments: LeadViewArguments(
+                      _leadList[index].id,
+                      _leadList[index].vehicleId,
+                      _leadList[index].vin,
+                      _leadList[index].title,
+                      _leadList[index].viewTag,
+                      logicalView),
+                );
+              },
             ),
           );
-          // return Ink(
-          //   color: theme.backgroundColor,
-          //   child: ListTile(
-          //     leading: CircleAvatar(
-          //       backgroundColor: _leadList[index].viewTag.getBackgroundColor(),
-          //       child: FxText.b1(_leadList[index].viewTag.getAbbrv(),
-          //           fontWeight: 600,
-          //           color: _leadList[index].viewTag.getForegroundColor()),
-          //     ),
-          //     subtitle: Row(
-          //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //       children: [
-          //         FxText.b2(_leadList[index].vin,
-          //             fontSize: 13,
-          //             fontWeight: 500,
-          //             color: theme.colorScheme.onBackground),
-          //         FxText.b2(_leadList[index].getPrettyTime(),
-          //             fontSize: 13,
-          //             fontWeight: 500,
-          //             color: theme.colorScheme.onBackground),
-          //       ],
-          //     ),
-          //     title: FxText.b1(_leadList[index].getCompactTitle(),
-          //         fontWeight: 700, color: theme.colorScheme.onBackground),
-          //     onTap: () {
-          //       Navigator.pushNamed(
-          //         context,
-          //         logicalView.getRouteName(),
-          //         arguments: LeadViewArguments(
-          //             _leadList[index].id,
-          //             _leadList[index].vehicleId,
-          //             _leadList[index].vin,
-          //             _leadList[index].title,
-          //             _leadList[index].viewTag,
-          //             logicalView),
-          //       );
-          //     },
-          //   ),
-          // );
         },
-        separatorBuilder: (_, __) => Divider(
+        separatorBuilder: (_, __) => const Divider(
               height: 25,
-              color: Colors.red,
+              color: Colors.transparent,
             ));
   }
 

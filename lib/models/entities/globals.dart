@@ -42,6 +42,11 @@ set currentUser(AuthUserModel? newUser) {
 }
 
 Future<List<LeadSummary>?> getLeads(LogicalView logicalView) async {
+  // return [
+  //     LeadSummary("123","321", "Toyota 2019", "123ADSAS123",LeadViewTag.approved,DateTime.now()),
+  //     LeadSummary("123","321", "Toyota 2019", "123ADSAS123",LeadViewTag.approved,DateTime.now()),
+  //     LeadSummary("123","321", "Toyota 2019", "123ADSAS123",LeadViewTag.approved,DateTime.now()),
+  // ];
   List<LeadSummary>? newLeads;
   if (logicalView.isLeadView()) {
     newLeads = await LeadInterface().getLeads(logicalView);
