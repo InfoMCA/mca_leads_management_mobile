@@ -172,9 +172,9 @@ class LeadSummary {
   }
 
   String getCompactTitle() {
-    if (title.length < 30) {
+    if (title.length < 25) {
       return title;
     }
-    return title.substring(0, 27) + "...";
+    return title.substring(0, 22) + "...";
   }
 }

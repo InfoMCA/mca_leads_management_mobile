@@ -15,7 +15,7 @@ Future<void> main() async {
   await dotenv.load(fileName: ".env");
   try {
     String object = await LocalStorage.getObject(ObjectType.driver);
-    if (object.isEmpty) {
+    if (true) {//object.isEmpty) {
       log("No user found, proceeding to login page");
     } else {
       currentUser = AuthUserModel.fromJson(json.decode(object));

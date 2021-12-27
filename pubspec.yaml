@@ -56,6 +56,13 @@ flutter:
     - .env
     - assets/icon_launcher/icon.png
     - assets/launcher.jpg
+    - assets/icon.png
+    - assets/hotel-1.jpg
+    - assets/hotel-2.jpg
+    - assets/room-1.jpg
+    - assets/room-2.jpg
+    - assets/room-3.jpg
+    - assets/bmw.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
