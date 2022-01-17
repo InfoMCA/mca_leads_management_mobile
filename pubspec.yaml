@@ -22,7 +22,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_feather_icons: ^2.0.0+1
   material_design_icons_flutter: 5.0.5955-rc.1
-  flutter_svg: ^0.23.0+1
+  flutter_svg: ^1.0.1
   json_annotation: ^4.4.0
   url_launcher: ^6.0.3
   intl: ^0.17.0
@@ -57,6 +57,16 @@ flutter:
     - assets/icon_launcher/icon.png
     - assets/launcher.jpg
     - assets/car_pic.png
+    - assets/marketplace_icons/dashboard.svg
+    - assets/marketplace_icons/garage.svg
+    - assets/marketplace_icons/listing.svg
+    - assets/marketplace_icons/settings.svg
+    - assets/marketplace_icons/vehicle.svg
+    - assets/marketplace_icons/search.svg
+    - assets/marketplace_icons/gas.svg
+    - assets/marketplace_icons/gearshift.svg
+    - assets/marketplace_icons/speedometer.svg
+    - assets/marketplace_icons/demo-car.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

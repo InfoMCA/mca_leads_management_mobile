@@ -22,6 +22,7 @@ import 'package:mca_leads_management_mobile/models/interfaces/session_interface.
 import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
 import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
 import 'package:mca_leads_management_mobile/views/lead/lead_view_arg.dart';
+import 'package:mca_leads_management_mobile/views/marketplace/dashboard_view.dart';
 import 'package:mca_leads_management_mobile/widgets/common/notifications.dart';
 import 'package:mca_leads_management_mobile/widgets/text/text.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -196,6 +197,12 @@ class _DashBoardState extends State<DashBoard> {
 
   @override
   Widget build(BuildContext context) {
+    if (logicalView == LogicalView.marketplace ||
+        logicalView == LogicalView.inventory ||
+        logicalView == LogicalView.receivedOffer ||
+        logicalView == LogicalView.sentOffer) {
+      return DashboardView();
+    }
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
