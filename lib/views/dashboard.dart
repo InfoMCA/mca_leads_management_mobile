@@ -201,7 +201,7 @@ class _DashBoardState extends State<DashBoard> {
         logicalView == LogicalView.inventory ||
         logicalView == LogicalView.receivedOffer ||
         logicalView == LogicalView.sentOffer) {
-      return DashboardView();
+      return MarketplaceDashboardView();
     }
     return Scaffold(
         key: _scaffoldKey,

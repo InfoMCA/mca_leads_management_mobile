@@ -42,7 +42,10 @@ class AppModule extends Module {
     ChildRoute('/home/listing-new',
         child: (_, args) => ListingRequestView(args: args.data)),
     ChildRoute('/home/marketplace-listing',
-        child: (_, args) => MarketListingDetailView(args: args.data)),
+        child: (_, args) => MarketListingDetailView(
+              id: args.data["id"],
+              viewTag: args.data["viewTag"],
+            )),
     ChildRoute('/home/offer',
         child: (_, args) => OfferDetailView(args: args.data)),
     ChildRoute('/home/inventory',

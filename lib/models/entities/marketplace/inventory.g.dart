@@ -19,7 +19,9 @@ InventoryItem _$InventoryItemFromJson(Map<String, dynamic> json) =>
       $enumDecode(_$InventoryItemStateEnumMap, json['state']),
       DateTime.parse(json['createdTime'] as String),
       DateTime.parse(json['lastModifiedTime'] as String),
-      DateTime.parse(json['transferTime'] as String),
+        json['transferTime'] == null
+            ? null
+            : DateTime.parse(json['transferTime'] as String),
       json['tradedPrice'] as int?,
       json['tradedTime'] == null
           ? null
@@ -41,7 +43,7 @@ Map<String, dynamic> _$InventoryItemToJson(InventoryItem instance) =>
       'state': _$InventoryItemStateEnumMap[instance.state],
       'createdTime': instance.createdTime.toIso8601String(),
       'lastModifiedTime': instance.lastModifiedTime.toIso8601String(),
-      'transferTime': instance.transferTime.toIso8601String(),
+      'transferTime': instance.transferTime?.toIso8601String(),
       'tradedPrice': instance.tradedPrice,
       'tradedTime': instance.tradedTime?.toIso8601String(),
       'buyerName': instance.buyerName,

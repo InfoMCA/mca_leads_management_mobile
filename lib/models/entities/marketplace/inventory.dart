@@ -44,7 +44,7 @@ class InventoryItem {
   InventoryItemState state;
   DateTime createdTime;
   DateTime lastModifiedTime;
-  DateTime transferTime;
+  DateTime? transferTime;
   int? tradedPrice;
   DateTime? tradedTime;
   String? buyerName;

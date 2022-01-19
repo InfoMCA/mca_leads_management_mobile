@@ -1,23 +1,22 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:intl/intl.dart';
 import 'package:mca_leads_management_mobile/models/entities/api/marketplace/marketplace_resp.dart';
-import 'package:mca_leads_management_mobile/models/entities/globals.dart';
 import 'package:mca_leads_management_mobile/models/entities/lead/lead_summary.dart';
 import 'package:mca_leads_management_mobile/models/interfaces/marketplace_interface.dart';
-import 'package:mca_leads_management_mobile/utils/theme/app_theme.dart';
-import 'package:mca_leads_management_mobile/utils/theme/custom_theme.dart';
-import 'package:mca_leads_management_mobile/views/lead/lead_view_arg.dart';
-import 'package:mca_leads_management_mobile/widgets/common/notifications.dart';
-import 'package:mca_leads_management_mobile/widgets/dialog/price_offer_dialog.dart';
-import 'package:mca_leads_management_mobile/widgets/image/ImageCarousel.dart';
+import 'package:mca_leads_management_mobile/utils/assets/marketplace_assets.dart';
+import 'package:mca_leads_management_mobile/utils/theme/marketplace.dart';
+import 'package:mca_leads_management_mobile/widgets/button/user_offer_tile.dart';
+import 'package:mca_leads_management_mobile/widgets/container/info_card.dart';
+import 'package:mca_leads_management_mobile/widgets/loader/full_screen_loader.dart';
+import 'package:mca_leads_management_mobile/widgets/slider/gradient_slider.dart';
 
 class MarketListingDetailView extends StatefulWidget {
-  final LeadViewArguments args;
+  final String id;
+  final LeadViewTag viewTag;
   static String routeName = '/home/marketplace-listing';
 
-  const MarketListingDetailView({Key? key, required this.args})
+  const MarketListingDetailView(
+      {Key? key, required this.id, required this.viewTag})
       : super(key: key);
 
   @override
@@ -26,213 +25,184 @@ class MarketListingDetailView extends StatefulWidget {
 }
 
 class _MarketListingDetailViewState extends State<MarketListingDetailView> {
-  late CustomTheme customTheme;
-  late ThemeData theme;
-  late GetListingResponse? listingInfo;
-  late Future<GetListingResponse> listingInfoFuture;
-  late LeadViewTag viewTag;
-
-  var _currentIndex = 1;
-  final _panelsExpansionStatus = [false, true];
-
-  Future<void> _getListingInfo(String listingId) async {
-    listingInfoFuture = MarketplaceInterface().getListing(listingId);
-    listingInfoFuture.whenComplete(() => setState(() {}));
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    customTheme = AppTheme.customTheme;
-    theme = AppTheme.theme;
-    _getListingInfo(widget.args.id);
-    viewTag = widget.args.leadViewTag;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: listingInfoFuture,
-        builder: (context, AsyncSnapshot<GetListingResponse> snapshot) {
-          if (!snapshot.hasData) {
-            return Container(
-              color: Colors.white,
-              child: SizedBox(
-                width: double.maxFinite,
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    CircularProgressIndicator(),
+    return Theme(
+      data: getMarketplaceThemeData,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black,),
+            onPressed: () => Modular.to.pop(),
+          ),
+          title: const Text("Vehicle description",
+            style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
+          ),
+        ),
+        backgroundColor: Colors.white,
+        body: FutureBuilder(
+            future: MarketplaceInterface().getListing(widget.id),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const FullScreenLoader();
+              }
+              GetListingResponse response = snapshot.data as GetListingResponse;
+              return Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: ListView(
+                  clipBehavior: Clip.none,
+                  children: [
+                    getGeneralInfoCard(),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    getConditionsInfoCard(),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    getOffersInfoCard()
                   ],
                 ),
-              ),
-            );
-          }
-          listingInfo = snapshot.data;
-          print(listingInfo);
-          return Scaffold(
-            appBar: AppBar(
-              leading: IconButton(
-                onPressed: () => Modular.to.pop(),
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: Colors.black,
-                ),
-              ),
-              title: Text(
-                listingInfo!.vehicle.ymmt,
-                style: TextStyle(color: Colors.black),
-              ),
-              actions: [
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.more_horiz_outlined,
-                    color: Colors.black,
-                  ),
-                )
-              ],
-              backgroundColor: Colors.white,
-            ),
-            floatingActionButton: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                SizedBox(
-                  width: 40,
-                ),
-                Expanded(
-                  child: Container(
-                    color: Color.fromRGBO(119, 147, 246, 1),
-                    child: TextButton(
-                      onPressed: () {
-                        if (viewTag != LeadViewTag.ownership) {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) =>
-                                  OfferPriceDialog(
-                                    onSubmit: (offerRequest) {
-                                      offerRequest.listingId =
-                                          listingInfo!.listing.id;
-                                      offerRequest.offerExpirationTime =
-                                          listingInfo!.listing.expirationTime;
-                                      MarketplaceInterface()
-                                          .submitOffer(offerRequest);
-                                    },
-                                  ));
-                        } else {
-                          showSnackBar(
-                              context: context,
-                              text: "You can't offer for your listed vehicle!",
-                              backgroundColor:
-                                  lightColor.defaultError.primaryVariant);
-                        }
-                      },
-                      child: Text(
-                        "Offer",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 25,
-                ),
-                Expanded(
-                  child: Container(
-                    color: Color.fromRGBO(119, 147, 246, 1),
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        "BUY",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Flexible(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 28.0, bottom: 10),
-                    child: ImageCarousel(
-                      [Image.asset("assets/car_pic.png")],
-                    ),
-                  ),
-                  flex: 1,
-                ),
-                Flexible(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                    decoration: BoxDecoration(
-                        color: Color.fromRGBO(48, 54, 105, 1),
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20))),
-                    child: ListView(children: [
-                      getDescriptionRow(Icons.sell_outlined, "Listing Price",
-                          listingInfo!.listing.initialOfferPrice.toString()),
-                      getDescriptionRow(
-                          Icons.calendar_today_outlined,
-                          "Listing expires",
-                          DateFormat('yyyy-MM-dd')
-                              .format(listingInfo!.listing.expirationTime)),
-                      getDescriptionRow(Icons.speed, "Odometer",
-                          "${listingInfo!.vehicle.mileage} mi"),
-                      getDescriptionRow(Icons.local_gas_station_outlined,
-                          "Fuel type", "Gas/Electric"),
-                      getDescriptionRow(
-                          Icons.title, "Title status", "Clean title"),
-                      getDescriptionRow(
-                          Icons.title, "VIN", listingInfo!.vehicle.vin),
-                      getDescriptionRow(Icons.palette_outlined, "Color",
-                          listingInfo!.vehicle.color),
-                      getDescriptionRow(Icons.title, "Estimated CR",
-                          listingInfo!.vehicle.estimatedCr.toString()),
-                    ]),
-                  ),
-                  flex: 3,
-                )
-              ],
-            ),
-          );
-        });
+              );
+            }),
+      ),
+    );
   }
 
-  Widget getDescriptionRow(IconData icon, String title, String value) {
-    return Column(
+  InfoCard getOffersInfoCard() {
+    return InfoCard(
+        child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          // mainAxisAlignment: MainAxisAlignment.spaceAround,
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 15.0),
+          child: Text(
+            "Offers",
+            style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
+          ),
+        ),
+        Divider(),
+        Wrap(
+          runSpacing: 20,
           children: [
-            Icon(
-              icon,
-              color: Colors.white,
+            UserOfferTile(
+              offerValue: 52900,
+              buyerName: "John Doe",
+              buyerCityState: "Irvine, CA",
+              onOfferAccepted: () {},
             ),
-            VerticalDivider(),
-            Container(
-              width: 120,
-              child: Text(
-                title,
-                style: TextStyle(color: Colors.white),
-              ),
+            UserOfferTile(
+              offerValue: 25000,
+              buyerName: "Jay Ce",
+              buyerCityState: "Irvine, CA",
+              onOfferAccepted: () {},
             ),
-            VerticalDivider(),
-            Expanded(
-              child: Text(
-                value,
-                maxLines: 1,
-                style: TextStyle(color: Colors.white),
-              ),
+            UserOfferTile(
+              offerValue: 25000,
+              buyerName: "Jay Ce",
+              buyerCityState: "Irvine, CA",
+              onOfferAccepted: () {},
+            ),
+            UserOfferTile(
+              offerValue: 25000,
+              buyerName: "Jay Ce",
+              buyerCityState: "Irvine, CA",
+              onOfferAccepted: () {},
             )
           ],
+        )
+      ],
+    ));
+  }
+
+  InfoCard getConditionsInfoCard() {
+    return InfoCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 15.0),
+            child: Text(
+              "Vehicle condition",
+              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
+            ),
+          ),
+          const Divider(),
+          Wrap(
+            runSpacing: 20,
+            children: [
+              GradientSlider(label: "Paint Condition:", value: 91),
+              GradientSlider(label: "Interior Condition:", value: 50),
+              GradientSlider(label: "Mechanical Condition", value: 91),
+              GradientSlider(label: "Brake Condition", value: 15),
+              GradientSlider(label: "Tire Condition", value: 30),
+              getDescriptionRow(name: "Structural/Frame Damage", value: "No"),
+              getDescriptionRow(name: "Airbags deployed", value: "No"),
+              getDescriptionRow(name: "Dents", value: "No"),
+              getDescriptionRow(name: "Scratches", value: "No"),
+              getDescriptionRow(name: "Odors", value: "No"),
+              getDescriptionRow(name: "Modifications", value: "No"),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget getGeneralInfoCard() {
+    return InfoCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 165,
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: Image.asset(
+                  MarketPlaceIcons.demoCar.asset,
+                  width: double.maxFinite,
+                  fit: BoxFit.fitWidth,
+                )),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 15.0),
+            child: Text("BMW M3 CS Limited",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900)),
+          ),
+          const Divider(),
+          Wrap(
+            runSpacing: 20,
+            children: [
+              getDescriptionRow(name: "Year", value: "2020"),
+              getDescriptionRow(name: "Make", value: "BMW"),
+              getDescriptionRow(name: "Model", value: "3 Series"),
+              getDescriptionRow(name: "Style", value: "4D M3 Sedan CS Limited"),
+              getDescriptionRow(name: "Color", value: "Gray"),
+              getDescriptionRow(name: "Mileage", value: "Gray"),
+              getDescriptionRow(name: "Fuel", value: "Gray"),
+              getDescriptionRow(name: "Gearbox", value: "Gray"),
+              getDescriptionRow(name: "Loan/Lease/Owned", value: "Gray"),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Row getDescriptionRow({required String name, required String value}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          name,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
-        Divider(color: Colors.grey),
+        Text(
+          value,
+          style: const TextStyle(fontSize: 16),
+        ),
       ],
     );
   }
 }
+
